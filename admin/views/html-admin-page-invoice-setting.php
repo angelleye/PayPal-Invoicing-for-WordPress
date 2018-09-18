@@ -29,7 +29,7 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : $this->debug_log;
 ?>
 <div class="wrap">
-    <div class="container-fluid">
+    <div class="container-fluid" id="angelleye-paypal-invoicing">
         <div class="row">
             <div class="col-sm-12">
                 <form method="POST">

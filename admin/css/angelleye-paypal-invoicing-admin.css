@@ -1,6 +1,10 @@
 
-input[type="checkbox"],
-input[type="radio"] {
+@media (max-width: 575.98px) { 
+     .pifw_lable_left {
+        text-align: left !important;
+    }
+}
+#apifw_enable_paypal_sandbox {
     margin: 8px 0px 0px -20px;
 }
 
@@ -78,3 +82,4 @@ padding: 0;
 display: block !important;
 font-size: inherit;
 }
+

@@ -5,18 +5,16 @@
  * and open the template in the editor.
  */
 ?>
-<div class="container-fluid">
-    
+<div class="container-fluid" id="angelleye-paypal-invoicing">
     <form>
         <div class="pifw_section">
-            <div class="row ">
+            <div class="row">
                 <div class="pt30-invoice"></div>
-                
-                <div class="col-8 mt30-invoice"></div>
-                <div class="col-4 mt30-invoice">
+                <div class="col-12 mt30-invoice col-sm-8"></div>
+                <div class="col-12 mt30-invoice col-sm-4">
                     <div class="form-group row">
-                        <label for="inputPassword" class="col-sm-5 col-form-label pifw_lable_left">Invoice number</label>
-                        <div class="col-sm-7">
+                        <label for="inputPassword" class="col-sm-5 col-form-label pifw_lable_left col-12">Invoice number</label>
+                        <div class="col-sm-7 col-12">
                             <input type="password" class="form-control" id="inputPassword" placeholder="">
                         </div>
                     </div>
@@ -61,8 +59,8 @@
                 </div>
             </div>
             <div class="row mt30-invoice">
-                <table class="table invoice-table">
-
+                <div class="table-responsive">
+                     <table class="table invoice-table">
                     <thead>
                         <tr>
                             <th scope="col" class="pifw-item-name">Description</th>
@@ -78,15 +76,15 @@
                             <td><input type="text" placeholder="<?php echo __('0'); ?>"></td>
                             <td><input type="text" placeholder="<?php echo __('0.00'); ?>"></td>
                             <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="text" placeholder="<?php echo __('Amount'); ?>"></td>
-                            
                             <td rowspan="2" class="pifw-border-bottom"><label>125.00</label></td>
                         </tr>
                         <tr class="pifw-border-bottom">
                             <td colspan="4" ><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
-                            
                         </tr>
                     </tbody>
                 </table>
+                </div>
+               
             </div>
         </div>
     </form>
