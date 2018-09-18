@@ -5,12 +5,6 @@
  * and open the template in the editor.
  */
 ?>
-<style>
-    .wrap h1.wp-heading-inline {
-        padding-right: 15px;
-        padding-left: 15px;
-    }
-</style>
 <div class="container-fluid" id="angelleye-paypal-invoicing">
     <form>
         <div class="pifw_section">

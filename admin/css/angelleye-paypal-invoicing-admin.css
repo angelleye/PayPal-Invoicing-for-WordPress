@@ -8,14 +8,8 @@
     margin: 8px 0px 0px -20px;
 }
 
-.pifw_section {
-    background-color: #fff;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.25);
-    box-shadow: 0 1px 4px rgba(0,0,0,.25);
-    margin-bottom: 20px;
-    min-height: 365px;
-    padding: 7px 15px 15px;
+.inside {
+    
 
 }
 
@@ -81,5 +75,12 @@
 padding: 0;
 display: block !important;
 font-size: inherit;
+background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    margin-bottom: 20px;
+    min-height: 365px;
+    padding: 7px 15px 15px;
 }
 
