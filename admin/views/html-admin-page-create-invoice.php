@@ -5,6 +5,12 @@
  * and open the template in the editor.
  */
 ?>
+<style>
+    .wrap h1.wp-heading-inline {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+</style>
 <div class="container-fluid" id="angelleye-paypal-invoicing">
     <form>
         <div class="pifw_section">
@@ -60,31 +66,31 @@
             </div>
             <div class="row mt30-invoice">
                 <div class="table-responsive">
-                     <table class="table invoice-table">
-                    <thead>
-                        <tr>
-                            <th scope="col" class="pifw-item-name">Description</th>
-                            <th scope="col" class="pifw-item-qty">Quantity</th>
-                            <th scope="col" class="pifw-item-price">Price</th>
-                            <th scope="col" class="pifw-item-tax">Tax</th>
-                            <th scope="col" class="pifw-item-amount">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><input type="text" placeholder="<?php echo __('Item name'); ?>"></td>
-                            <td><input type="text" placeholder="<?php echo __('0'); ?>"></td>
-                            <td><input type="text" placeholder="<?php echo __('0.00'); ?>"></td>
-                            <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="text" placeholder="<?php echo __('Amount'); ?>"></td>
-                            <td rowspan="2" class="pifw-border-bottom"><label>125.00</label></td>
-                        </tr>
-                        <tr class="pifw-border-bottom">
-                            <td colspan="4" ><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
-                        </tr>
-                    </tbody>
-                </table>
+                    <table class="table invoice-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="pifw-item-name">Description</th>
+                                <th scope="col" class="pifw-item-qty">Quantity</th>
+                                <th scope="col" class="pifw-item-price">Price</th>
+                                <th scope="col" class="pifw-item-tax">Tax</th>
+                                <th scope="col" class="pifw-item-amount">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="text" placeholder="<?php echo __('Item name'); ?>"></td>
+                                <td><input type="text" placeholder="<?php echo __('0'); ?>"></td>
+                                <td><input type="text" placeholder="<?php echo __('0.00'); ?>"></td>
+                                <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="text" placeholder="<?php echo __('Amount'); ?>"></td>
+                                <td rowspan="2" class="pifw-border-bottom"><label>125.00</label></td>
+                            </tr>
+                            <tr class="pifw-border-bottom">
+                                <td colspan="4" ><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-               
+
             </div>
         </div>
     </form>
