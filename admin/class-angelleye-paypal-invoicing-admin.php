@@ -400,4 +400,49 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->angelleye_paypal_invoicing_create_invoice_content();
     }
 
+    public function angelleye_paypal_invoicing_add_paypal_invoices_columns($existing_columns) {
+        $columns = array();
+        $columns['cb'] = '<input type="checkbox" />';
+        //$columns['title'] = _x('Transaction ID', 'paypal-ipn');
+        $columns['invoice_date'] = _x('Date', 'paypal-ipn');
+        $columns['invoice'] = __('Invoice #', 'paypal-ipn');
+        $columns['recipient'] = _x('Recipient', 'paypal-ipn');
+        $columns['status'] = __('Status', 'paypal-ipn');
+        //$columns['action'] = __('Action', 'paypal-ipn');
+        $columns['amount'] = __('Amount', 'paypal-ipn');
+
+        return $columns;
+    }
+
+    public function angelleye_paypal_invoicing_render_paypal_invoices_columns($column) {
+        global $post;
+        switch ($column) {
+            case 'invoice_date' :
+                $invoice = get_post_meta($post->ID, 'invoice_date', true);
+                echo $invoice;
+                break;
+            case 'invoice' :
+                $invoice_number = esc_attr(get_post_meta($post->ID, 'number', true));
+                echo $invoice_number;
+                break;
+            case 'recipient' :
+                echo esc_attr(get_post_meta($post->ID, 'email', true));
+                break;
+            case 'status' :
+                $status = get_post_meta($post->ID, 'status', true);
+                echo pifw_get_invoice_status($status);
+                break;
+            case 'action' :
+                
+                break;
+
+            case 'amount' :
+                $total_amount_value = get_post_meta($post->ID, 'total_amount_value', true);
+                $currency = get_post_meta($post->ID, 'currency', true);
+                echo pifw_get_currency_symbol($currency) . $total_amount_value . ' ' . $currency;
+                
+                break;
+        }
+    }
+
 }

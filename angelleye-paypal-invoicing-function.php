@@ -1,5 +1,16 @@
 <?php
 
+function pifw_get_invoice_status($key) {
+    $invoice_status = array('DRAFT' => 'Draft', 'UNPAID' => 'Unpaid', 'SENT' => 'Unpaid (Sent)', 'SCHEDULED' => 'Scheduled', 'PARTIALLY_PAID' => 'Partially Paid', 'PAYMENT_PENDING' => 'Payment Pending', 'PAID' => 'Paid',
+        'MARKED_AS_PAID' => 'Mark as Paid',
+        'CANCELLED' => 'Cancelled',
+        'REFUNDED' => 'Refunded',
+        'PARTIALLY_REFUNDED' => 'Partially Refunded',
+        'MARKED_AS_REFUNDED' => 'Mark as Refunded'
+    );
+    return $invoice_status_value = isset($invoice_status[$key]) ? $invoice_status[$key] : '';
+}
+
 function pifw_get_currency_symbol($currency = '') {
 
     $symbols = apply_filters(

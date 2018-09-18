@@ -140,7 +140,10 @@ class AngellEYE_PayPal_Invoicing_Request {
         $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_data_array['id']);
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
-            update_post_meta($post_id, 'paypal_invoicing_data', $invoice);
+            foreach ($paypal_invoice_data_array as $key => $value) {
+                update_post_meta($post_id, $key, $value);
+            }
+            update_post_meta($post_id, 'all_invoice_data', $invoice);
         }
     }
 

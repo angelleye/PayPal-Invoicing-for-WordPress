@@ -146,6 +146,8 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('admin_menu', $plugin_admin, 'angelleye_paypal_invoicing_top_menu');
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_remove_meta', 10, 2);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_add_meta_box', 99, 2);
+        $this->loader->add_action('manage_edit-paypal_invoices_columns', $plugin_admin, 'angelleye_paypal_invoicing_add_paypal_invoices_columns', 10, 2);
+        $this->loader->add_action('manage_paypal_invoices_posts_custom_column', $plugin_admin, 'angelleye_paypal_invoicing_render_paypal_invoices_columns', 2);
     }
 
     /**
