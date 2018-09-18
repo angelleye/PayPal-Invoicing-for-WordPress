@@ -6,26 +6,13 @@
  */
 ?>
 <div class="container-fluid">
-    <br>
-    <h3><?php echo __('Create Invoice', ''); ?></h3>
-    <br>
+    
     <form>
         <div class="pifw_section">
             <div class="row ">
                 <div class="pt30-invoice"></div>
-                <div class="col-4 mt30-invoice">
-                    <div class="input-group mb-3">
-                        <b style="margin-left: 12px;"></b>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile02">
-                            <label class="custom-file-label" for="inputGroupFile02" aria-describedby="inputGroupFileAddon02"><?php echo __('Add company logo', ''); ?></label>
-                        </div>
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="inputGroupFileAddon02"><?php echo __('Upload', ''); ?></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-4 mt30-invoice"></div>
+                
+                <div class="col-8 mt30-invoice"></div>
                 <div class="col-4 mt30-invoice">
                     <div class="form-group row">
                         <label for="inputPassword" class="col-sm-5 col-form-label pifw_lable_left">Invoice number</label>

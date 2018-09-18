@@ -12,7 +12,7 @@ input[type="radio"] {
     margin-bottom: 20px;
     min-height: 365px;
     padding: 7px 15px 15px;
-    
+
 }
 
 .mt30-invoice {
@@ -34,7 +34,7 @@ input[type="radio"] {
     text-align: center;
     border-bottom: none !important;
     border-top: none !important;
-    
+
 }
 .invoice-table input {
     width: 100%;
@@ -42,15 +42,15 @@ input[type="radio"] {
     border-bottom: 1px dashed #ddd;
 }
 .pifw-border-top {
-   
-    
+
+
 }
 .pifw-border-bottom {
     background: #e9ecef;
 }
 
 .pifw-item-name {
-   width: 560px !important;
+    width: 560px !important;
 }
 .pifw-item-qty {
     width: 100px !important;
@@ -60,4 +60,21 @@ input[type="radio"] {
 }
 .pifw-item-tax {
     width: 140px !important;
+}
+
+
+#angelleye_paypal_invoicing_meta_box .handlediv, #angelleye_paypal_invoicing_meta_box .hndle {
+    display: none;
+}
+
+#angelleye_paypal_invoicing_meta_box {
+    border: none;
+}
+
+#angelleye_paypal_invoicing_meta_box .inside {
+    margin: 0;
+
+padding: 0;
+display: block !important;
+font-size: inherit;
 }
