@@ -1,12 +1,12 @@
 <?php
 
 function pifw_get_invoice_status($key) {
-    $invoice_status = array('DRAFT' => 'Draft', 'UNPAID' => 'Unpaid', 'SENT' => 'Unpaid (Sent)', 'SCHEDULED' => 'Scheduled', 'PARTIALLY_PAID' => 'Partially Paid', 'PAYMENT_PENDING' => 'Payment Pending', 'PAID' => 'Paid',
-        'MARKED_AS_PAID' => 'Mark as Paid',
+    $invoice_status = array('DRAFT' => 'Draft', 'UNPAID' => 'Unpaid', 'SENT' => 'Unpaid (Sent)', 'SCHEDULED' => 'Scheduled', 'PARTIALLY_PAID' => 'Partially paid', 'PAYMENT_PENDING' => 'Payment pending', 'PAID' => 'Paid',
+        'MARKED_AS_PAID' => 'Mark as paid',
         'CANCELLED' => 'Cancelled',
         'REFUNDED' => 'Refunded',
-        'PARTIALLY_REFUNDED' => 'Partially Refunded',
-        'MARKED_AS_REFUNDED' => 'Mark as Refunded'
+        'PARTIALLY_REFUNDED' => 'Partially refunded',
+        'MARKED_AS_REFUNDED' => 'Mark as refunded'
     );
     return $invoice_status_value = isset($invoice_status[$key]) ? $invoice_status[$key] : '';
 }
