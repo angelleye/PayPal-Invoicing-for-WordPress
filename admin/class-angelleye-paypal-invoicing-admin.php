@@ -182,7 +182,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_manage_items_content() {
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
-            
+
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -198,7 +198,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_address_book_content() {
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
-            
+
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -207,7 +207,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_business_information_content() {
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
-            
+
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -216,7 +216,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_tax_information_content() {
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
-            
+
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -318,7 +318,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
             } catch (Exception $ex) {
-                
+
             }
         }
     }
@@ -433,15 +433,43 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 echo pifw_get_invoice_status($status);
                 break;
             case 'action' :
-                
+
                 break;
 
             case 'amount' :
                 $total_amount_value = get_post_meta($post->ID, 'total_amount_value', true);
                 $currency = get_post_meta($post->ID, 'currency', true);
                 echo pifw_get_currency_symbol($currency) . $total_amount_value . ' ' . $currency;
-                
+
                 break;
+        }
+    }
+    
+    public function angelleye_paypal_invoicing_paypal_invoices_sortable_columns($columns) {
+        $custom = array(
+            'invoice' => 'number',
+            'recipient' => 'email',
+            'status' => 'status',
+            'amount' => 'total_amount_value'
+        );
+
+        return wp_parse_args($custom, $columns);
+    }
+    
+    public function angelleye_paypal_invoicing_paypal_invoices_column_orderby($query) {
+        global $wpdb;
+        if (is_admin() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices' && isset($_GET['orderby']) && $_GET['orderby'] != 'None') {
+            $orderby = $query->get( 'orderby');
+            if('total_amount_value' == $orderby) {
+                $query->query_vars['orderby'] = 'meta_value_num';
+            } else {
+                $query->query_vars['orderby'] = 'meta_value';
+            }
+            $query->query_vars['meta_key'] = $_GET['orderby'];
+            if (isset($query->query_vars['s']) && empty($query->query_vars['s'])) {
+                $query->is_search = false;
+            }
+            
         }
     }
 
