@@ -1,0 +1,63 @@
+
+input[type="checkbox"],
+input[type="radio"] {
+    margin: 8px 0px 0px -20px;
+}
+
+.pifw_section {
+    background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    margin-bottom: 20px;
+    min-height: 365px;
+    padding: 7px 15px 15px;
+    
+}
+
+.mt30-invoice {
+    margin-top: 20px;
+}
+
+.pifw_lable_left {
+    text-align: right;
+}
+
+.pifw-width-three-zero {
+    width:50px;
+}
+
+
+
+.invoice-table td, .invoice-table th {
+    padding: 0px !important;
+    text-align: center;
+    border-bottom: none !important;
+    border-top: none !important;
+    
+}
+.invoice-table input {
+    width: 100%;
+    font-size: inherit;
+    border-bottom: 1px dashed #ddd;
+}
+.pifw-border-top {
+   
+    
+}
+.pifw-border-bottom {
+    background: #e9ecef;
+}
+
+.pifw-item-name {
+   width: 560px !important;
+}
+.pifw-item-qty {
+    width: 100px !important;
+}
+.pifw-item-price {
+    width: 90px !important;
+}
+.pifw-item-tax {
+    width: 140px !important;
+}
