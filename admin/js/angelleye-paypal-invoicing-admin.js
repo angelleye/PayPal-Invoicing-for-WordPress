@@ -16,7 +16,10 @@
             event.preventDefault();
             var $table = $('.invoice-table'),
             $first_row = $table.find('tbody:last').clone();
+            $first_row.removeClass('first_tbody');
             $table.append($first_row);
         });
+        
+        
     });
 })(jQuery);

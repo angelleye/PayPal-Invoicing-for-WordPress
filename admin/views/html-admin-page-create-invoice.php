@@ -71,17 +71,18 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody class="first_tbody">
                             <tr class="invoice-item-data">
                                 <td><input type="text" placeholder="<?php echo __('Item name'); ?>"></td>
                                 <td><input type="number" placeholder="<?php echo __('0'); ?>"></td>
                                 <td><input type="number" placeholder="<?php echo __('0.00'); ?>"></td>
                                 <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="number" placeholder="<?php echo __('Amount'); ?>"></td>
                                 <td rowspan="2" class="pifw-border-bottom"><label>125.00</label></td>
-                                <td></td>
+                                
                             </tr>
                             <tr class="invoice-detailed">
                                 <td colspan="4"><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
+                                <td><div class="deleteItem" style="width:23px;">&nbsp;</div></td>
                             </tr>
                             <tr class="invoice-end-row"><td colspan="5"></td></tr>
                         </tbody>
@@ -93,6 +94,8 @@
                                     </div>
                                     
                                 </td>
+                                
+                                
                             </tr>
                         </tfoot>
                     </table>

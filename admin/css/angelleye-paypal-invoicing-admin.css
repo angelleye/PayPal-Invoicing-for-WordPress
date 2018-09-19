@@ -121,3 +121,20 @@
 
 }
 
+.invoice-table .deleteItem {
+
+
+    background-image: url(../images/GlobalSprite_midx-3.png);
+    background-repeat: no-repeat;
+    background-position: 0 -5830px;
+    width: 22px;
+    height: 22px;
+    margin-left: 15px !important;
+    margin-right: 8px !important;
+    cursor: pointer;
+
+}
+
+.first_tbody .deleteItem {
+    display: none;
+}
