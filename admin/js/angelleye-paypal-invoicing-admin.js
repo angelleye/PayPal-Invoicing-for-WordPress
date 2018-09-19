@@ -15,18 +15,13 @@
         jQuery('#add_new_item').click(function (event) {
             event.preventDefault();
             var $table = $('.invoice-table'),
-            $first_row = $table.find('tbody:last').clone();
+                    $first_row = $table.find('tbody:last').clone().find('input').val('').end();
             $first_row.removeClass('first_tbody');
             $table.append($first_row);
         });
-       
-        
-        
         jQuery(document).on('click', '.deleteItem', function (event) {
             event.preventDefault();
             jQuery(this).closest('tbody').remove();
-    });
-        
-        
+        });
     });
 })(jQuery);
