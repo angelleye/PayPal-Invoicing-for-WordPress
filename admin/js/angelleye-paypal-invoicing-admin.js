@@ -19,6 +19,13 @@
             $first_row.removeClass('first_tbody');
             $table.append($first_row);
         });
+       
+        
+        
+        jQuery(document).on('click', '.deleteItem', function (event) {
+            event.preventDefault();
+            jQuery(this).closest('tbody').remove();
+    });
         
         
     });
