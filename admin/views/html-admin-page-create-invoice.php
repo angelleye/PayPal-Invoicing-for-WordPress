@@ -66,26 +66,39 @@
                                 <th scope="col" class="pifw-item-name">Description</th>
                                 <th scope="col" class="pifw-item-qty">Quantity</th>
                                 <th scope="col" class="pifw-item-price">Price</th>
-                                <th scope="col" class="pifw-item-tax">Tax</th>
+                                <th scope="col" class="pifw-item-tax" style="text-align: center;">Tax</th>
                                 <th scope="col" class="pifw-item-amount">Amount</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="invoice-item-data">
                                 <td><input type="text" placeholder="<?php echo __('Item name'); ?>"></td>
-                                <td><input type="text" placeholder="<?php echo __('0'); ?>"></td>
-                                <td><input type="text" placeholder="<?php echo __('0.00'); ?>"></td>
-                                <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="text" placeholder="<?php echo __('Amount'); ?>"></td>
+                                <td><input type="number" placeholder="<?php echo __('0'); ?>"></td>
+                                <td><input type="number" placeholder="<?php echo __('0.00'); ?>"></td>
+                                <td><input type="text" style="width: 50%;" placeholder="<?php echo __('Name'); ?>"><input style="width: 50%;" type="number" placeholder="<?php echo __('Amount'); ?>"></td>
                                 <td rowspan="2" class="pifw-border-bottom"><label>125.00</label></td>
+                                <td></td>
                             </tr>
-                            <tr class="pifw-border-bottom">
-                                <td colspan="4" ><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
+                            <tr class="invoice-detailed">
+                                <td colspan="4"><input type="text" aria-label="" placeholder="Enter detailed description (optional)"></td>
                             </tr>
+                            <tr class="invoice-end-row"><td colspan="5"></td></tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                    <div class="add_new_item_box">
+                                        <a href="#" id="add_new_item" tabindex="-1" pa-marked="1"><span></span> Add another line item</a>
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
-
             </div>
+           
         </div>
     </form>
 </div>

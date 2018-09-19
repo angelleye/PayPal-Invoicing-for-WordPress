@@ -15,22 +15,51 @@
 .pifw-width-three-zero {
     width:50px;
 }
-.invoice-table td, .invoice-table th {
+.invoice-table tfoot td {
+    margin-top: 30px;
+    border-top: 0 none !important;
     padding: 0px !important;
-    text-align: center;
+}
+
+.invoice-table tbody + tbody {
+    border-top: 0 none !important;
+}
+
+.invoice-table tbody tr.invoice-end-row > td {
+
+
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    border-top: 0 none;
+    height: 15px;
+}
+
+.invoice-table tbody td {
+    padding: 0px !important;
     border-bottom: none !important;
     border-top: none !important;
 
 }
+.invoice-table th {
+    padding: 4px !important;
+    border-bottom: none !important;
+    border-top: none !important;
+}
 .invoice-table input {
     width: 100%;
     font-size: inherit;
+    box-shadow: none !important;
+}
+
+.invoice-table input[type="number"] {
+    height: inherit !important;
+    line-height: inherit !important;
 }
 .pifw-border-bottom {
     background: #e9ecef;
 }
 .pifw-item-name {
-    width: 560px !important;
+    width: 500px !important;
 }
 .pifw-item-qty {
     width: 100px !important;
@@ -39,7 +68,7 @@
     width: 90px !important;
 }
 .pifw-item-tax {
-    width: 140px !important;
+    width: 200px !important;
 }
 #angelleye_paypal_invoicing_meta_box .handlediv, #angelleye_paypal_invoicing_meta_box .hndle {
     display: none;
@@ -59,5 +88,36 @@
     margin-bottom: 20px;
     min-height: 365px;
     padding: 7px 15px 15px;
+}
+
+.invoice-table #add_new_item {
+    font-size: 15px;
+    text-decoration: none;
+    background-image: url(../images/GlobalSprite_1x-3.png);
+    background-position: 0 -5300px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    margin-left: 3px;
+    outline: 0;
+    display: block;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 21px;
+    font-weight: 400;
+}
+.invoice-table .add_new_item_box a {
+    text-decoration: none;
+    box-shadow: none;
+    color: #004975;
+}
+.invoice-table .add_new_item_box a:hover, .invoice-table .add_new_item_box a:focus {
+    color: #004975;
+}
+.invoice-table .add_new_item_box {
+    background-color: #ecf7fc;
+    border: 1px solid #91d4f0;
+    padding: 10px;
+    margin: 10px 0;
+    margin-right: 0px;
+
 }
 

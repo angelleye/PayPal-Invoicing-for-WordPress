@@ -12,5 +12,11 @@
                 production.show();
             }
         }).change();
+        jQuery('#add_new_item').click(function (event) {
+            event.preventDefault();
+            var $table = $('.invoice-table'),
+            $first_row = $table.find('tbody:last').clone();
+            $table.append($first_row);
+        });
     });
 })(jQuery);
