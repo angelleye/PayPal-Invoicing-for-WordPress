@@ -1,4 +1,4 @@
-@media (max-width: 575.98px) { 
+@media (max-width: 575.98px) {
     .pifw_lable_left {
         text-align: left !important;
     }
@@ -26,8 +26,6 @@
 }
 
 .invoice-table tbody tr.invoice-end-row > td {
-
-
     border-left: 1px solid #fff;
     border-right: 1px solid #fff;
     border-top: 0 none;
@@ -69,6 +67,12 @@
 }
 .pifw-item-tax {
     width: 200px !important;
+}
+.pifw-item-action {
+    width: 50px !important;
+}
+.pifw-item-amount {
+    width: 120px !important;
 }
 #angelleye_paypal_invoicing_meta_box .handlediv, #angelleye_paypal_invoicing_meta_box .hndle {
     display: none;
@@ -118,12 +122,9 @@
     padding: 10px;
     margin: 10px 0;
     margin-right: 0px;
-
 }
 
 .invoice-table .deleteItem {
-
-
     background-image: url(../images/GlobalSprite_midx-3.png);
     background-repeat: no-repeat;
     background-position: 0 -5830px;
@@ -134,7 +135,14 @@
     cursor: pointer;
 
 }
-
 .first_tbody .deleteItem {
     display: none;
+}
+.invoice-table tbody {
+    border-collapse: collapse;
+    border: 1px solid #dee2e6;
+}
+.invoice-table .amount {
+    text-align: center;
+    background: #f6f6f6;
 }
