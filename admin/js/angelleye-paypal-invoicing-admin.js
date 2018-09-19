@@ -23,5 +23,9 @@
             event.preventDefault();
             jQuery(this).closest('tbody').remove();
         });
+        jQuery('#invoice_date').datepicker({
+            format: 'mm/dd/yyyy',
+            startDate: '-3d'
+        });
     });
 })(jQuery);

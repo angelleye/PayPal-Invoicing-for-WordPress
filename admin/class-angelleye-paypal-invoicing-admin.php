@@ -171,6 +171,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_create_invoice_content() {
+        wp_enqueue_script( 'jquery-ui-datepicker' );
+            wp_register_style( 'jquery-ui', 'http://code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css' );
+    wp_enqueue_style( 'jquery-ui' );  
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';

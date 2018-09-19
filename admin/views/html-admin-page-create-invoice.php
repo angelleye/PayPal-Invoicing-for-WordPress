@@ -12,25 +12,25 @@
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', ''); ?></label>
                 <div class="col-sm-7 col-12">
-                    <input type="password" class="form-control" id="invoice_number" placeholder="" name="invoice_number">
+                    <input type="text" class="form-control" id="invoice_number" placeholder="" name="invoice_number">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', ''); ?></label>
                 <div class="col-sm-7">
-                    <input type="password" class="form-control" id="invoice_date" placeholder="" name="invoice_date">
+                    <input type="text" class="form-control hasDatepicker" id="invoice_date" placeholder="" name="invoice_date">
                 </div>
             </div>
             <div class="form-group row">
                 <label for="Reference" class="col-sm-5 col-form-label pifw_lable_left">Reference</label>
                 <div class="col-sm-7">
-                    <input type="password" class="form-control" id="Reference" placeholder="<?php echo __('Such as PO#', ''); ?>" name="reference">
+                    <input type="text" class="form-control" id="Reference" placeholder="<?php echo __('Such as PO#', ''); ?>" name="reference">
                 </div>
             </div>
-            <div class="form-group row">
-                <label for="due_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', ''); ?></label>
+            <div class="form-group row" >
+                <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', ''); ?></label>
                 <div class="col-sm-7">
-                    <select name="invoiceTerms" id="invoiceTerms" class="invterms">
+                    <select id="invoiceTerms" class="form-control" name="invoiceTerms">
                         <option value="noduedate"><?php echo __('No due date', ''); ?></option>
                         <option value="receipt" selected=""><?php echo __('Due on receipt', ''); ?></option>
                         <option name="dueDateTermsSpecified" id="dueDateTermsSpecified" value="specified"><?php echo __('Due on date specified', ''); ?></option>
@@ -41,6 +41,12 @@
                         <option value="net60"><?php echo __('Due in 60 days', ''); ?></option>
                         <option value="net90"><?php echo __('Due in 90 days', ''); ?></option>
                     </select>
+                </div>
+            </div>
+            <div class="form-group row" style="display: none;">
+                 <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control hasDatepicker" id="dueDate" placeholder="<?php echo __('dd/mm/yyyy', ''); ?>" name="dueDate">
                 </div>
             </div>
         </div>
