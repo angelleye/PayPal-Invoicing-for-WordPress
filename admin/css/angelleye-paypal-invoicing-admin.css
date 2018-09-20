@@ -169,7 +169,7 @@
     width: 20px;
 
 }
-#angelleye-paypal-invoicing #memo .memoHead span {
+#angelleye_paypal_invoicing_meta_box #memo .memoHead span {
     cursor: pointer;
 }
 #angelleye-paypal-invoicing .pull-left {
@@ -181,4 +181,18 @@
 #angelleye_paypal_invoicing_meta_box #chars {
     margin-bottom: 0px;
     text-align: right;
+}
+#angelleye-paypal-invoicing {
+    font-size: 15px;
+}
+#angelleye-paypal-invoicing h3 {
+    font-size: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+body {
+    background-color: #f1f1f1 !important;
+}
+#angelleye-paypal-invoicing input {
+    font-size: 15px;
 }
