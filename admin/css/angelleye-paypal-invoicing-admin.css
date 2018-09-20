@@ -3,7 +3,7 @@
         text-align: left !important;
     }
 }
-#apifw_enable_paypal_sandbox {
+#apifw_enable_paypal_sandbox, #apifw_debug_log {
     margin: 8px 0px 0px -20px;
 }
 .mt30-invoice {
@@ -20,23 +20,19 @@
     border-top: 0 none !important;
     padding: 0px !important;
 }
-
 .invoice-table tbody + tbody {
     border-top: 0 none !important;
 }
-
 .invoice-table tbody tr.invoice-end-row > td {
     border-left: 1px solid #fff;
     border-right: 1px solid #fff;
     border-top: 0 none;
     height: 15px;
 }
-
 .invoice-table tbody td {
     padding: 0px !important;
     border-bottom: none !important;
     border-top: none !important;
-
 }
 .invoice-table th {
     padding: 4px !important;
@@ -48,7 +44,6 @@
     font-size: inherit;
     box-shadow: none !important;
 }
-
 .invoice-table input[type="number"] {
     height: inherit !important;
     line-height: inherit !important;
@@ -93,7 +88,6 @@
     min-height: 365px;
     padding: 7px 15px 15px;
 }
-
 .invoice-table #add_new_item {
     font-size: 15px;
     text-decoration: none;
@@ -123,7 +117,6 @@
     margin: 10px 0;
     margin-right: 0px;
 }
-
 .invoice-table .deleteItem {
     background-image: url(../images/GlobalSprite_midx-3.png);
     background-repeat: no-repeat;
@@ -133,26 +126,23 @@
     margin-left: 15px !important;
     margin-right: 8px !important;
     cursor: pointer;
-
 }
-.first_tbody .deleteItem {
+#angelleye_paypal_invoicing_meta_box .first_tbody .deleteItem {
     display: none;
 }
-.invoice-table tbody {
+#angelleye_paypal_invoicing_meta_box .invoice-table tbody {
     border-collapse: collapse;
     border-top: 1px solid #dee2e6;
 }
-.invoice-table .amount {
+#angelleye_paypal_invoicing_meta_box .invoice-table .amount {
     text-align: center;
     background: #f6f6f6;
     vertical-align: middle;
 }
-.sub-total-table {
+#angelleye_paypal_invoicing_meta_box .sub-total-table {
     text-align: right;
 }
-
 #angelleye-paypal-invoicing span.helpIcon {
-
     background-repeat: no-repeat;
     display: inline-block;
     height: 32px;
@@ -161,17 +151,12 @@
     color: #6c7378;
     cursor: pointer;
     font-family: consumer-icons;
-
 }
-
 #angelleye-paypal-invoicing #memo .memoHead {
-
     color: #0079c1;
     font-size: 15px;
-
 }
 #angelleye-paypal-invoicing #memo .memoHead span.addIcon {
-
     background-image: url(../images/GlobalSprite_1x-3.png);
     background-position: 0 -4495px;
     background-repeat: no-repeat;
@@ -184,22 +169,16 @@
     width: 20px;
 
 }
-
 #angelleye-paypal-invoicing #memo .memoHead span {
-
     cursor: pointer;
-
 }
-
 #angelleye-paypal-invoicing .pull-left {
-
     float: left !important;
-
 }
-.memo-p {
+#angelleye_paypal_invoicing_meta_box .memo-p {
     margin-bottom: 0px;
 }
-#chars {
+#angelleye_paypal_invoicing_meta_box #chars {
     margin-bottom: 0px;
     text-align: right;
 }
