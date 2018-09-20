@@ -21,7 +21,14 @@ $first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name']
 $last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : $this->last_name;
 $compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : $this->compnay_name;
 $phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : $this->phone_number;
-$address = isset($apifw_setting['address']) ? $apifw_setting['address'] : $this->address;
+
+$address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : $this->address_line_1;
+$address_line_2 = isset($apifw_setting['address_line_2']) ? $apifw_setting['address_line_2'] : $this->address_line_2;
+$city = isset($apifw_setting['city']) ? $apifw_setting['city'] : $this->city;
+$post_code = isset($apifw_setting['post_code']) ? $apifw_setting['post_code'] : $this->post_code;
+$state = isset($apifw_setting['state']) ? $apifw_setting['state'] : $this->state;
+$country = isset($apifw_setting['country']) ? $apifw_setting['country'] : $this->country;
+
 $shipping_rate = isset($apifw_setting['shipping_rate']) ? $apifw_setting['shipping_rate'] : $this->shipping_rate;
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : $this->note_to_recipient;
@@ -33,7 +40,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
         <div class="row">
             <div class="col-sm-12">
                 <form method="POST">
-                    <h1><?php echo __('PayPal API Credentials', 'angelleye-paypal-invoicing'); ?></h1><br><br>
+                    <h3><?php echo __('PayPal API Credentials', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <div class="col-sm-2"><?php echo __('PayPal Sandbox', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-4">
@@ -83,7 +90,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                             <input type="password" class="form-control" id="apifw_secret" placeholder="<?php echo __('Secret', 'angelleye-paypal-invoicing'); ?>" name="secret" value="<?php echo $secret; ?>">
                         </div>
                     </div>
-                    <br><h1><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h1><br><br>
+                    <h3><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <label for="apifw_first_name" class="col-sm-2 col-form-label"><?php echo __('First Name', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
@@ -102,20 +109,50 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                             <input type="text" class="form-control" id="apifw_compnay_name" placeholder="<?php echo __('Company Name', 'angelleye-paypal-invoicing'); ?>" name="compnay_name" value="<?php echo $compnay_name; ?>">
                         </div>
                     </div>
-                   
                     <div class="form-group row">
                         <label for="apifw_phone_number" class="col-sm-2 col-form-label"><?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" name="phone_number" value="<?php echo $phone_number; ?>">
                         </div>
                     </div>
+                    <h3><?php echo __('Merchant / Business Address', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
-                        <label for="apifw_address" class="col-sm-2 col-form-label"><?php echo __('Address', 'angelleye-paypal-invoicing'); ?></label>
+                        <label for="apifw_address_line_1" class="col-sm-2 col-form-label"><?php echo __('Address line 1', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="apifw_address" placeholder="<?php echo __('Address', 'angelleye-paypal-invoicing'); ?>" name="address" value="<?php echo $address; ?>">
+                            <input type="text" class="form-control" id="apifw_address_line_1" placeholder="<?php echo __('House number and street name', 'angelleye-paypal-invoicing'); ?>" name="address_line_1" value="<?php echo $address_line_1; ?>">
                         </div>
                     </div>
-                    <br><h1><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h1><br><br>
+                    <div class="form-group row">
+                        <label for="apifw_address_line_2" class="col-sm-2 col-form-label"><?php echo __('Address line 2', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_address_line_2" placeholder="<?php echo __('Apartment, suite, unit etc.', 'angelleye-paypal-invoicing'); ?>" name="address_line_2" value="<?php echo $address_line_2; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_city" class="col-sm-2 col-form-label"><?php echo __('City', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_city" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="city" value="<?php echo $city; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_post_code" class="col-sm-2 col-form-label"><?php echo __('Postcode / ZIP', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_post_code" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="post_code" value="<?php echo $post_code; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_state" class="col-sm-2 col-form-label"><?php echo __('State / County', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_state" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="state" value="<?php echo $state; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_country" class="col-sm-2 col-form-label"><?php echo __('Country', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_country" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="country" value="<?php echo $country; ?>">
+                        </div>
+                    </div>
+                    <h3><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <label for="apifw_shipping_rate" class="col-sm-2 col-form-label"><?php echo __('Shipping Rate', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
@@ -140,7 +177,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                             <input type="text" class="form-control" id="apifw_terms_and_condition" placeholder="<?php echo __('Terms and Conditions', 'angelleye-paypal-invoicing'); ?>" name="terms_and_condition" value="<?php echo $terms_and_condition; ?>">
                         </div>
                     </div>
-                    <br><h1><?php echo __('Log Event', 'angelleye-paypal-invoicing'); ?></h1><br><br>
+                    <h3><?php echo __('Log Event', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <div class="col-sm-2"><?php echo __('Debug Log', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-10">
@@ -155,7 +192,6 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                                 </small>
                             </div>
                         </div>
-
                     </div>
                     <div class="form-group row">
                         <label for="apifw_delete_logs" class="col-sm-2 col-form-label"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></label>

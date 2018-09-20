@@ -59,7 +59,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->last_name = isset($woocommerce_pifw_paypal_invoice_settings['last_name']) ? $woocommerce_pifw_paypal_invoice_settings['last_name'] : '';
         $this->compnay_name = isset($woocommerce_pifw_paypal_invoice_settings['compnay_name']) ? $woocommerce_pifw_paypal_invoice_settings['compnay_name'] : '';
         $this->phone_number = isset($woocommerce_pifw_paypal_invoice_settings['phone_number']) ? $woocommerce_pifw_paypal_invoice_settings['phone_number'] : '';
-        $this->address = isset($woocommerce_pifw_paypal_invoice_settings['address']) ? $woocommerce_pifw_paypal_invoice_settings['address'] : '';
+        
+        $this->address_line_1 = isset($woocommerce_pifw_paypal_invoice_settings['address_line_1']) ? $woocommerce_pifw_paypal_invoice_settings['address_line_1'] : '';
+        $this->address_line_2 = isset($woocommerce_pifw_paypal_invoice_settings['address_line_2']) ? $woocommerce_pifw_paypal_invoice_settings['address_line_2'] : '';
+        $this->city = isset($woocommerce_pifw_paypal_invoice_settings['city']) ? $woocommerce_pifw_paypal_invoice_settings['city'] : '';
+        $this->post_code = isset($woocommerce_pifw_paypal_invoice_settings['post_code']) ? $woocommerce_pifw_paypal_invoice_settings['post_code'] : '';
+        $this->state = isset($woocommerce_pifw_paypal_invoice_settings['state']) ? $woocommerce_pifw_paypal_invoice_settings['state'] : '';
+        $this->country = isset($woocommerce_pifw_paypal_invoice_settings['country']) ? $woocommerce_pifw_paypal_invoice_settings['country'] : '';
+        
         $this->shipping_rate = isset($woocommerce_pifw_paypal_invoice_settings['shipping_rate']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_rate'] : '';
         $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : '';
         $this->note_to_recipient = isset($woocommerce_pifw_paypal_invoice_settings['note_to_recipient']) ? $woocommerce_pifw_paypal_invoice_settings['note_to_recipient'] : '';
@@ -258,7 +265,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'sandbox_paypal_email', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address', 'shipping_rate', 'tax_rate', 'note_to_recipient', 'terms_and_condition', 'debug_log');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'sandbox_paypal_email', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'tax_rate', 'note_to_recipient', 'terms_and_condition', 'debug_log');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = $_POST[$value];
