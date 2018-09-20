@@ -95,7 +95,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
      */
     public function enqueue_scripts() {
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/angelleye-paypal-invoicing-admin.js', array( 'jquery', 'jquery-ui-datepicker'), $this->version, false);
-        wp_register_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.min.js', null, null, false);
+        wp_register_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.bundle.min.js', null, null, false);
     }
 
     public function angelleye_paypal_invoicing_sub_menu_manage_invoices() {

@@ -140,10 +140,66 @@
 }
 .invoice-table tbody {
     border-collapse: collapse;
-    border: 1px solid #dee2e6;
+    border-top: 1px solid #dee2e6;
 }
 .invoice-table .amount {
     text-align: center;
     background: #f6f6f6;
     vertical-align: middle;
+}
+.sub-total-table {
+    text-align: right;
+}
+
+#angelleye-paypal-invoicing span.helpIcon {
+
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-left: 10px;
+    color: #6c7378;
+    cursor: pointer;
+    font-family: consumer-icons;
+
+}
+
+#angelleye-paypal-invoicing #memo .memoHead {
+
+    color: #0079c1;
+    font-size: 15px;
+
+}
+#angelleye-paypal-invoicing #memo .memoHead span.addIcon {
+
+    background-image: url(../images/GlobalSprite_1x-3.png);
+    background-position: 0 -4495px;
+    background-repeat: no-repeat;
+    display: block;
+    float: left;
+    height: 32px;
+    margin-left: 0;
+    margin-top: -3px;
+    margin-right: 5px;
+    width: 20px;
+
+}
+
+#angelleye-paypal-invoicing #memo .memoHead span {
+
+    cursor: pointer;
+
+}
+
+#angelleye-paypal-invoicing .pull-left {
+
+    float: left !important;
+
+}
+.memo-p {
+    margin-bottom: 0px;
+}
+#chars {
+    margin-bottom: 0px;
+    text-align: right;
 }

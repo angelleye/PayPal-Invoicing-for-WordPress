@@ -13,15 +13,20 @@
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
-            
             if (jQuery(this).val() === 'specified') {
                 jQuery('#dueDate_box').show();
             } else {
                 jQuery('#dueDate_box').hide();
             }
         }).change();
-        
-        
+        jQuery('#allowPartialPayments').change(function () {
+            if (jQuery(this).is(':checked')) {
+                jQuery('.allow_partial_payment_content_box').show();
+            } else {
+                jQuery('.allow_partial_payment_content_box').hide();
+            }
+        }).change();
+
         jQuery('#add_new_item').click(function (event) {
             event.preventDefault();
             var $table = $('.invoice-table'),
@@ -34,9 +39,20 @@
             jQuery(this).closest('tbody').remove();
         });
         jQuery('#invoice_date, #dueDate').datepicker();
-        
+        jQuery('[data-toggle="tooltip"]').tooltip();
+        jQuery(".memoHead").click(function () {
+            jQuery(".memoDetail").show();
+            jQuery(".memoHead").hide();
+            
+        });
+        jQuery("#memoHideLink").click(function (event) {
+            event.preventDefault();
+            jQuery(".memoDetail").hide();
+            jQuery(".memoHead").show();
+        });
+
     });
-    
+
 })(jQuery);
 
 
