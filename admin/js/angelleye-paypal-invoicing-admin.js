@@ -12,6 +12,16 @@
                 production.show();
             }
         }).change();
+        jQuery('#invoiceTerms').change(function () {
+            
+            if (jQuery(this).val() === 'specified') {
+                jQuery('#dueDate_box').show();
+            } else {
+                jQuery('#dueDate_box').hide();
+            }
+        }).change();
+        
+        
         jQuery('#add_new_item').click(function (event) {
             event.preventDefault();
             var $table = $('.invoice-table'),
@@ -23,12 +33,10 @@
             event.preventDefault();
             jQuery(this).closest('tbody').remove();
         });
-        jQuery('#invoice_date').datepicker();
+        jQuery('#invoice_date, #dueDate').datepicker();
         
     });
     
 })(jQuery);
 
-jQuery(document).ready(function($) {
-    $('.hasDatepicker').datepicker();
-});
+

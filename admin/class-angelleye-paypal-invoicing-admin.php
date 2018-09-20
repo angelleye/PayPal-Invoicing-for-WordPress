@@ -85,6 +85,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function enqueue_styles() {
         wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/angelleye-paypal-invoicing-admin.css', array(), $this->version, 'all');
         wp_register_style($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'css/bootstrap.min.css', array(), null, 'all');
+        wp_enqueue_style('jquery-ui-style', plugin_dir_url(__FILE__) . 'css/jquery-ui/jquery-ui.min.css', array(), $this->version);
     }
 
     /**
@@ -171,7 +172,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_create_invoice_content() {
-       
+        wp_enqueue_script('jquery-ui-style');
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';

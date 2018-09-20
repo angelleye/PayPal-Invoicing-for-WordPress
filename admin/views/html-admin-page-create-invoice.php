@@ -18,7 +18,7 @@
             <div class="form-group row">
                 <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', ''); ?></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control hasDatepicker" id="invoice_date" placeholder="" name="invoice_date">
+                    <input type="text" class="form-control" id="invoice_date" placeholder="" name="invoice_date">
                 </div>
             </div>
             <div class="form-group row">
@@ -43,10 +43,10 @@
                     </select>
                 </div>
             </div>
-            <div class="form-group row" style="display: none;">
+            <div class="form-group row" id="dueDate_box">
                  <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control hasDatepicker" id="dueDate" placeholder="<?php echo __('dd/mm/yyyy', ''); ?>" name="dueDate">
+                    <input type="text" class="form-control" id="dueDate" placeholder="<?php echo __('dd/mm/yyyy', ''); ?>" name="dueDate">
                 </div>
             </div>
         </div>
