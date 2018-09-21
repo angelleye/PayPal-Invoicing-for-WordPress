@@ -37,22 +37,106 @@
         jQuery(document).on('click', '.deleteItem', function (event) {
             event.preventDefault();
             jQuery(this).closest('tbody').remove();
+            count_sub_total();
         });
-        jQuery('#invoice_date, #dueDate').datepicker();
+        jQuery('#invoice_date, #dueDate').datepicker({dateFormat: 'dd/mm/yy'});
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
             jQuery(".memoDetail").show();
             jQuery(".memoHead").hide();
-            
+
         });
         jQuery("#memoHideLink").click(function (event) {
             event.preventDefault();
             jQuery(".memoDetail").hide();
             jQuery(".memoHead").show();
         });
+        jQuery("#memoHideLink").click(function (event) {
+            event.preventDefault();
+            jQuery(".memoDetail").hide();
+            jQuery(".memoHead").show();
+        });
+        jQuery(document).on('change blur keyup', '#angelleye-paypal-invoicing input', function (event) {
+            count_sub_total();
+        });
+        function count_sub_total() {
+            var total = 0;
+            var i = 0;
+            jQuery('input[name="item_name[]"]').each(function () {
+                jQuery('#tax_tr_' + (i + 1)).html('');
+                var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
+                if (isNaN(qty)) {
+                    tax = 0;
+                }
+                var price = parseFloat(jQuery(this).parent().next().next().children('input[type="text"]').val()).toFixed(2);
+                if (isNaN(price)) {
+                    tax = 0.00;
+                }
+                var tax_name = jQuery(this).parent().next().next().next().children('input[type="text"]').val();
+                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children('input[type="text"]').val());
+                if (isNaN(tax)) {
+                    tax = 0.00;
+                }
+                var amount = (qty * price);
+                var temp_amount = ((amount * tax) / 100);
+                if (isNaN(amount)) {
+                    amount = 0.00;
+                }
+                
+                if (jQuery('#tax_tr_' + i).length) {
+                    if (tax > 0 && jQuery.isNumeric(temp_amount)) {
+                        jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
+                    } else {
+                        jQuery('#tax_tr_' + i).html('');
+                    }
+                } else {
+                    var next_id = 'tax_tr_' + i;
+                    jQuery('#tax_tr_' + (i - 1)).after('<tr class="dynamic_tax" id="' + next_id + '"></tr>');
+                    if (tax > 0 && jQuery.isNumeric(temp_amount)) {
+                        jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
+                    } else {
+                        jQuery('#tax_tr_' + i).html('');
+                    }
+                }
+                jQuery(this).parent().next().next().next().next().next().html('$' + amount.toFixed(2));
+                console.log("qty: " + qty + "  price: " + price + " tax: " + tax + " tax_name: " + tax_name);
+                total = total + amount;
+                i++;
+            });
+            jQuery('.itemSubTotal').text('$' + total.toFixed(2));
+            countFinalTotal(jQuery('input[name="invDiscount"]').val());
+        }
+        function countFinalTotal(val) {
+            var total = Number(jQuery('.itemSubTotal').text().replace(/[^0-9\.-]+/g, ""));
+            var discountBase = jQuery('select[name="invoiceDiscType"]').val();
+            var discount = parseFloat(val);
+            var discountAmt = 0;
+            if (discountBase == 'percentage') {
+                discountAmt = parseFloat((total * discount) / 100);
+            } else if (discountBase == 'dollar') {
+                discountAmt = parseFloat(val);
+            }
+            if (isNaN(discountAmt)) {
+                discountAmt = 0.00;
+            }
+            jQuery('.invoiceDiscountAmount').text('$' + discountAmt.toFixed(2));
 
+            var shippingAmount = parseFloat(jQuery('input[name="shippingAmount"]').val());
+            if (isNaN(shippingAmount))
+            {
+                shippingAmount = 0.00;
+            }
+            jQuery('.shippingAmountTd').text('$' + shippingAmount.toFixed(2));
+            var taxs = 0;
+            jQuery('.tax_to_add').each(function () {
+                taxs = taxs + parseFloat(jQuery(this).html());
+            });
+
+            var finalTotal = total - discountAmt + shippingAmount + taxs;
+
+            jQuery('.finalTotal').text('$' + finalTotal.toFixed(2) + ' USD');
+        }
     });
-
 })(jQuery);
 
 

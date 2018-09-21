@@ -150,6 +150,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('manage_paypal_invoices_posts_custom_column', $plugin_admin, 'angelleye_paypal_invoicing_render_paypal_invoices_columns', 2);
         $this->loader->add_filter('manage_edit-paypal_invoices_sortable_columns', $plugin_admin , 'angelleye_paypal_invoicing_paypal_invoices_sortable_columns');
         $this->loader->add_action('pre_get_posts', $plugin_admin, 'angelleye_paypal_invoicing_paypal_invoices_column_orderby');
+        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save' );
     }
 
     /**

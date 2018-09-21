@@ -49,7 +49,7 @@ class AngellEYE_PayPal_Invoicing_Public {
      * @since    1.0.0
      */
     public function enqueue_styles() {
-        wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/angelleye-paypal-invoicing-public.css', array(), $this->version, 'all');
+        wp_register_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/angelleye-paypal-invoicing-public.css', array(), $this->version, 'all');
     }
 
     /**
@@ -58,7 +58,7 @@ class AngellEYE_PayPal_Invoicing_Public {
      * @since    1.0.0
      */
     public function enqueue_scripts() {
-        wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/angelleye-paypal-invoicing-public.js', array('jquery'), $this->version, false);
+        wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/angelleye-paypal-invoicing-public.js', array('jquery'), $this->version, false);
     }
     
     public function pifw_woocommerce_payment_gateways($default_gateway) {

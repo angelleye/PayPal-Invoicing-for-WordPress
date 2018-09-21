@@ -4,15 +4,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+$apifw_setting = get_option('apifw_setting');
+$note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : $this->note_to_recipient;
+$terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : $this->terms_and_condition;
+$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : $this->shipping_amount;
+$tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
+$tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
 ?>
 <div class="container-fluid pifw_section" id="angelleye-paypal-invoicing">
+    <div class="row">
+        <div class="col-sm-12 col-12" style="float: right;">
+            <div class="form-group row paypal-invoice-create-action-box">
+                <button class="btn btn-primary" type="submit" id="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 mt30-invoice col-sm-8"></div>
         <div class="col-12 mt30-invoice col-sm-4">
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', ''); ?> </label>
-                <div class="col-sm-6 col-11">
-                    <input type="text" class="form-control" id="invoice_number" placeholder="" name="invoice_number">
+                <div class="col-sm-6 col-11 ">
+                    <input type="text" class="form-control" value="<?php echo isset($this->response['number']) ? $this->response['number'] : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("Invoices are numbered automatically beginning with invoice number 0001. You can customize the invoice number any way you'd like, and the next number will increment by 1.", ''); ?>"></span>
@@ -21,22 +34,22 @@
             <div class="form-group row">
                 <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', ''); ?></label>
                 <div class="col-sm-6 col-11">
-                    <input type="text" class="form-control" id="invoice_date" placeholder="" name="invoice_date">
+                    <input type="text" class="form-control" value="<?php echo date("d/m/Y"); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("You can select any invoice date. This invoice will be sent today or on a future date you choose.", ''); ?>"></span>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="Reference" class="col-sm-5 col-form-label pifw_lable_left">Reference</label>
+                <label for="reference" class="col-sm-5 col-form-label pifw_lable_left">Reference</label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="Reference" placeholder="<?php echo __('Such as PO#', ''); ?>" name="reference">
+                    <input type="text" class="form-control" id="reference" placeholder="<?php echo __('Such as PO#', ''); ?>" name="reference" required>
                 </div>
             </div>
             <div class="form-group row" >
                 <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', ''); ?></label>
                 <div class="col-sm-7">
-                    <select id="invoiceTerms" class="form-control" name="invoiceTerms">
+                    <select id="invoiceTerms" class="form-control" name="invoiceTerms" required>
                         <option value="noduedate"><?php echo __('No due date', ''); ?></option>
                         <option value="receipt" selected=""><?php echo __('Due on receipt', ''); ?></option>
                         <option name="dueDateTermsSpecified" id="dueDateTermsSpecified" value="specified"><?php echo __('Due on date specified', ''); ?></option>
@@ -62,7 +75,7 @@
             <div class="form-group row">
                 <label for="inputPassword" class="col-sm-2 col-form-label pifw_lable_left"><b>Bill to:</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword" placeholder="">
+                    <input type="text" class="form-control" id="inputPassword" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -83,8 +96,8 @@
                 <thead>
                     <tr>
                         <th scope="col" class="pifw-item-name"><?php echo __('Description', ''); ?></th>
-                        <th scope="col" class="pifw-item-qty"><?php __('Quantity', ''); ?></th>
-                        <th scope="col" class="pifw-item-price"><?php __('Price', ''); ?></th>
+                        <th scope="col" class="pifw-item-qty"><?php echo __('Quantity', ''); ?></th>
+                        <th scope="col" class="pifw-item-price"><?php echo __('Price', ''); ?></th>
                         <th colspan="2" scope="col" class="pifw-item-tax" style="text-align: center;"><?php echo __('Tax', ''); ?></th>
                         <th  scope="col" class="pifw-item-amount"><?php echo __('Amount', ''); ?></th>
                         <th scope="col" class="pifw-item-action"></th>
@@ -92,11 +105,11 @@
                 </thead>
                 <tbody class="first_tbody">
                     <tr class="invoice-item-data">
-                        <td><input type="text" placeholder="<?php echo __('Item name'); ?>"></td>
-                        <td><input type="number" placeholder="<?php echo __('0'); ?>"></td>
-                        <td><input type="number" placeholder="<?php echo __('0.00'); ?>"></td>
-                        <td><input type="text" placeholder="<?php echo __('Name'); ?>"></td>
-                        <td><input type="number" placeholder="<?php echo __('Amount'); ?>"></td>
+                        <td><input name="item_name[]" value="" id="item_name" type="text" placeholder="<?php echo __('Item name'); ?>" required></td>
+                        <td><input name="item_qty[]" value="" id="item_qty" type="text" placeholder="<?php echo __('0'); ?>" required></td>
+                        <td><input name="item_amt[]" value="" id="item_amt" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
+                        <td><input name="item_txt_name[]" value="" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name'); ?>" required></td>
+                        <td><input name="item_txt_rate[]" value="" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount'); ?>" required></td>
                         <td rowspan="2" class="amount">0.00</td>
                         <td></td>
                     </tr>
@@ -168,9 +181,9 @@
                             <tr>
                                 <th><?php echo __('Shipping', ''); ?></th>
                                 <td colspan="2">
-                                    <input name="shippingAmount" id="shippingAmount" class="text short-field" value="0.00" type="text">
+                                    <input name="shippingAmount" id="shippingAmount" class="text short-field" value="<?php echo $shipping_amount; ?>" type="text">
                                 </td>
-                                <td class="grey-bg shippingAmountTd">$15.00</td>
+                                <td class="grey-bg shippingAmountTd"><?php echo $shipping_amount; ?></td>
                             </tr>
                             <tr class="dynamic_tax" id="tax_tr_0"><td colspan="3"><b>Tax (2.5%) </b>GST</td><td>$<span class="tax_to_add">0.00</span></td></tr>
                             <tr class="grey-bg">
@@ -185,13 +198,14 @@
     </div>
     <div class="row mt30-invoice">
         <div class="col-sm-6">
-            <div class="form-group"><label for="terms"><?php echo __('Note to recipient', ''); ?></label><textarea placeholder="<?php echo __('Such as “Thank you for your business”', ''); ?>" rows="5" class="form-control" name="notes" id="notes"></textarea><p class="help-block text-right" id="notesChars">3837</p></div>
+            <div class="form-group"><label for="terms"><?php echo __('Note to recipient', ''); ?></label><textarea placeholder="<?php echo __('Such as Thank you for your business', ''); ?>" rows="5" class="form-control" name="notes" id="notes"><?php echo $note_to_recipient; ?></textarea><p class="help-block text-right" id="notesChars">3837</p></div>
         </div>
         <div class="col-sm-6">
-            <div class="form-group"><label for="notes"><?php echo __('Terms and conditions', ''); ?></label><textarea placeholder="<?php echo __('Include your return or cancelation policy', ''); ?>" rows="5" class="form-control" name="terms" id="terms"></textarea><p class="help-block text-right" id="termsChars">3991</p></div>
+            <div class="form-group"><label for="notes"><?php echo __('Terms and conditions', ''); ?></label><textarea placeholder="<?php echo __('Include your return or cancelation policy', ''); ?>" rows="5" class="form-control" name="terms" id="terms"><?php echo $terms_and_condition; ?></textarea><p class="help-block text-right" id="termsChars">3991</p></div>
         </div>
     </div>
-    <div class="col-xs-6">
+    <div class="row">
+        <div class="col-sm-6">
         <div id="memo">
             <div class="memoHead" style="">
                 <span class="addIcon" tabindex="0" id="memoAddButton"></span>
@@ -207,4 +221,13 @@
             </div>
         </div>
     </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-12" style="float: right;">
+            <div class="form-group row paypal-invoice-create-action-box">
+                    <button class="btn btn-primary" type="submit"><?php echo __('Send Invoice', ''); ?></button>
+                </div>
+        </div>
+    </div>
 </div>
+    

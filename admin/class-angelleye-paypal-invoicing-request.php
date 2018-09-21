@@ -95,6 +95,15 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $ex->getMessage();
         }
     }
+    
+    public function angelleye_paypal_invoicing_get_next_invoice_number() {
+        try {
+            $invoices = Invoice::generateNumber($this->angelleye_paypal_invoicing_getAuth());
+            return json_decode($invoices, true);
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 
     public function angelleye_paypal_invoicing_sync_invoicing_with_wp() {
         $page = 0;
@@ -147,11 +156,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_exist_post_by_title($ipn_txn_id) {
+    public function angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_txn_id) {
 
         global $wpdb;
 
-        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = %s ", $ipn_txn_id, 'paypal_invoices'));
+        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = %s ", $paypal_invoice_txn_id, 'paypal_invoices'));
 
         if (empty($post_data)) {
 

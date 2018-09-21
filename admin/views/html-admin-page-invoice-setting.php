@@ -30,7 +30,9 @@ $state = isset($apifw_setting['state']) ? $apifw_setting['state'] : $this->state
 $country = isset($apifw_setting['country']) ? $apifw_setting['country'] : $this->country;
 
 $shipping_rate = isset($apifw_setting['shipping_rate']) ? $apifw_setting['shipping_rate'] : $this->shipping_rate;
+$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : $this->shipping_amount;
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
+$tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : $this->note_to_recipient;
 $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : $this->terms_and_condition;
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : $this->debug_log;
@@ -160,6 +162,18 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="apifw_shipping_amount" class="col-sm-2 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_shipping_amount" placeholder="<?php echo __('0.00', 'angelleye-paypal-invoicing'); ?>" name="shipping_amount" value="<?php echo $shipping_amount; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_tax_name" class="col-sm-2 col-form-label"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control" id="apifw_tax_name" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="tax_name" value="<?php echo $tax_name; ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="apifw_tax_rate" class="col-sm-2 col-form-label"><?php echo __('Tax Rate', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control" id="apifw_tax_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" name="tax_rate" value="<?php echo $tax_rate; ?>">
@@ -188,7 +202,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                                     <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
                                 </label>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
-                                    <?php echo __('Log PayPal events, inside', 'paypal-ipn'); ?> <code><?php echo PAYPAL_INVOICE_LOG_DIR; ?> </code>
+                                    <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo PAYPAL_INVOICE_LOG_DIR; ?> </code>
                                 </small>
                             </div>
                         </div>

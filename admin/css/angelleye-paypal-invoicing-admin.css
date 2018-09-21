@@ -42,7 +42,7 @@
 .invoice-table input {
     width: 100%;
     font-size: inherit;
-    box-shadow: none !important;
+    
 }
 .invoice-table input[type="number"] {
     height: inherit !important;
@@ -195,4 +195,13 @@ body {
 }
 #angelleye-paypal-invoicing input {
     font-size: 15px;
+}
+.paypal-invoice-create-action-box {
+    float: right;
+    margin-top: 22px;
+    margin-right: 0px;
+}
+
+.was-submited input:invalida {
+    border: 2px solid red;
 }
