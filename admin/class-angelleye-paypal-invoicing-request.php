@@ -147,11 +147,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_exist_post_by_title($ipn_txn_id) {
+    public function angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_txn_id) {
 
         global $wpdb;
 
-        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = %s ", $ipn_txn_id, 'paypal_invoices'));
+        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = %s ", $paypal_invoice_txn_id, 'paypal_invoices'));
 
         if (empty($post_data)) {
 

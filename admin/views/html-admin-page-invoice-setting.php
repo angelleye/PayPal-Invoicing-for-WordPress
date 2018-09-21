@@ -188,7 +188,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                                     <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
                                 </label>
                                 <small id="passwordHelpBlock" class="form-text text-muted">
-                                    <?php echo __('Log PayPal events, inside', 'paypal-ipn'); ?> <code><?php echo PAYPAL_INVOICE_LOG_DIR; ?> </code>
+                                    <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo PAYPAL_INVOICE_LOG_DIR; ?> </code>
                                 </small>
                             </div>
                         </div>
