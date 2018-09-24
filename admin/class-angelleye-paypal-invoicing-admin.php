@@ -103,7 +103,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
      * @since    1.0.0
      */
     public function enqueue_scripts() {
-        wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/angelleye-paypal-invoicing-admin.js', array( 'jquery', 'jquery-ui-datepicker'), $this->version, false);
+        wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/angelleye-paypal-invoicing-admin.js', array('jquery', 'jquery-ui-datepicker'), $this->version, false);
         wp_register_script($this->plugin_name . 'bootstrap', plugin_dir_url(__FILE__) . 'js/bootstrap.bundle.min.js', null, null, false);
     }
 
@@ -469,17 +469,29 @@ class AngellEYE_PayPal_Invoicing_Admin {
             wp_dequeue_script('autosave');
         }
     }
-    
+
     public function angelleye_paypal_invoicing_create_invoice_hook($post_ID, $post, $update) {
-        if($update == false) {
+        if ($update == false) {
             return false;
         }
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
-            $this->response = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);
-           // include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-template_list.php';
+            $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);
+            if (!empty($invoice_id) && $invoice_id != false) {
+                $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_ID);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1024'));
+                exit();
+            }
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
     }
+    
+    public function angelleye_paypal_invoicing_display_admin_notice() {
+        if( !empty($_GET['message']) && $_GET['message'] == '1024') {
+            echo "<div class='notice notice-success is-dismissible'><p>We've sent your invoice.</p></div>";
+        }
+    }
+
 }

@@ -557,122 +557,154 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update) {
-        $post_data = $_REQUEST;
-        $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date("d/m/Y");
-        $invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
-        $invoice_date = $invoice_date_obj->format('Y-m-d e');
-        $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
-        $reference = isset($post_data['reference']) ? $post_data['reference'] : '';
-        $number = isset($post_data['invoice_number']) ? $post_data['invoice_number'] : '';
-        $notes = isset($post_data['notes']) ? $post_data['notes'] : '';
-        $terms = isset($post_data['terms']) ? $post_data['terms'] : '';
-        $merchant_memo = isset($post_data['memodesc']) ? $post_data['memodesc'] : '';
-        $bill_to = isset($post_data['bill_to']) ? $post_data['bill_to'] : '';
-        $cc_to = isset($post_data['cc_to']) ? $post_data['cc_to'] : '';
-        $shippingAmount = isset($post_data['shippingAmount']) ? $post_data['shippingAmount'] : 0.00;
-        $invoiceDiscType = isset($post_data['invoiceDiscType']) ? $post_data['invoiceDiscType'] : 'percentage';
-        $invDiscount = isset($post_data['invDiscount']) ? $post_data['invDiscount'] : 0;
-        $allowPartialPayments = isset($post_data['allowPartialPayments']) ? $post_data['allowPartialPayments'] : 'no';
-        $minimumDueAmount = isset($post_data['minimumDueAmount']) ? $post_data['minimumDueAmount'] : 0.00;
-
-        $invoice = new Invoice();
-        $invoice->setReference($reference);
-        $invoice->setNumber($number);
-        $invoice->setInvoiceDate($invoice_date);
-        $invoice->setTerms($terms);
-        $invoice->setMerchantMemo($merchant_memo);
-
-        $participant = new Participant();
-        $participant->setEmail($cc_to);
-        $invoice->addCcInfo($participant);
-
-        $invoice
-                ->setMerchantInfo(new MerchantInfo())
-                ->setBillingInfo(array(new BillingInfo()))
-                ->setNote($notes)
-                ->setPaymentTerm(new PaymentTerm())
-                ->setShippingInfo(new ShippingInfo());
-        $invoice->getMerchantInfo()
-                ->setEmail($this->rest_paypal_email)
-                ->setAddress(new Address());
-        $invoice->getMerchantInfo()->getAddress()
-                ->setLine1($this->address_line_1)
-                ->setLine1($this->address_line_2)
-                ->setCity($this->city)
-                ->setState($this->state)
-                ->setPostalCode($this->post_code)
-                ->setCountryCode($this->country);
-        $billing = $invoice->getBillingInfo();
-        $billing[0]
-                ->setEmail($bill_to);
-        $billing[0]->setAddress(new InvoiceAddress());
-
-        $invoice->getShippingInfo()->setAddress(new InvoiceAddress());
-
-        $items = array();
-        $i = 0;
-        if (!empty($post_data['item_name'])) {
-            foreach ($post_data['item_name'] as $key => $order_items) {
-                $items[$key] = new InvoiceItem();
-                $items[$key]
-                        ->setName($order_items)
-                        ->setQuantity($post_data['item_qty'][$key])
-                        ->setDescription($post_data['item_description'][$key])
-                        ->setUnitPrice(new Currency());
-                $items[$key]->getUnitPrice()
-                        ->setCurrency('USD')
-                        ->setValue($post_data['item_amt'][$key]);
-
-                $tax = new \PayPal\Api\Tax();
-                $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
-                $items[$key]->setTax($tax);
-                $i = $i + 1;
-            }
-        }
-
-        $shipping_cost = new ShippingCost();
-        $shipping_currency = new Currency();
-        $shipping_currency->setCurrency('USD');
-        $shipping_currency->setValue($shippingAmount);
-        $shipping_cost->setAmount($shipping_currency);
-        $invoice->setShippingCost($shipping_cost);
-        if ($allowPartialPayments == 'on') {
-            $invoice->setAllowPartialPayment('true');
-
-            $minimum_amount_due_shipping_currency = new Currency();
-            $minimum_amount_due_shipping_currency->setCurrency('USD');
-            $minimum_amount_due_shipping_currency->setValue($minimumDueAmount);
-
-
-
-            $invoice->setMinimumAmountDue($minimum_amount_due_shipping_currency);
-        }
-        //setAllowPartialPayment
-
-        if (!empty($invDiscount)) {
-            $cost = new Cost();
-            if ($invoiceDiscType == 'percentage') {
-                $cost->setPercent($invDiscount);
-            } else {
-                $discount_currency = new Currency();
-                $discount_currency->setCurrency('USD');
-                $discount_currency->setValue($invDiscount);
-                $cost->setAmount($discount_currency);
-            }
-            $invoice->setDiscount($cost);
-        }
-
-
-        $invoice->setItems($items);
-        $invoice->getPaymentTerm()
-                ->setTermType($term_type);
         try {
+            $post_data = $_REQUEST;
+            $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date("d/m/Y");
+            $invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
+            $invoice_date = $invoice_date_obj->format('Y-m-d e');
+            $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
+            $reference = isset($post_data['reference']) ? $post_data['reference'] : '';
+            $number = isset($post_data['invoice_number']) ? $post_data['invoice_number'] : '';
+            $notes = isset($post_data['notes']) ? $post_data['notes'] : '';
+            $terms = isset($post_data['terms']) ? $post_data['terms'] : '';
+            $merchant_memo = isset($post_data['memodesc']) ? $post_data['memodesc'] : '';
+            $bill_to = isset($post_data['bill_to']) ? $post_data['bill_to'] : '';
+            $cc_to = isset($post_data['cc_to']) ? $post_data['cc_to'] : '';
+            $shippingAmount = isset($post_data['shippingAmount']) ? $post_data['shippingAmount'] : 0.00;
+            $invoiceDiscType = isset($post_data['invoiceDiscType']) ? $post_data['invoiceDiscType'] : 'percentage';
+            $invDiscount = isset($post_data['invDiscount']) ? $post_data['invDiscount'] : 0;
+            $allowPartialPayments = isset($post_data['allowPartialPayments']) ? $post_data['allowPartialPayments'] : 'no';
+            $minimumDueAmount = isset($post_data['minimumDueAmount']) ? $post_data['minimumDueAmount'] : 0.00;
+            $invoice = new Invoice();
+            $invoice->setReference($reference);
+            $invoice->setNumber($number);
+            $invoice->setInvoiceDate($invoice_date);
+            $invoice->setTerms($terms);
+            $invoice->setMerchantMemo($merchant_memo);
+            $participant = new Participant();
+            $participant->setEmail($cc_to);
+            $invoice->addCcInfo($participant);
+            $invoice
+                    ->setMerchantInfo(new MerchantInfo())
+                    ->setBillingInfo(array(new BillingInfo()))
+                    ->setNote($notes)
+                    ->setPaymentTerm(new PaymentTerm())
+                    ->setShippingInfo(new ShippingInfo());
+            $invoice->getMerchantInfo()
+                    ->setEmail($this->rest_paypal_email)
+                    ->setAddress(new Address());
+            $invoice->getMerchantInfo()->getAddress()
+                    ->setLine1($this->address_line_1)
+                    ->setLine1($this->address_line_2)
+                    ->setCity($this->city)
+                    ->setState($this->state)
+                    ->setPostalCode($this->post_code)
+                    ->setCountryCode($this->country);
+            $billing = $invoice->getBillingInfo();
+            $billing[0]
+                    ->setEmail($bill_to);
+            $billing[0]->setAddress(new InvoiceAddress());
+            $invoice->getShippingInfo()->setAddress(new InvoiceAddress());
+            $items = array();
+            if (!empty($post_data['item_name'])) {
+                foreach ($post_data['item_name'] as $key => $order_items) {
+                    $items[$key] = new InvoiceItem();
+                    $items[$key]
+                            ->setName($order_items)
+                            ->setQuantity($post_data['item_qty'][$key])
+                            ->setDescription($post_data['item_description'][$key])
+                            ->setUnitPrice(new Currency());
+                    $items[$key]->getUnitPrice()
+                            ->setCurrency('USD')
+                            ->setValue($post_data['item_amt'][$key]);
+
+                    $tax = new \PayPal\Api\Tax();
+                    $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
+                    $items[$key]->setTax($tax);
+                }
+            }
+
+            if (!empty($shippingAmount) && $shippingAmount > 0) {
+                $shipping_cost = new ShippingCost();
+                $shipping_currency = new Currency();
+                $shipping_currency->setCurrency('USD');
+                $shipping_currency->setValue($shippingAmount);
+                $shipping_cost->setAmount($shipping_currency);
+                $invoice->setShippingCost($shipping_cost);
+            }
+            if ($allowPartialPayments == 'on') {
+                $invoice->setAllowPartialPayment('true');
+                $minimum_amount_due_shipping_currency = new Currency();
+                $minimum_amount_due_shipping_currency->setCurrency('USD');
+                $minimum_amount_due_shipping_currency->setValue($minimumDueAmount);
+                $invoice->setMinimumAmountDue($minimum_amount_due_shipping_currency);
+            }
+            if (!empty($invDiscount) && $invDiscount > 0) {
+                $cost = new Cost();
+                if ($invoiceDiscType == 'percentage') {
+                    $cost->setPercent($invDiscount);
+                } else {
+                    $discount_currency = new Currency();
+                    $discount_currency->setCurrency('USD');
+                    $discount_currency->setValue($invDiscount);
+                    $cost->setAmount($discount_currency);
+                }
+                $invoice->setDiscount($cost);
+            }
+            $invoice->setItems($items);
+            $invoice->getPaymentTerm()
+                    ->setTermType($term_type);
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
             $invoice->send($this->angelleye_paypal_invoicing_getAuth());
             return $invoice->getId();
         } catch (Exception $ex) {
+            echo $this->angelleye_paypal_invoicing_print_api_error($ex->getMessage());
             return false;
         }
+    }
+
+    public function angelleye_paypal_invoicing_print_api_error($error_msg) {
+        ?>
+        <br>
+        <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
+            <?php echo wp_kses_post($error_msg) . PHP_EOL; ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?php
+    }
+
+    public function angelleye_paypal_invoicing_get_invoice_details($invoiceId) {
+        $invoice = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+        $invoices_array_data = json_decode($invoice, true);
+        return $invoices_array_data;
+    }
+
+    public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
+        $billing_info = $invoice['billing_info'];
+        $amount = $invoice['total_amount'];
+        $paypal_invoice_data_array = array(
+            'id' => $invoice['id'],
+            'status' => $invoice['status'],
+            'invoice_date' => $invoice['invoice_date'],
+            'number' => $invoice['number'],
+            'email' => $billing_info[0]['email'],
+            'currency' => $amount['currency'],
+            'total_amount_value' => $amount['value'],
+        );
+        $insert_invoice_array = array(
+            'ID' => $post_id,
+            'post_type' => 'paypal_invoices',
+            'post_status' => $paypal_invoice_data_array['status'],
+            'post_title' => $paypal_invoice_data_array['id'],
+            'post_author' => 0
+        );
+        $post_id = wp_insert_post($insert_invoice_array);
+        foreach ($paypal_invoice_data_array as $key => $value) {
+            update_post_meta($post_id, $key, $value);
+        }
+        update_post_meta($post_id, 'all_invoice_data', $invoice);
     }
 
 }
