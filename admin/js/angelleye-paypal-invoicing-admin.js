@@ -56,7 +56,7 @@
             jQuery(".memoDetail").hide();
             jQuery(".memoHead").show();
         });
-        jQuery(document).on('change blur keyup', '#angelleye-paypal-invoicing input', function (event) {
+        jQuery(document).on('change blur keyup', '#angelleye-paypal-invoicing input, #angelleye-paypal-invoicing select', function (event) {
             count_sub_total();
         });
         function count_sub_total() {

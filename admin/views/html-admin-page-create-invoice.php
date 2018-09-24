@@ -50,22 +50,22 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                 <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', ''); ?></label>
                 <div class="col-sm-7">
                     <select id="invoiceTerms" class="form-control" name="invoiceTerms" required>
-                        <option value="noduedate"><?php echo __('No due date', ''); ?></option>
-                        <option value="receipt" selected=""><?php echo __('Due on receipt', ''); ?></option>
+                        <option value="NO_DUE_DATE"><?php echo __('No due date', ''); ?></option>
+                        <option value="DUE_ON_RECEIPT" selected=""><?php echo __('Due on receipt', ''); ?></option>
                         <option name="dueDateTermsSpecified" id="dueDateTermsSpecified" value="specified"><?php echo __('Due on date specified', ''); ?></option>
-                        <option value="net10"><?php echo __('Due in 10 days', ''); ?></option>
-                        <option value="net15"><?php echo __('Due in 15 days', ''); ?></option>
-                        <option value="net30"><?php echo __('Due in 30 days', ''); ?></option>
-                        <option value="net45"><?php echo __('Due in 45 days', ''); ?></option>
-                        <option value="net60"><?php echo __('Due in 60 days', ''); ?></option>
-                        <option value="net90"><?php echo __('Due in 90 days', ''); ?></option>
+                        <option value="NET_10"><?php echo __('Due in 10 days', ''); ?></option>
+                        <option value="NET_15"><?php echo __('Due in 15 days', ''); ?></option>
+                        <option value="NET_30"><?php echo __('Due in 30 days', ''); ?></option>
+                        <option value="NET_45"><?php echo __('Due in 45 days', ''); ?></option>
+                        <option value="NET_60"><?php echo __('Due in 60 days', ''); ?></option>
+                        <option value="NET_90"><?php echo __('Due in 90 days', ''); ?></option>
                     </select>
                 </div>
             </div>
             <div class="form-group row" id="dueDate_box">
                 <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="dueDate" placeholder="<?php echo __('dd/mm/yyyy', ''); ?>" name="dueDate">
+                    <input type="text" class="form-control" id="dueDate" placeholder="<?php echo __('d/m/Y', ''); ?>" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date("d/m/Y"); ?>">
                 </div>
             </div>
         </div>
@@ -73,9 +73,9 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label pifw_lable_left"><b>Bill to:</b></label>
+                <label for="bill_to" class="col-sm-2 col-form-label pifw_lable_left"><b>Bill to:</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword" placeholder="" required>
+                    <input type="text" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -83,9 +83,9 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="inputPassword" class="col-sm-2 col-form-label pifw_lable_left"><b>Cc:</b></label>
+                <label for="cc_to" class="col-sm-2 col-form-label pifw_lable_left"><b>Cc:</b></label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPassword" placeholder="">
+                    <input type="text" name="cc_to" class="form-control" id="cc_to" placeholder="">
                 </div>
             </div>
         </div>
@@ -114,7 +114,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                         <td></td>
                     </tr>
                     <tr class="invoice-detailed">
-                        <td colspan="5"><input type="text" aria-label="" placeholder="<?php echo __('Enter detailed description (optional)', ''); ?>"></td>
+                        <td colspan="5"><input type="text" aria-label="" name="item_description[]" placeholder="<?php echo __('Enter detailed description (optional)', ''); ?>"></td>
                         <td><div class="deleteItem" style="width:23px;">&nbsp;</div></td>
                     </tr>
                     <tr class="invoice-end-row"><td colspan="5"></td></tr>
@@ -198,10 +198,10 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     </div>
     <div class="row mt30-invoice">
         <div class="col-sm-6">
-            <div class="form-group"><label for="terms"><?php echo __('Note to recipient', ''); ?></label><textarea placeholder="<?php echo __('Such as Thank you for your business', ''); ?>" rows="5" class="form-control" name="notes" id="notes"><?php echo $note_to_recipient; ?></textarea><p class="help-block text-right" id="notesChars">3837</p></div>
+            <div class="form-group"><label for="notes"><?php echo __('Note to recipient', ''); ?></label><textarea placeholder="<?php echo __('Such as Thank you for your business', ''); ?>" rows="5" class="form-control" name="notes" id="notes"><?php echo $note_to_recipient; ?></textarea><p class="help-block text-right" id="notesChars">3837</p></div>
         </div>
         <div class="col-sm-6">
-            <div class="form-group"><label for="notes"><?php echo __('Terms and conditions', ''); ?></label><textarea placeholder="<?php echo __('Include your return or cancelation policy', ''); ?>" rows="5" class="form-control" name="terms" id="terms"><?php echo $terms_and_condition; ?></textarea><p class="help-block text-right" id="termsChars">3991</p></div>
+            <div class="form-group"><label for="terms"><?php echo __('Terms and conditions', ''); ?></label><textarea placeholder="<?php echo __('Include your return or cancelation policy', ''); ?>" rows="5" class="form-control" name="terms" id="terms"><?php echo $terms_and_condition; ?></textarea><p class="help-block text-right" id="termsChars">3991</p></div>
         </div>
     </div>
     <div class="row">

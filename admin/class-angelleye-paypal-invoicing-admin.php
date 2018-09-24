@@ -392,10 +392,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_add_meta_box() {
-        add_meta_box('angelleye_paypal_invoicing_meta_box', __('My Meta Box', 'textdomain'), array($this, 'wpdocs_my_display_callback'), 'paypal_invoices', 'normal');
+        add_meta_box('angelleye_paypal_invoicing_meta_box', __('Add New invoice', 'angelleye-paypal-invoicing'), array($this, 'angelleye_paypal_invoicing_add_meta_box_add_new_invoice'), 'paypal_invoices', 'normal');
     }
 
-    public function wpdocs_my_display_callback() {
+    public function angelleye_paypal_invoicing_add_meta_box_add_new_invoice() {
         $this->angelleye_paypal_invoicing_create_invoice_content();
     }
 
@@ -467,6 +467,19 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_disable_auto_save() {
         if ('paypal_invoices' == get_post_type()) {
             wp_dequeue_script('autosave');
+        }
+    }
+    
+    public function angelleye_paypal_invoicing_create_invoice_hook($post_ID, $post, $update) {
+        if($update == false) {
+            return false;
+        }
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            $this->response = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);
+           // include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-template_list.php';
+        } else {
+            $this->angelleye_paypal_invoicing_print_error();
         }
     }
 }
