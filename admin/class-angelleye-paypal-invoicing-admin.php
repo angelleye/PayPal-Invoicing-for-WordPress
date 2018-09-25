@@ -415,7 +415,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         switch ($column) {
             case 'invoice_date' :
                 $invoice = get_post_meta($post->ID, 'invoice_date', true);
-                echo $invoice;
+                echo date_i18n( get_option( 'date_format' ), strtotime( $invoice ) );
                 break;
             case 'invoice' :
                 $invoice_number = esc_attr(get_post_meta($post->ID, 'number', true));
@@ -461,6 +461,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if (isset($query->query_vars['s']) && empty($query->query_vars['s'])) {
                 $query->is_search = false;
             }
+        } else {
+            if(is_admin() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
+                $query->query_vars['orderby'] = 'ID';
+                $query->query_vars['order'] = 'asc';
+            }
         }
     }
 
@@ -472,6 +477,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_create_invoice_hook($post_ID, $post, $update) {
         if ($update == false) {
+            return false;
+        }
+        if(isset($post->post_status) && $post->post_status == 'trash') {
             return false;
         }
         $is_paypal_invoice_sent = get_post_meta($post_ID, 'is_paypal_invoice_sent', true);
