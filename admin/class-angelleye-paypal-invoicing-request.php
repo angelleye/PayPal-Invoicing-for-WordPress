@@ -563,6 +563,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
             $invoice_date = $invoice_date_obj->format('Y-m-d e');
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
+            $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
             $reference = isset($post_data['reference']) ? $post_data['reference'] : '';
             $number = isset($post_data['invoice_number']) ? $post_data['invoice_number'] : '';
             $notes = isset($post_data['notes']) ? $post_data['notes'] : '';
@@ -574,6 +575,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoiceDiscType = isset($post_data['invoiceDiscType']) ? $post_data['invoiceDiscType'] : 'percentage';
             $invDiscount = isset($post_data['invDiscount']) ? $post_data['invDiscount'] : 0;
             $allowPartialPayments = isset($post_data['allowPartialPayments']) ? $post_data['allowPartialPayments'] : 'no';
+            $allow_tips = isset($post_data['allowTips']) ? $post_data['allowTips'] : 'no';
             $minimumDueAmount = isset($post_data['minimumDueAmount']) ? $post_data['minimumDueAmount'] : 0.00;
             $invoice = new Invoice();
             $invoice->setReference($reference);
@@ -651,11 +653,20 @@ class AngellEYE_PayPal_Invoicing_Request {
                 }
                 $invoice->setDiscount($cost);
             }
+            if ($allow_tips == 'on') {
+                $invoice->setAllowtip('true');
+            }
+            if (!empty($due_date)) {
+                $invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
+                $invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
+                $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
+            }
             $invoice->setItems($items);
             $invoice->getPaymentTerm()
                     ->setTermType($term_type);
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
             $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
             return $invoice->getId();
         } catch (Exception $ex) {
             echo $this->angelleye_paypal_invoicing_print_api_error($ex->getMessage());

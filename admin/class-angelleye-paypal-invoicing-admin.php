@@ -474,6 +474,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($update == false) {
             return false;
         }
+        $is_paypal_invoice_sent = get_post_meta($post_ID, 'is_paypal_invoice_sent', true);
+        if( !empty($is_paypal_invoice_sent) && $is_paypal_invoice_sent == 'yes') {
+            return false;
+        }
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);

@@ -13,7 +13,7 @@
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
-            if (jQuery(this).val() === 'specified') {
+            if (jQuery(this).val() === 'DUE_ON_DATE_SPECIFIED') {
                 jQuery('#dueDate_box').show();
             } else {
                 jQuery('#dueDate_box').hide();

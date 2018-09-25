@@ -51,8 +51,8 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                 <div class="col-sm-7">
                     <select id="invoiceTerms" class="form-control" name="invoiceTerms" required>
                         <option value="NO_DUE_DATE"><?php echo __('No due date', ''); ?></option>
-                        <option value="DUE_ON_RECEIPT" selected=""><?php echo __('Due on receipt', ''); ?></option>
-                        <option name="dueDateTermsSpecified" id="dueDateTermsSpecified" value="specified"><?php echo __('Due on date specified', ''); ?></option>
+                        <option value="DUE_ON_RECEIPT"><?php echo __('Due on receipt', ''); ?></option>
+                        <option value="DUE_ON_DATE_SPECIFIED"><?php echo __('Due on date specified', ''); ?></option>
                         <option value="NET_10"><?php echo __('Due in 10 days', ''); ?></option>
                         <option value="NET_15"><?php echo __('Due in 15 days', ''); ?></option>
                         <option value="NET_30"><?php echo __('Due in 30 days', ''); ?></option>
