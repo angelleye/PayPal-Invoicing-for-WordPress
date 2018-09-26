@@ -10,12 +10,15 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : $this->shipping_amount;
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
+
+echo print_r(_get_cron_array(), true);
 ?>
+
 <div class="container-fluid pifw_section" id="angelleye-paypal-invoicing">
     <div class="row">
         <div class="col-sm-12 col-12" style="float: right;">
             <div class="form-group row paypal-invoice-create-action-box">
-                <button class="btn btn-primary" type="submit" id="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+                <button class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
             </div>
         </div>
     </div>
@@ -225,7 +228,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-sm-12 col-12" style="float: right;">
             <div class="form-group row paypal-invoice-create-action-box">
-                    <button class="btn btn-primary" type="submit"><?php echo __('Send Invoice', ''); ?></button>
+                    <button class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
                 </div>
         </div>
     </div>

@@ -176,6 +176,13 @@ class AngellEYE_PayPal_Invoicing_Request {
                 update_post_meta($post_id, $key, $value);
             }
             update_post_meta($post_id, 'all_invoice_data', $invoice);
+        } else {
+            $insert_invoice_array['ID'] = $existing_post_id;
+            wp_update_post($insert_invoice_array);
+            foreach ($paypal_invoice_data_array as $key => $value) {
+                update_post_meta($existing_post_id, $key, $value);
+            }
+            update_post_meta($existing_post_id, 'all_invoice_data', $invoice);
         }
     }
 

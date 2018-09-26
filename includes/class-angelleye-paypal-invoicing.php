@@ -60,12 +60,14 @@ class AngellEYE_PayPal_Invoicing {
             $this->version = '1.0.0';
         }
         $this->plugin_name = 'angelleye-paypal-invoicing';
-
         $this->load_dependencies();
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
         include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/angelleye-paypal-invoicing-function.php' );
+        add_filter('cron_schedules', array($this, 'angelleye_paypal_invoicing_new_interval_cron_time'));
+       // add_action('wp', array($this, 'angelleye_paypal_invoicing_add_wp_schedule_event'));
+        add_action('angelleye_paypal_invoicing_sync_event', array($this, 'angelleye_paypal_invoicing_sync_with_paypal'));
     }
 
     /**
@@ -108,6 +110,8 @@ class AngellEYE_PayPal_Invoicing {
          * side of the site.
          */
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-angelleye-paypal-invoicing-public.php';
+        
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
 
         $this->loader = new AngellEYE_PayPal_Invoicing_Loader();
     }
@@ -141,18 +145,18 @@ class AngellEYE_PayPal_Invoicing {
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
-        $this->loader->add_action( 'init', $plugin_admin, 'angelleye_paypal_invoicing_sub_menu_manage_invoices' );
+        $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_sub_menu_manage_invoices');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_register_post_status', 10);
         $this->loader->add_action('admin_menu', $plugin_admin, 'angelleye_paypal_invoicing_top_menu');
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_remove_meta', 10, 2);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_add_meta_box', 99, 2);
         $this->loader->add_action('manage_edit-paypal_invoices_columns', $plugin_admin, 'angelleye_paypal_invoicing_add_paypal_invoices_columns', 10, 2);
         $this->loader->add_action('manage_paypal_invoices_posts_custom_column', $plugin_admin, 'angelleye_paypal_invoicing_render_paypal_invoices_columns', 2);
-        $this->loader->add_filter('manage_edit-paypal_invoices_sortable_columns', $plugin_admin , 'angelleye_paypal_invoicing_paypal_invoices_sortable_columns');
+        $this->loader->add_filter('manage_edit-paypal_invoices_sortable_columns', $plugin_admin, 'angelleye_paypal_invoicing_paypal_invoices_sortable_columns');
         $this->loader->add_action('pre_get_posts', $plugin_admin, 'angelleye_paypal_invoicing_paypal_invoices_column_orderby');
-        $this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save' );
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save');
         $this->loader->add_action('save_post_paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_create_invoice_hook', 10, 3);
-        $this->loader->add_action( 'admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_admin_notice' );
+        $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_admin_notice');
     }
 
     /**
@@ -207,6 +211,22 @@ class AngellEYE_PayPal_Invoicing {
      */
     public function get_version() {
         return $this->version;
+    }
+
+    public function angelleye_paypal_invoicing_new_interval_cron_time($interval) {
+        $interval['every_ten_minutes'] = array('interval' => 600, 'display' => 'Every 10 Minutes');
+        return $interval;
+    }
+
+    public function angelleye_paypal_invoicing_add_wp_schedule_event() {
+        if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
+            wp_schedule_event(time(), 'every_ten_minutes', 'angelleye_paypal_invoicing_sync_event');
+        }
+    }
+    
+    public function angelleye_paypal_invoicing_sync_with_paypal() {
+        $log = new AngellEYE_PayPal_Invoicing_Logger();
+        $log->add('start_time_redirect_paypal_invoice_status', date('H:i:s'));
     }
 
 }
