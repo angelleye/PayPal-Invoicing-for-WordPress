@@ -121,7 +121,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 'add_new' => __('Add invoice', 'angelleye-paypal-invoicing'),
                 'add_new_item' => __('Add New invoice', 'angelleye-paypal-invoicing'),
                 'edit' => __('Edit', 'angelleye-paypal-invoicing'),
-                'edit_item' => __('View invoice', 'angelleye-paypal-invoicing'),
+                'edit_item' => __('Invoice Details', 'angelleye-paypal-invoicing'),
                 'new_item' => __('New invoice', 'angelleye-paypal-invoicing'),
                 'view' => __('View PayPal invoice', 'angelleye-paypal-invoicing'),
                 'view_item' => __('View PayPal invoice', 'angelleye-paypal-invoicing'),
@@ -181,12 +181,20 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_create_invoice_content() {
+        global $post;
         wp_enqueue_style('jquery-ui-style');
         $this->angelleye_paypal_invoicing_add_bootstrap();
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $this->response = $this->request->angelleye_paypal_invoicing_get_next_invoice_number();
-            include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
+            if (empty($_GET['action'])) {
+                include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
+            } elseif (!empty($_GET['action']) && $_GET['action'] == 'edit') {
+                $invoice_id = get_post_meta($post->ID, 'id', true);
+                $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post->ID);
+                include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-view-invoice.php';
+            }
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -399,9 +407,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->angelleye_paypal_invoicing_create_invoice_content();
     }
 
-    public function angelleye_paypal_invoicing_add_paypal_invoices_columns($existing_columns) {
-        $columns = array();
-        $columns['cb'] = '<input type="checkbox" />';
+    public function angelleye_paypal_invoicing_add_paypal_invoices_columns($columns) {
+        unset($columns['date']);
+        $columns['title'] = __('Invoice ID', 'angelleye-paypal-invoicing');
         $columns['invoice_date'] = _x('Date', 'angelleye-paypal-invoicing');
         $columns['invoice'] = __('Invoice #', 'angelleye-paypal-invoicing');
         $columns['recipient'] = _x('Recipient', 'angelleye-paypal-invoicing');
@@ -415,11 +423,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
         switch ($column) {
             case 'invoice_date' :
                 $invoice = get_post_meta($post->ID, 'invoice_date', true);
-                echo date_i18n( get_option( 'date_format' ), strtotime( $invoice ) );
+                echo date_i18n(get_option('date_format'), strtotime($invoice));
                 break;
             case 'invoice' :
                 $invoice_number = esc_attr(get_post_meta($post->ID, 'number', true));
-                echo $invoice_number;
+                $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
+                if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
+                    echo sprintf('<a href="%1$s">%2$s</a>', $payer_view_url, $invoice_number);
+                } else {
+                    echo $invoice_number;
+                }
                 break;
             case 'recipient' :
                 echo esc_attr(get_post_meta($post->ID, 'email', true));
@@ -443,7 +456,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'invoice' => 'number',
             'recipient' => 'email',
             'status' => 'status',
-            'amount' => 'total_amount_value'
+            'amount' => 'total_amount_value',
+            'title' => 'ID'
         );
         return wp_parse_args($custom, $columns);
     }
@@ -462,7 +476,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $query->is_search = false;
             }
         } else {
-            if(is_admin() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
+            if (is_admin() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
                 $query->query_vars['orderby'] = 'ID';
                 $query->query_vars['order'] = 'asc';
             }
@@ -479,14 +493,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($update == false) {
             return false;
         }
-        if(isset($post->post_status) && $post->post_status == 'trash') {
+        if (isset($post->post_status) && $post->post_status == 'trash') {
             return false;
         }
-        if( !isset($_REQUEST['send_invoice']) || empty($_REQUEST['send_invoice']) ) {
+        if (!isset($_REQUEST['send_invoice']) || empty($_REQUEST['send_invoice'])) {
             return false;
         }
         $is_paypal_invoice_sent = get_post_meta($post_ID, 'is_paypal_invoice_sent', true);
-        if( !empty($is_paypal_invoice_sent) && $is_paypal_invoice_sent == 'yes') {
+        if (!empty($is_paypal_invoice_sent) && $is_paypal_invoice_sent == 'yes') {
             return false;
         }
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
@@ -502,10 +516,28 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $this->angelleye_paypal_invoicing_print_error();
         }
     }
-    
+
     public function angelleye_paypal_invoicing_display_admin_notice() {
-        if( !empty($_GET['message']) && $_GET['message'] == '1024') {
+        if (!empty($_GET['message']) && $_GET['message'] == '1024') {
             echo "<div class='notice notice-success is-dismissible'><p>We've sent your invoice.</p></div>";
+        }
+    }
+
+    public function angelleye_paypal_invoicing_get_payer_view($invoice) {
+        if (!empty($invoice['links'])) {
+            foreach ($invoice['links'] as $key => $link_array) {
+                if($link_array['rel'] == 'payer-view') {
+                    return $link_array['href'];
+                }
+            }
+        }
+        return false;
+    }
+    
+    public function angelleye_paypal_invoicing_remove_bulk_actions($actions, $post) {
+        if($post->post_type == 'paypal_invoices') {
+            unset( $actions['inline hide-if-no-js'] );
+            return $actions;
         }
     }
 

@@ -718,11 +718,10 @@ class AngellEYE_PayPal_Invoicing_Request {
             'post_title' => $paypal_invoice_data_array['id'],
             'post_author' => 0
         );
-        $post_id = wp_insert_post($insert_invoice_array);
+        wp_update_post($insert_invoice_array);
         foreach ($paypal_invoice_data_array as $key => $value) {
             update_post_meta($post_id, $key, $value);
         }
         update_post_meta($post_id, 'all_invoice_data', $invoice);
     }
-
 }

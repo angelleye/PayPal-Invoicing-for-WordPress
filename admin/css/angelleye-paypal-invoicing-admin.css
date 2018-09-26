@@ -205,3 +205,8 @@ body {
 .was-submited input:invalida {
     border: 2px solid red;
 }
+.card {
+    min-width: inherit;
+    max-width: inherit;
+    padding: 0px;
+}
