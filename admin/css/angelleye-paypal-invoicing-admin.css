@@ -210,7 +210,7 @@ body {
     max-width: inherit;
     padding: 0px;
 }
-#invoice_view_table table thead {
+#invoice_view_table table#paypal_invoice_view_table_format thead {
     margin: 0;
     border: 1px solid #ddd;
     background-color: #f9f9f9;
@@ -219,21 +219,21 @@ body {
     font-size: 15px;
 
 }
-#invoice_view_table table thead th {
+#invoice_view_table table#paypal_invoice_view_table_format thead th {
     border-bottom: none;
 }
-#invoice_view_table table tbody {
+#invoice_view_table table#paypal_invoice_view_table_format tbody {
     line-height: 21px;
     margin: 0;
 }
-#invoice_view_table table tbody tr {
+#invoice_view_table table#paypal_invoice_view_table_format tbody tr {
     border-bottom: 1px solid #ddd;
 }
-#invoice_view_table table tr td {
+#invoice_view_table table#paypal_invoice_view_table_format tr td {
     padding-top: 5px;
     padding-bottom: 5px;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 10px;
+    padding-right: 1px;
 }
 #invoice_view_table .itemdescription {
     padding-right: 0;
@@ -287,4 +287,34 @@ body {
     font-size: 20px;
     font-weight: bold;
     color: #555;
+}
+.paypal_invoice_view_table_format_total table td {
+    border-top: none;
+}
+.paypal_invoice_view_table_format_total table tbody tr td {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.table#paypal_invoice_view_table_format {
+    margin-bottom: 0px;
+}
+.paypal_invoice_view_table_format_total table {
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+    line-height: 21px;
+}
+.paypal_invoice_view_table_format_total table tbody tr td.total {
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.paypal_invoice_view_table_format_total table tbody {
+    line-height: 21px;
+}
+
+.paypal_invoice_view_table_format_total table tbody tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 10px;
 }

@@ -124,13 +124,13 @@
                 </div>
             </div>
             <div class="table-responsive-sm">
-                <table class="table">
+                <table class="table" id="paypal_invoice_view_table_format">
                     <thead>
                         <tr>
                             <th class="itemdescription"><?php echo __('Description', ''); ?></th>
-                            <th class="itemquantity text-right"><?php __('Quantity', ''); ?></th>
-                            <th class="itemprice text-right"><?php __('Price', ''); ?></th>
-                            <th class="itemamount text-right"><?php __('Amount', ''); ?></th>
+                            <th class="itemquantity text-right"><?php echo __('Quantity', ''); ?></th>
+                            <th class="itemprice text-right"><?php echo __('Price', ''); ?></th>
+                            <th class="itemamount text-right"><?php echo __('Amount', ''); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -147,7 +147,7 @@
                                 echo '<td class="itemprice text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . $invoice_item['unit_price']['value'] . '</td>';
                                 echo '<td class="itemamount text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . number_format($invoice_item['quantity'] * $invoice_item['unit_price']['value'], 2) . '</td>';
                                 echo '</tr>';
-                                $sub_total = $sub_total + number_format($invoice_item['quantity'] * $invoice_item['unit_price']['value'], 2);
+                                $sub_total = $sub_total + ($invoice_item['quantity'] * $invoice_item['unit_price']['value']);
                                 if (!empty($invoice_item['tax'])) {
                                     $invoice_total_array['tax'][$key] = $invoice_item['tax'];
                                 }
@@ -159,7 +159,7 @@
                                 $invoice_total_array['shipping_cost'] = $invoice['shipping_cost'];
                             }
 
-                            $invoice_total_array['sub_total'] = array('currency' => $invoice_item['unit_price']['currency'], 'value' => number_format($sub_total, 2));
+                            $invoice_total_array['sub_total'] = array('currency' => $invoice_item['unit_price']['currency'], 'value' => $sub_total);
                         }
                         ?>
                     </tbody>
@@ -168,51 +168,55 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-5">
                 </div>
-                <div class="col-lg-4 col-sm-5 ml-auto">
-                    <table class="table table-clear">
-                        <tbody>
-                            <tr>
-                                <td class="left">
-                                    <?php echo __('Subtotal', ''); ?>
-                                </td>
-                                <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
-                            </tr>
-                            <tr>
-                                <td class="left">
-                                    <?php echo __('Shipping', ''); ?>
-                                </td>
-                                <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
-                            </tr>
-                            <?php if (!empty($invoice_total_array['tax'])) : ?>
-                                <?php
-                                foreach ($invoice_total_array['tax'] as $tax_index => $tax_data) {
-                                    echo '<tr>';
-                                    echo '<td class="left">';
-                                    echo $tax_data['name'] . ' (' . $tax_data['percent'] . '%)';
-                                    echo '</td>';
-                                    echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency']) . number_format($tax_data['amount']['value'], 2) . '</td>';
-                                    echo '</tr>';
-                                }
-                                ?>
-                            <?php endif; ?>
-                             <?php if (!empty($invoice_total_array['discount'])) : ?>
-                            <tr>
-                                <td class="left">
-                                    <?php echo __('Discount', ''); ?>
-                                </td>
-                                <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
-                            </tr>
-                            <?php endif; ?>
-                            <?php if (!empty($invoice['total_amount'])) : ?>
-                            <tr>
-                                <td class="left">
-                                    <strong><?php echo __('Total', ''); ?></strong>
-                                </td>
-                                <?php echo '<td class="right"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' '. $invoice['total_amount']['currency'] . '</strong></td>'; ?>
-                            </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                <div class="col-lg-4 col-sm-5 ml-auto paypal_invoice_view_table_format_total">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <td class="left">
+                                        <?php echo __('Subtotal', ''); ?>
+                                    </td>
+                                    <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
+                                </tr>
+                                <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
+                                <tr>
+                                    <td class="left">
+                                        <?php echo __('Shipping', ''); ?>
+                                    </td>
+                                    <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
+                                </tr>
+                                <?php endif; ?>
+                                <?php if (!empty($invoice_total_array['tax'])) : ?>
+                                    <?php
+                                    foreach ($invoice_total_array['tax'] as $tax_index => $tax_data) {
+                                        echo '<tr>';
+                                        echo '<td class="left">';
+                                        echo $tax_data['name'] . ' (' . $tax_data['percent'] . '%)';
+                                        echo '</td>';
+                                        echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency']) . number_format($tax_data['amount']['value'], 2) . '</td>';
+                                        echo '</tr>';
+                                    }
+                                    ?>
+                                <?php endif; ?>
+                                <?php if (!empty($invoice_total_array['discount'])) : ?>
+                                    <tr>
+                                        <td class="left">
+                                            <?php echo __('Discount', ''); ?>
+                                        </td>
+                                        <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
+                                    </tr>
+                                <?php endif; ?>
+                                <?php if (!empty($invoice['total_amount'])) : ?>
+                                    <tr>
+                                        <td class="left total">
+                                            <strong><?php echo __('Total', ''); ?></strong>
+                                        </td>
+                                        <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <br>
