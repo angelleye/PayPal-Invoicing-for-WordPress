@@ -42,7 +42,7 @@
 .invoice-table input {
     width: 100%;
     font-size: inherit;
-    
+
 }
 .invoice-table input[type="number"] {
     height: inherit !important;
@@ -205,8 +205,86 @@ body {
 .was-submited input:invalida {
     border: 2px solid red;
 }
-.card {
+#invoice_view_table .card {
     min-width: inherit;
     max-width: inherit;
     padding: 0px;
+}
+#invoice_view_table table thead {
+    margin: 0;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    line-height: 21px;
+    font-weight: 700;
+    font-size: 15px;
+
+}
+#invoice_view_table table thead th {
+    border-bottom: none;
+}
+#invoice_view_table table tbody {
+    line-height: 21px;
+    margin: 0;
+}
+#invoice_view_table table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+#invoice_view_table table tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#invoice_view_table .itemdescription {
+    padding-right: 0;
+}
+#invoice_view_table .itemquantity  {
+    width: 10%;
+    padding-right: 0;
+}
+#invoice_view_table .itemprice   {
+    width: 15%;
+    padding-right: 0;
+}
+#invoice_view_table .itemamount    {
+    width: 15%;
+}
+#invoice_view_table .wrap {
+    margin: 0;
+}
+#invoice_view_table .folded-corner {
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    border-style: none solid solid none;
+    border-width: 0 70px 70px 0;
+    border-style: solid;
+    background: #e6e6e6;
+    border-color: #fff #fff transparent transparent;
+}
+#invoice_view_table .pageCurl {
+    direction: rtl;
+    margin-right: 85px;
+    white-space: nowrap;
+    color: #9da3a6;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 30px;
+}
+#invoice_view_table span {
+    margin-bottom: 5px;
+}
+#invoice_view_table .sectionBottom {
+    border-bottom: 1px solid #ddd;
+}
+#invoice_view_table {
+    color: #555;
+}
+#invoice_view_table h4 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
 }

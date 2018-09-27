@@ -191,9 +191,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
             } elseif (!empty($_GET['action']) && $_GET['action'] == 'edit') {
                 $invoice_id = get_post_meta($post->ID, 'id', true);
-                $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
-                $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post->ID);
-                include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-view-invoice.php';
+                if(!empty($invoice_id)) {
+                    $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                    $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post->ID);
+                    include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-view-invoice.php';
+                } else {
+                    include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
+                }
+                
             }
         } else {
             $this->angelleye_paypal_invoicing_print_error();
@@ -496,7 +501,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (isset($post->post_status) && $post->post_status == 'trash') {
             return false;
         }
-        if (!isset($_REQUEST['send_invoice']) || empty($_REQUEST['send_invoice'])) {
+        if (!isset($_REQUEST['send_invoice'])) {
             return false;
         }
         $is_paypal_invoice_sent = get_post_meta($post_ID, 'is_paypal_invoice_sent', true);
