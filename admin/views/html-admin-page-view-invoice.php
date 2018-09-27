@@ -13,6 +13,10 @@
                 <div class="col-sm-8">
                 </div>
                 <div class="col-sm-4 invoice-view-info"> 
+                    <div class="row" style="margin-bottom: 20px;">
+                            <span class="col-sm-6 text-right"></span>
+                            <span class="invoiceStatus isCancelled"><?php echo $invoice['status']; ?></span>
+                        </div>
                     <?php if (!empty($invoice['number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', ''); ?></span>

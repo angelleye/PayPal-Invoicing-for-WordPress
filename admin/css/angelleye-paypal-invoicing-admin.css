@@ -229,11 +229,11 @@ body {
 #invoice_view_table table#paypal_invoice_view_table_format tbody tr {
     border-bottom: 1px solid #ddd;
 }
-#invoice_view_table table#paypal_invoice_view_table_format tr td {
+#invoice_view_table table#paypal_invoice_view_table_format tr td, #invoice_view_table table#paypal_invoice_view_table_format tr th {
     padding-top: 5px;
     padding-bottom: 5px;
     padding-left: 10px;
-    padding-right: 1px;
+    padding-right: 10px;
 }
 #invoice_view_table .itemdescription {
     padding-right: 0;
@@ -317,4 +317,18 @@ body {
     padding-bottom: 5px;
     padding-left: 5px;
     padding-right: 10px;
+}
+.invoiceStatus  {
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    padding-right: 10px;
+}
+
+.isCancelled {
+    color: #fff;
+    background-color: #f8981f;
 }
