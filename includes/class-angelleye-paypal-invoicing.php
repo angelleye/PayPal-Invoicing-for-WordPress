@@ -156,7 +156,9 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save');
         $this->loader->add_action('save_post_paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_create_invoice_hook', 10, 3);
         $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_admin_notice');
-        $this->loader->add_filter('post_row_actions', $plugin_admin, 'angelleye_paypal_invoicing_remove_bulk_actions', 10, 2);
+        $this->loader->add_filter('post_row_actions', $plugin_admin, 'angelleye_paypal_invoicing_remove_actions_row', 10, 2);
+        $this->loader->add_filter('bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_bulk_actions', 10, 2);
+        
     }
 
     /**

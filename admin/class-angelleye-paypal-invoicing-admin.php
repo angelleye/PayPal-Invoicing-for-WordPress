@@ -34,6 +34,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public $invoices;
     public $invoice;
     public $billing_info;
+    public $paypal_invoice_post_status_list;
 
     /**
      * Initialize the class and set its properties.
@@ -371,9 +372,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_register_post_status() {
         global $wpdb;
-        $paypal_invoice_post_status_list = $this->angelleye_paypal_invoicing_get_paypal_invoice_status();
-        if (isset($paypal_invoice_post_status_list) && !empty($paypal_invoice_post_status_list)) {
-            foreach ($paypal_invoice_post_status_list as $paypal_invoice_post_status) {
+        $this->paypal_invoice_post_status_list = $this->angelleye_paypal_invoicing_get_paypal_invoice_status();
+        if (isset($this->paypal_invoice_post_status_list) && !empty($this->paypal_invoice_post_status_list)) {
+            foreach ($this->paypal_invoice_post_status_list as $paypal_invoice_post_status) {
                 $paypal_invoice_post_status_display_name = ucfirst(str_replace('_', ' ', $paypal_invoice_post_status));
                 register_post_status($paypal_invoice_post_status, array(
                     'label' => _x($paypal_invoice_post_status_display_name, 'PayPal invoice status', 'angelleye-paypal-invoicing'),
@@ -443,7 +444,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 break;
             case 'status' :
                 $status = get_post_meta($post->ID, 'status', true);
-                if( !empty($status) ) {
+                if (!empty($status)) {
                     $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
                     echo isset($invoice_status_array['lable']) ? $invoice_status_array['lable'] : '';
                 }
@@ -541,7 +542,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         return false;
     }
 
-    public function angelleye_paypal_invoicing_remove_bulk_actions($actions, $post) {
+    public function angelleye_paypal_invoicing_remove_actions_row($actions, $post) {
         if ($post->post_type == 'paypal_invoices') {
             $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
             unset($actions['inline hide-if-no-js']);
@@ -553,7 +554,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
         }
-        return $actions; 
+        return $actions;
+    }
+
+    public function angelleye_paypal_invoicing_bulk_actions($actions) {
+        global $post;
+        if( !empty($this->paypal_invoice_post_status_list)) {
+            foreach ($this->paypal_invoice_post_status_list as $key => $value) {
+                $actions[$key] = $value;
+            }
+        }
+        return $actions;
     }
 
 }

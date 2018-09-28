@@ -174,7 +174,7 @@ function pifw_get_currency_symbol($currency = '') {
 
 function pifw_get_invoice_status_name_and_class($status) {
     $invoice_status = array(
-        "UNPAID" => array('lable' => 'Unpaid', 'class' => 'isDraft'),
+        "UNPAID" => array('lable' => 'Unpaid', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
         "SENT" => array('lable' => 'Unpaid (Sent)', 'class' => 'isDraft'),
         'SCHEDULED' => array('lable' => 'Scheduled', 'class' => 'isDraft'),
         "DRAFT" => array('lable' => 'Draft', 'class' => 'isDraft'),
