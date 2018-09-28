@@ -1,0 +1,198 @@
+@media (max-width: 575.98px) {
+    .pifw_lable_left {
+        text-align: left !important;
+    }
+}
+#apifw_enable_paypal_sandbox, #apifw_debug_log {
+    margin: 8px 0px 0px -20px;
+}
+.mt30-invoice {
+    margin-top: 20px;
+}
+.pifw_lable_left {
+    text-align: right;
+}
+.pifw-width-three-zero {
+    width:50px;
+}
+.invoice-table tfoot td {
+    margin-top: 30px;
+    border-top: 0 none !important;
+    padding: 0px !important;
+}
+.invoice-table tbody + tbody {
+    border-top: 0 none !important;
+}
+.invoice-table tbody tr.invoice-end-row > td {
+    border-left: 1px solid #fff;
+    border-right: 1px solid #fff;
+    border-top: 0 none;
+    height: 15px;
+}
+.invoice-table tbody td {
+    padding: 0px !important;
+    border-bottom: none !important;
+    border-top: none !important;
+}
+.invoice-table th {
+    padding: 4px !important;
+    border-bottom: none !important;
+    border-top: none !important;
+}
+.invoice-table input {
+    width: 100%;
+    font-size: inherit;
+    box-shadow: none !important;
+}
+.invoice-table input[type="number"] {
+    height: inherit !important;
+    line-height: inherit !important;
+}
+.pifw-border-bottom {
+    background: #e9ecef;
+}
+.pifw-item-name {
+    width: 500px !important;
+}
+.pifw-item-qty {
+    width: 100px !important;
+}
+.pifw-item-price {
+    width: 90px !important;
+}
+.pifw-item-tax {
+    width: 200px !important;
+}
+.pifw-item-action {
+    width: 50px !important;
+}
+.pifw-item-amount {
+    width: 120px !important;
+}
+#angelleye_paypal_invoicing_meta_box .handlediv, #angelleye_paypal_invoicing_meta_box .hndle {
+    display: none;
+}
+#angelleye_paypal_invoicing_meta_box {
+    border: none;
+}
+#angelleye_paypal_invoicing_meta_box .inside {
+    margin: 0;
+    padding: 0;
+    display: block !important;
+    font-size: inherit;
+    background-color: #fff;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    box-shadow: 0 1px 4px rgba(0,0,0,.25);
+    margin-bottom: 20px;
+    min-height: 365px;
+    padding: 7px 15px 15px;
+}
+.invoice-table #add_new_item {
+    font-size: 15px;
+    text-decoration: none;
+    background-image: url(../images/GlobalSprite_1x-3.png);
+    background-position: 0 -5300px;
+    background-repeat: no-repeat;
+    padding-left: 30px;
+    margin-left: 3px;
+    outline: 0;
+    display: block;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    line-height: 21px;
+    font-weight: 400;
+}
+.invoice-table .add_new_item_box a {
+    text-decoration: none;
+    box-shadow: none;
+    color: #004975;
+}
+.invoice-table .add_new_item_box a:hover, .invoice-table .add_new_item_box a:focus {
+    color: #004975;
+}
+.invoice-table .add_new_item_box {
+    background-color: #ecf7fc;
+    border: 1px solid #91d4f0;
+    padding: 10px;
+    margin: 10px 0;
+    margin-right: 0px;
+}
+.invoice-table .deleteItem {
+    background-image: url(../images/GlobalSprite_midx-3.png);
+    background-repeat: no-repeat;
+    background-position: 0 -5830px;
+    width: 22px;
+    height: 22px;
+    margin-left: 15px !important;
+    margin-right: 8px !important;
+    cursor: pointer;
+}
+#angelleye_paypal_invoicing_meta_box .first_tbody .deleteItem {
+    display: none;
+}
+#angelleye_paypal_invoicing_meta_box .invoice-table tbody {
+    border-collapse: collapse;
+    border-top: 1px solid #dee2e6;
+}
+#angelleye_paypal_invoicing_meta_box .invoice-table .amount {
+    text-align: center;
+    background: #f6f6f6;
+    vertical-align: middle;
+}
+#angelleye_paypal_invoicing_meta_box .sub-total-table {
+    text-align: right;
+}
+#angelleye-paypal-invoicing span.helpIcon {
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 32px;
+    width: 32px;
+    margin-left: 10px;
+    color: #6c7378;
+    cursor: pointer;
+    font-family: consumer-icons;
+}
+#angelleye-paypal-invoicing #memo .memoHead {
+    color: #0079c1;
+    font-size: 15px;
+}
+#angelleye-paypal-invoicing #memo .memoHead span.addIcon {
+    background-image: url(../images/GlobalSprite_1x-3.png);
+    background-position: 0 -4495px;
+    background-repeat: no-repeat;
+    display: block;
+    float: left;
+    height: 32px;
+    margin-left: 0;
+    margin-top: -3px;
+    margin-right: 5px;
+    width: 20px;
+
+}
+#angelleye_paypal_invoicing_meta_box #memo .memoHead span {
+    cursor: pointer;
+}
+#angelleye-paypal-invoicing .pull-left {
+    float: left !important;
+}
+#angelleye_paypal_invoicing_meta_box .memo-p {
+    margin-bottom: 0px;
+}
+#angelleye_paypal_invoicing_meta_box #chars {
+    margin-bottom: 0px;
+    text-align: right;
+}
+#angelleye-paypal-invoicing {
+    font-size: 15px;
+}
+#angelleye-paypal-invoicing h3 {
+    font-size: 25px;
+    margin-bottom: 25px;
+    margin-top: 25px;
+}
+body {
+    background-color: #f1f1f1 !important;
+}
+#angelleye-paypal-invoicing input {
+    font-size: 15px;
+}
