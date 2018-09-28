@@ -80,25 +80,25 @@ class AngellEYE_PayPal_Invoicing_Request {
             $this->rest_paypal_email = ( isset($this->apifw_setting['paypal_email']) && !empty($this->apifw_setting['paypal_email']) ) ? $this->apifw_setting['paypal_email'] : $this->paypal_email;
         }
 
-        $this->first_name = isset($this->apifw_setting['first_name']) ? $this->apifw_setting['first_name'] : $this->first_name;
-        $this->last_name = isset($this->apifw_setting['last_name']) ? $this->apifw_setting['last_name'] : $this->last_name;
-        $this->compnay_name = isset($this->apifw_setting['compnay_name']) ? $this->apifw_setting['compnay_name'] : $this->compnay_name;
-        $this->phone_number = isset($this->apifw_setting['phone_number']) ? $this->apifw_setting['phone_number'] : $this->phone_number;
+        $this->first_name = isset($this->apifw_setting['first_name']) ? $this->apifw_setting['first_name'] : '';
+        $this->last_name = isset($this->apifw_setting['last_name']) ? $this->apifw_setting['last_name'] : '';
+        $this->compnay_name = isset($this->apifw_setting['compnay_name']) ? $this->apifw_setting['compnay_name'] : '';
+        $this->phone_number = isset($this->apifw_setting['phone_number']) ? $this->apifw_setting['phone_number'] : '';
 
-        $this->address_line_1 = isset($this->apifw_setting['address_line_1']) ? $this->apifw_setting['address_line_1'] : $this->address_line_1;
-        $this->address_line_2 = isset($this->apifw_setting['address_line_2']) ? $this->apifw_setting['address_line_2'] : $this->address_line_2;
-        $this->city = isset($this->apifw_setting['city']) ? $this->apifw_setting['city'] : $this->city;
-        $this->post_code = isset($this->apifw_setting['post_code']) ? $this->apifw_setting['post_code'] : $this->post_code;
-        $this->state = isset($this->apifw_setting['state']) ? $this->apifw_setting['state'] : $this->state;
-        $this->country = isset($this->apifw_setting['country']) ? $this->apifw_setting['country'] : $this->country;
+        $this->address_line_1 = isset($this->apifw_setting['address_line_1']) ? $this->apifw_setting['address_line_1'] : '';
+        $this->address_line_2 = isset($this->apifw_setting['address_line_2']) ? $this->apifw_setting['address_line_2'] : '';
+        $this->city = isset($this->apifw_setting['city']) ? $this->apifw_setting['city'] : '';
+        $this->post_code = isset($this->apifw_setting['post_code']) ? $this->apifw_setting['post_code'] : '';
+        $this->state = isset($this->apifw_setting['state']) ? $this->apifw_setting['state'] : '';
+        $this->country = isset($this->apifw_setting['country']) ? $this->apifw_setting['country'] : '';
 
-        $this->shipping_rate = isset($this->apifw_setting['shipping_rate']) ? $this->apifw_setting['shipping_rate'] : $this->shipping_rate;
-        $this->shipping_amount = isset($this->apifw_setting['shipping_amount']) ? $this->apifw_setting['shipping_amount'] : $this->shipping_amount;
-        $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : $this->tax_rate;
-        $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : $this->tax_name;
-        $this->note_to_recipient = isset($this->apifw_setting['note_to_recipient']) ? $this->apifw_setting['note_to_recipient'] : $this->note_to_recipient;
-        $this->terms_and_condition = isset($this->apifw_setting['terms_and_condition']) ? $this->apifw_setting['terms_and_condition'] : $this->terms_and_condition;
-        $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : $this->debug_log;
+        $this->shipping_rate = isset($this->apifw_setting['shipping_rate']) ? $this->apifw_setting['shipping_rate'] : '';
+        $this->shipping_amount = isset($this->apifw_setting['shipping_amount']) ? $this->apifw_setting['shipping_amount'] : '';
+        $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : '';
+        $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : '';
+        $this->note_to_recipient = isset($this->apifw_setting['note_to_recipient']) ? $this->apifw_setting['note_to_recipient'] : '';
+        $this->terms_and_condition = isset($this->apifw_setting['terms_and_condition']) ? $this->apifw_setting['terms_and_condition'] : '';
+        $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
 
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
         include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/paypal-rest/autoload.php' );
