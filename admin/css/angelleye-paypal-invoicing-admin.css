@@ -346,3 +346,7 @@ body {
     color: #fff;
     background-color: #1b9e1b;
 }
+
+#invoice_view_table table#paypal_invoice_view_table_format tr td, #invoice_view_table table#paypal_invoice_view_table_format tr th {
+    vertical-align: middle !important;
+}

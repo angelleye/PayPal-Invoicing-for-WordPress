@@ -1,4 +1,4 @@
-<?php //echo print_r($invoice, true); ?>
+<?php //echo print_r($invoice, true);  ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -149,10 +149,18 @@
                         $sub_total = 0;
                         if (!empty($invoice['items'])) {
                             foreach ($invoice['items'] as $key => $invoice_item) {
+                                $description_html = '';
+                                if (!empty($invoice_item['description'])) {
+                                    $description = $invoice_item['description'];
+                                } else {
+                                    $description = '';
+                                }
                                 echo '<tr>';
-                                echo '<td class="itemdescription">' .
-                                '<div class="wrap">' . $invoice_item['name'] . '<br>' . $invoice_item['description'] . '</div>' .
-                                '</td>';
+                                echo '<td class="itemdescription">';
+                                $description_html .= '<div class="wrap">' . $invoice_item['name'];
+                                $description_html .= !empty($description) ? '<br>' . $description : '';
+                                echo $description_html;
+                                echo '</div></td>';
                                 echo '<td class="itemquantity text-right">' . $invoice_item['quantity'] . '</td>';
                                 echo '<td class="itemprice text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . $invoice_item['unit_price']['value'] . '</td>';
                                 echo '<td class="itemamount text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . number_format($invoice_item['quantity'] * $invoice_item['unit_price']['value'], 2) . '</td>';
@@ -184,18 +192,18 @@
                             <tbody>
                                 <tr>
                                     <td class="left">
-                                        <?php echo __('Subtotal', ''); ?>
+<?php echo __('Subtotal', ''); ?>
                                     </td>
                                     <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
                                 </tr>
-                                <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
+<?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
                                     <tr>
                                         <td class="left">
-                                            <?php echo __('Shipping', ''); ?>
+    <?php echo __('Shipping', ''); ?>
                                         </td>
                                         <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
                                     </tr>
-                                <?php endif; ?>
+<?php endif; ?>
                                 <?php if (!empty($invoice_total_array['tax'])) : ?>
                                     <?php
                                     foreach ($invoice_total_array['tax'] as $tax_index => $tax_data) {
@@ -211,19 +219,19 @@
                                 <?php if (!empty($invoice_total_array['discount'])) : ?>
                                     <tr>
                                         <td class="left">
-                                            <?php echo __('Discount', ''); ?>
+    <?php echo __('Discount', ''); ?>
                                         </td>
-                                        <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
+                                            <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
                                     </tr>
-                                <?php endif; ?>
+                                    <?php endif; ?>
                                 <?php if (!empty($invoice['total_amount'])) : ?>
                                     <tr>
                                         <td class="left total">
                                             <strong><?php echo __('Total', ''); ?></strong>
                                         </td>
-                                        <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
+    <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
                                     </tr>
-                                <?php endif; ?>
+                                    <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -233,14 +241,14 @@
             <div class="sectionBottom"></div>
             <br>
             <div class="row">
-                <?php if (!empty($invoice['note'])) : ?>
+<?php if (!empty($invoice['note'])) : ?>
                     <div class="col-xs-6 col-sm-6">
                         <div>
                             <h4 class="headline"><?php echo __('Notes', ''); ?></h4>
                             <p class="notes"><?php echo $invoice['note']; ?></p>
                         </div>
                     </div><!-- close note col-xs -->
-                <?php endif; ?>
+<?php endif; ?>
                 <?php if (!empty($invoice['terms'])) : ?>
                     <div class="col-xs-6 col-sm-6">
                         <div>
@@ -248,7 +256,7 @@
                             <p class="terms"><?php echo $invoice['terms']; ?></p>
                         </div>
                     </div> <!-- close terms col-xs -->
-                <?php endif; ?>
+<?php endif; ?>
             </div>
         </div>
     </div>
