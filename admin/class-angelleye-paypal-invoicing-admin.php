@@ -443,7 +443,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 break;
             case 'status' :
                 $status = get_post_meta($post->ID, 'status', true);
-                echo pifw_get_invoice_status($status);
+                if( !empty($status) ) {
+                    $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
+                    echo isset($invoice_status_array['lable']) ? $invoice_status_array['lable'] : '';
+                }
                 break;
             case 'action' :
                 break;
@@ -549,8 +552,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
                 }
             }
-            return $actions;
         }
+        return $actions; 
     }
 
 }

@@ -1,3 +1,4 @@
+<?php //echo print_r($invoice, true); ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -12,11 +13,16 @@
             <div class="row">
                 <div class="col-sm-8">
                 </div>
-                <div class="col-sm-4 invoice-view-info"> 
-                    <div class="row" style="margin-bottom: 20px;">
+                <div class="col-sm-4 invoice-view-info">
+                    <?php
+                    $invoice_status_array = pifw_get_invoice_status_name_and_class($invoice['status']);
+                    if (!empty($invoice_status_array)) :
+                        ?>
+                        <div class="row" style="margin-bottom: 20px;">
                             <span class="col-sm-6 text-right"></span>
-                            <span class="invoiceStatus isCancelled"><?php echo $invoice['status']; ?></span>
+                            <span class="invoiceStatus <?php echo $invoice_status_array['class']; ?>"><?php echo $invoice_status_array['lable']; ?></span>
                         </div>
+                    <?php endif; ?>
                     <?php if (!empty($invoice['number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', ''); ?></span>
@@ -183,12 +189,12 @@
                                     <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
                                 </tr>
                                 <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
-                                <tr>
-                                    <td class="left">
-                                        <?php echo __('Shipping', ''); ?>
-                                    </td>
-                                    <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
-                                </tr>
+                                    <tr>
+                                        <td class="left">
+                                            <?php echo __('Shipping', ''); ?>
+                                        </td>
+                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
+                                    </tr>
                                 <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['tax'])) : ?>
                                     <?php

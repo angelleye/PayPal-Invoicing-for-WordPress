@@ -332,3 +332,17 @@ body {
     color: #fff;
     background-color: #f8981f;
 }
+.isPartiallyPaid {
+    color: #1b9e1b;
+    background-color: #f7fff7;
+    border-bottom: 3px solid #1b9e1b;
+    border-top: 3px solid #1b9e1b;
+}
+.isDraft {
+    color: #fff;
+    background-color: #9da3a6;
+}
+.isPaid {
+    color: #fff;
+    background-color: #1b9e1b;
+}
