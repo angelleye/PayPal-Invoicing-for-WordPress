@@ -101,7 +101,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : $this->debug_log;
 
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
-        include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/paypal-rest/vendor/autoload.php' );
+        include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/paypal-rest/autoload.php' );
     }
 
     public function angelleye_paypal_invoicing_getAuth() {

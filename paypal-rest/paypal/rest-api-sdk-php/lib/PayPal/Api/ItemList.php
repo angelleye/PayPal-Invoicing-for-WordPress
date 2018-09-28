@@ -27,7 +27,7 @@ class ItemList extends PayPalModel
      */
     public function setItems($items)
     {
-        $this->items = array_values($items);
+        $this->items = $items;
         return $this;
     }
 

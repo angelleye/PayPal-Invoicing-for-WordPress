@@ -1186,7 +1186,7 @@ class Invoice extends PayPalResourceModel
         );
         $ret = new InvoiceSearchResponse();
         $ret->fromJson($json);
-        return $json;
+        return $ret;
     }
 
     /**
@@ -1335,22 +1335,6 @@ class Invoice extends PayPalResourceModel
         $ret = new InvoiceNumber();
         $ret->fromJson($json);
         return $ret;
-    }
-    
-    public function setAllowtip($allow_tip)
-    {
-        $this->allow_tip = $allow_tip;
-        return $this;
-    }
-
-    /**
-     * The total amount of the invoice.
-     *
-     * @return \PayPal\Api\Currency
-     */
-    public function getAllowtip()
-    {
-        return $this->allow_tip;
     }
 
 }
