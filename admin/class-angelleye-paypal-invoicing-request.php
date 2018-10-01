@@ -132,7 +132,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         $page = 0;
         $bool = true;
         while ($bool) {
-            $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+            $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
             $invoices_array_data = json_decode($invoices_data, true);
             if (!empty($invoices_array_data)) {
                 if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
@@ -146,7 +146,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             } else {
                 
             }
-            $page = $page + 20;
+            $page = $page + 1000;
         }
     }
 

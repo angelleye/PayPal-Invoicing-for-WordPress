@@ -420,6 +420,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $columns['recipient'] = _x('Recipient', 'angelleye-paypal-invoicing');
         $columns['status'] = __('Status', 'angelleye-paypal-invoicing');
         $columns['amount'] = __('Amount', 'angelleye-paypal-invoicing');
+        $columns['action'] = __('Action', 'angelleye-paypal-invoicing');
         return $columns;
     }
 
@@ -450,6 +451,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
                 break;
             case 'action' :
+                $status = get_post_meta($post->ID, 'status', true);
+                if (!empty($status)) {
+                    $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
+                    if (!empty($invoice_status_array['action'])) {
+                        foreach ($invoice_status_array['action'] as $key => $value) {
+                            ?><select name="pifw_action">
+                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                        </select> <?php
+                        }
+                    }
+                }
                 break;
             case 'amount' :
                 $total_amount_value = get_post_meta($post->ID, 'total_amount_value', true);
@@ -559,11 +571,13 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_bulk_actions($actions) {
         global $post;
-        if( !empty($this->paypal_invoice_post_status_list)) {
-            foreach ($this->paypal_invoice_post_status_list as $key => $value) {
-                $actions[$key] = $value;
-            }
-        }
+        /* if( !empty($this->paypal_invoice_post_status_list)) {
+          foreach ($this->paypal_invoice_post_status_list as $key => $value) {
+          $actions[$key] = $value;
+          }
+          } */
+        $actions['send'] = __('Send', '');
+        $actions['remind'] = __('Remind', '');
         return $actions;
     }
 

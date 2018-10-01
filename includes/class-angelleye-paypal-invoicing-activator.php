@@ -17,7 +17,6 @@ class AngellEYE_PayPal_Invoicing_Activator {
      */
     public static function activate() {
         self::create_files();
-        self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
         if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
             $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
             wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
@@ -26,6 +25,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
         if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
             wp_schedule_event(time(), 'every_ten_minutes', 'angelleye_paypal_invoicing_sync_event');
         }
+        //self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
     }
 
     private static function create_files() {
