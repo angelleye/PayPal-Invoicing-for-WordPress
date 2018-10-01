@@ -272,7 +272,7 @@
                                     <?php
                                     foreach ($invoice_history as $key => $history) {
                                         echo '<tr>';
-                                        echo '<td>' . $history->comment_date . '</td>';
+                                        echo '<td>' . date_i18n(get_option('date_format'), strtotime($history->comment_date)) . '</td>';
                                         echo '<td>' . $history->comment_content . '</td>';
                                         echo '</tr>';
                                     }

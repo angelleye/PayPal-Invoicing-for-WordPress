@@ -593,31 +593,40 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_handle_bulk_action($redirect_to, $action_name, $post_ids) {
-        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
-            $this->angelleye_paypal_invoicing_load_rest_api();
-            if ('send' === $action_name) {
-                foreach ($post_ids as $post_id) {
-                    $status = get_post_meta($post_id, 'status', true);
-                    if ($status == 'DRAFT') {
-                        $invoice_id = get_post_meta($post_id, 'id', true);
-                        $invoice = $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
+        try {
+            if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+                $this->angelleye_paypal_invoicing_load_rest_api();
+                if ('send' === $action_name) {
+                    foreach ($post_ids as $post_id) {
+                        $status = get_post_meta($post_id, 'status', true);
+                        if ($status == 'DRAFT') {
+                            $invoice_id = get_post_meta($post_id, 'id', true);
+                            $invoice_id = get_post_meta($post_id, 'id', true);
+                            $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
+                            $email = get_post_meta($post_id, 'email', true);
+                            $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        }
                     }
-                }
-            } elseif ('remind' === $action_name) {
-                foreach ($post_ids as $post_id) {
-                    $status = get_post_meta($post_id, 'status', true);
-                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED') {
-                        $invoice_id = get_post_meta($post_id, 'id', true);
-                        $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
-                        $email = get_post_meta($post_id, 'email', true);
-                        $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                    $redirect_to = add_query_arg('message', 1024, $redirect_to);
+                    return $redirect_to;
+                } elseif ('remind' === $action_name) {
+                    foreach ($post_ids as $post_id) {
+                        $status = get_post_meta($post_id, 'status', true);
+                        if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED') {
+                            $invoice_id = get_post_meta($post_id, 'id', true);
+                            $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
+                            $email = get_post_meta($post_id, 'email', true);
+                            $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        }
                     }
+                    $redirect_to = add_query_arg('message', 1025, $redirect_to);
+                    return $redirect_to;
                 }
-                $redirect_to = add_query_arg('message', 1025, $redirect_to);
-                return $redirect_to;
+            } else {
+                $this->angelleye_paypal_invoicing_print_error();
             }
-        } else {
-            $this->angelleye_paypal_invoicing_print_error();
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
         }
     }
 

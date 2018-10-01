@@ -736,4 +736,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
     }
 
+    public function angelleye_paypal_invoicing_send_invoice_from_draft($invoiceId, $post_id) {
+        $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+        $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
+        $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
+        $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
+    }
+
 }
