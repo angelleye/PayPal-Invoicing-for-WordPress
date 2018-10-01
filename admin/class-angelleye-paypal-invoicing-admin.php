@@ -152,6 +152,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_top_menu() {
         remove_meta_box('submitdiv', 'paypal_invoices', 'side');
+        remove_meta_box('postexcerpt', 'paypal_invoices', 'normal');
+        remove_meta_box('trackbacksdiv', 'paypal_invoices', 'normal');
+        remove_meta_box('postcustom', 'paypal_invoices', 'normal');
+        remove_meta_box('commentstatusdiv', 'paypal_invoices', 'normal');
+        remove_meta_box('commentsdiv', 'paypal_invoices', 'normal');
+        remove_meta_box('revisionsdiv', 'paypal_invoices', 'normal');
+        remove_meta_box('authordiv', 'paypal_invoices', 'normal');
+        remove_meta_box('sqpt-meta-tags', 'paypal_invoices', 'normal');
         add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, PAYPAL_INVOICE_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
         // add_submenu_page('apifw_manage_invoces', 'Manage Invoces', 'Manage Invoces', 'manage_options', 'apifw_manage_invoces', array($this, 'angelleye_paypal_invoicing_manage_invoicing_content'));
         // add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'apifw_create_invoces', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
@@ -457,8 +465,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     if (!empty($invoice_status_array['action'])) {
                         foreach ($invoice_status_array['action'] as $key => $value) {
                             ?><select name="pifw_action">
-                            <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                        </select> <?php
+                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                            </select> <?php
                         }
                     }
                 }
@@ -541,6 +549,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_GET['message']) && $_GET['message'] == '1024') {
             echo "<div class='notice notice-success is-dismissible'><p>We've sent your invoice.</p></div>";
         }
+        if (!empty($_GET['message']) && $_GET['message'] == '1025') {
+            echo "<div class='notice notice-success is-dismissible'><p>Your reminder was sent.</p></div>";
+        }
     }
 
     public function angelleye_paypal_invoicing_get_payer_view($invoice) {
@@ -579,6 +590,93 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $actions['send'] = __('Send', '');
         $actions['remind'] = __('Remind', '');
         return $actions;
+    }
+
+    public function angelleye_paypal_invoicing_handle_bulk_action($redirect_to, $action_name, $post_ids) {
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if ('send' === $action_name) {
+                foreach ($post_ids as $post_id) {
+                    $status = get_post_meta($post_id, 'status', true);
+                    if ($status == 'DRAFT') {
+                        $invoice_id = get_post_meta($post_id, 'id', true);
+                        $invoice = $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
+                    }
+                }
+            } elseif ('remind' === $action_name) {
+                foreach ($post_ids as $post_id) {
+                    $status = get_post_meta($post_id, 'status', true);
+                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED') {
+                        $invoice_id = get_post_meta($post_id, 'id', true);
+                        $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
+                        $email = get_post_meta($post_id, 'email', true);
+                        $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                    }
+                }
+                $redirect_to = add_query_arg('message', 1025, $redirect_to);
+                return $redirect_to;
+            }
+        } else {
+            $this->angelleye_paypal_invoicing_print_error();
+        }
+    }
+
+    public function add_invoice_note($post_id, $note, $is_customer_note = 0, $added_by_user = false) {
+        if (is_user_logged_in() && $added_by_user) {
+            $user = get_user_by('id', get_current_user_id());
+            $comment_author = $user->display_name;
+            $comment_author_email = $user->user_email;
+        } else {
+            $comment_author = __('PayPal Invoice', 'angelleye-paypal-invoicing');
+            $comment_author_email = strtolower(__('paypal_invoice', 'angelleye-paypal-invoicing')) . '@';
+            $comment_author_email .= isset($_SERVER['HTTP_HOST']) ? str_replace('www.', '', sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST']))) : 'noreply.com'; // WPCS: input var ok.
+            $comment_author_email = sanitize_email($comment_author_email);
+        }
+        $commentdata = apply_filters(
+                'angelleye_paypal_invoicing_new_order_note_data', array(
+            'comment_post_ID' => $post_id,
+            'comment_author' => $comment_author,
+            'comment_author_email' => $comment_author_email,
+            'comment_author_url' => '',
+            'comment_content' => $note,
+            'comment_agent' => 'PayPal Invoice',
+            'comment_type' => 'invoice_note',
+            'post_type' => 'paypal_invoices',
+            'comment_parent' => 0,
+            'comment_approved' => 1,
+                ), array(
+            'is_customer_note' => $is_customer_note,
+                )
+        );
+        $comment_id = wp_insert_comment($commentdata);
+        if ($is_customer_note) {
+            add_comment_meta($comment_id, 'is_customer_note', 1);
+            do_action(
+                    'angelleye_paypal_invoicing_new_customer_note', array(
+                'order_id' => $post_id,
+                'customer_note' => $commentdata['comment_content'],
+                    )
+            );
+        }
+        return $comment_id;
+    }
+
+    public function get_invoice_notes($post_id) {
+        $notes = array();
+        $args = array(
+            'post_id' => $post_id,
+            'comment_type' => 'invoice_note',
+            'post_type' => 'paypal_invoices'
+        );
+        $comments = get_comments($args);
+        foreach ($comments as $comment) {
+            if (!get_comment_meta($comment->comment_ID, 'is_customer_note', true)) {
+                continue;
+            }
+            $comment->comment_content = make_clickable($comment->comment_content);
+            $notes[] = $comment;
+        }
+        return $notes;
     }
 
 }

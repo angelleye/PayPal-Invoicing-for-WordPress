@@ -1,4 +1,4 @@
-<?php //echo print_r($invoice, true);  ?>
+<?php //echo print_r($invoice, true);        ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -192,18 +192,18 @@
                             <tbody>
                                 <tr>
                                     <td class="left">
-<?php echo __('Subtotal', ''); ?>
+                                        <?php echo __('Subtotal', ''); ?>
                                     </td>
                                     <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
                                 </tr>
-<?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
+                                <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
                                     <tr>
                                         <td class="left">
-    <?php echo __('Shipping', ''); ?>
+                                            <?php echo __('Shipping', ''); ?>
                                         </td>
                                         <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
                                     </tr>
-<?php endif; ?>
+                                <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['tax'])) : ?>
                                     <?php
                                     foreach ($invoice_total_array['tax'] as $tax_index => $tax_data) {
@@ -219,19 +219,19 @@
                                 <?php if (!empty($invoice_total_array['discount'])) : ?>
                                     <tr>
                                         <td class="left">
-    <?php echo __('Discount', ''); ?>
+                                            <?php echo __('Discount', ''); ?>
                                         </td>
-                                            <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
+                                        <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
                                     </tr>
-                                    <?php endif; ?>
+                                <?php endif; ?>
                                 <?php if (!empty($invoice['total_amount'])) : ?>
                                     <tr>
                                         <td class="left total">
                                             <strong><?php echo __('Total', ''); ?></strong>
                                         </td>
-    <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
+                                        <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
                                     </tr>
-                                    <?php endif; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -241,14 +241,14 @@
             <div class="sectionBottom"></div>
             <br>
             <div class="row">
-<?php if (!empty($invoice['note'])) : ?>
+                <?php if (!empty($invoice['note'])) : ?>
                     <div class="col-xs-6 col-sm-6">
                         <div>
                             <h4 class="headline"><?php echo __('Notes', ''); ?></h4>
                             <p class="notes"><?php echo $invoice['note']; ?></p>
                         </div>
                     </div><!-- close note col-xs -->
-<?php endif; ?>
+                <?php endif; ?>
                 <?php if (!empty($invoice['terms'])) : ?>
                     <div class="col-xs-6 col-sm-6">
                         <div>
@@ -256,10 +256,33 @@
                             <p class="terms"><?php echo $invoice['terms']; ?></p>
                         </div>
                     </div> <!-- close terms col-xs -->
-<?php endif; ?>
+                <?php endif; ?>
+            </div>
+            <br><br><br><br>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="headline">History</h4>
+                    <div class="table-responsive-sm">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <?php
+                                $invoice_history = $this->get_invoice_notes($post->ID);
+                                if (!empty($invoice_history)) {
+                                    foreach ($invoice_history as $key => $history) {
+                                        echo '<tr>';
+                                        echo '<td>'.$history->comment_date.'</td>';
+                                        echo '<td>'.$history->comment_content.'</td>';
+                                        echo '</tr>';
+                                    }
+                                }
+                                ?>
+                            </table>
+                        </div>
+                    </div>
+                </div>           
+
             </div>
         </div>
     </div>
-</div>
 
 

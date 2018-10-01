@@ -16,6 +16,7 @@ use PayPal\Api\ShippingInfo;
 use PayPal\Api\Templates;
 use PayPal\Api\Participant;
 use PayPal\Api\ShippingCost;
+use PayPal\Api\Notification;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -724,4 +725,15 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
         update_post_meta($post_id, 'all_invoice_data', $invoice);
     }
+
+    public function angelleye_paypal_invoicing_send_invoice_remind($invoiceId) {
+        $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+        $notify = new Notification();
+        $notify
+                ->setSubject(apply_filters('angelleye_paypal_invoice_remind_subject', "Past due"))
+                ->setNote(apply_filters('angelleye_paypal_invoice_remind_note', "Please pay soon"))
+                ->setSendToMerchant(true);
+        $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
+    }
+
 }
