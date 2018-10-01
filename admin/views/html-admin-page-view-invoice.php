@@ -1,4 +1,4 @@
-<?php //echo print_r($invoice, true);        ?>
+<?php //echo print_r($invoice, true);         ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -259,30 +259,29 @@
                 <?php endif; ?>
             </div>
             <br><br><br><br>
-            <div class="row">
-                <div class="col-sm-12">
-                    <h4 class="headline">History</h4>
-                    <div class="table-responsive-sm">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <?php
-                                $invoice_history = $this->get_invoice_notes($post->ID);
-                                if (!empty($invoice_history)) {
+            <?php
+            $invoice_history = $this->get_invoice_notes($post->ID);
+            if (!empty($invoice_history)) :
+                ?>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h4 class="headline">History</h4>
+                        <div class="table-responsive-sm">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <?php
                                     foreach ($invoice_history as $key => $history) {
                                         echo '<tr>';
-                                        echo '<td>'.$history->comment_date.'</td>';
-                                        echo '<td>'.$history->comment_content.'</td>';
+                                        echo '<td>' . $history->comment_date . '</td>';
+                                        echo '<td>' . $history->comment_content . '</td>';
                                         echo '</tr>';
                                     }
-                                }
-                                ?>
-                            </table>
+                                    ?>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                </div>           
-
-            </div>
+                    </div>           
+                </div>
+            <?php endif; ?>  
         </div>
     </div>
-
-
