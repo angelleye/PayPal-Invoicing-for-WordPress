@@ -60,14 +60,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->last_name = isset($woocommerce_pifw_paypal_invoice_settings['last_name']) ? $woocommerce_pifw_paypal_invoice_settings['last_name'] : '';
         $this->compnay_name = isset($woocommerce_pifw_paypal_invoice_settings['compnay_name']) ? $woocommerce_pifw_paypal_invoice_settings['compnay_name'] : '';
         $this->phone_number = isset($woocommerce_pifw_paypal_invoice_settings['phone_number']) ? $woocommerce_pifw_paypal_invoice_settings['phone_number'] : '';
-
         $this->address_line_1 = isset($woocommerce_pifw_paypal_invoice_settings['address_line_1']) ? $woocommerce_pifw_paypal_invoice_settings['address_line_1'] : '';
         $this->address_line_2 = isset($woocommerce_pifw_paypal_invoice_settings['address_line_2']) ? $woocommerce_pifw_paypal_invoice_settings['address_line_2'] : '';
         $this->city = isset($woocommerce_pifw_paypal_invoice_settings['city']) ? $woocommerce_pifw_paypal_invoice_settings['city'] : '';
         $this->post_code = isset($woocommerce_pifw_paypal_invoice_settings['post_code']) ? $woocommerce_pifw_paypal_invoice_settings['post_code'] : '';
         $this->state = isset($woocommerce_pifw_paypal_invoice_settings['state']) ? $woocommerce_pifw_paypal_invoice_settings['state'] : '';
         $this->country = isset($woocommerce_pifw_paypal_invoice_settings['country']) ? $woocommerce_pifw_paypal_invoice_settings['country'] : '';
-
         $this->shipping_rate = isset($woocommerce_pifw_paypal_invoice_settings['shipping_rate']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_rate'] : '';
         $this->shipping_amount = isset($woocommerce_pifw_paypal_invoice_settings['shipping_amount']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_amount'] : '';
         $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : '';
@@ -428,7 +426,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $columns['recipient'] = _x('Recipient', 'angelleye-paypal-invoicing');
         $columns['status'] = __('Status', 'angelleye-paypal-invoicing');
         $columns['amount'] = __('Amount', 'angelleye-paypal-invoicing');
-        $columns['action'] = __('Action', 'angelleye-paypal-invoicing');
+        //$columns['action'] = __('Action', 'angelleye-paypal-invoicing');
         return $columns;
     }
 
@@ -568,12 +566,20 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_remove_actions_row($actions, $post) {
         if ($post->post_type == 'paypal_invoices') {
             $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
+            $status = get_post_meta($post->ID, 'status', true);
             unset($actions['inline hide-if-no-js']);
             if (!empty($actions['edit'])) {
                 $actions['view'] = str_replace('Edit', 'View', $actions['edit']);
                 unset($actions['edit']);
                 if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
                     $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
+                }
+                if ($status == 'DRAFT') {
+                    $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice') . '</a>';
+                }
+
+                if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
+                    $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice') . '</a>';
                 }
             }
         }
@@ -600,7 +606,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     foreach ($post_ids as $post_id) {
                         $status = get_post_meta($post_id, 'status', true);
                         if ($status == 'DRAFT') {
-                            $invoice_id = get_post_meta($post_id, 'id', true);
                             $invoice_id = get_post_meta($post_id, 'id', true);
                             $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
                             $email = get_post_meta($post_id, 'email', true);
@@ -686,6 +691,37 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $notes[] = $comment;
         }
         return $notes;
+    }
+
+    public function angelleye_paypal_invoicing_handle_post_row_action() {
+        try {
+            if (isset($_REQUEST['invoice_action']) && !empty($_REQUEST['invoice_action']) && isset($_REQUEST['post_id']) && !empty($_REQUEST['post_id'])) {
+                $action_name = $_REQUEST['invoice_action'];
+                $post_id = $_REQUEST['post_id'];
+                if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+                    $this->angelleye_paypal_invoicing_load_rest_api();
+                    if ('paypal_invoice_send' === $action_name) {
+                        $invoice_id = get_post_meta($post_id, 'id', true);
+                        $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
+                        $email = get_post_meta($post_id, 'email', true);
+                        $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1024'));
+                        exit();
+                    } elseif ('paypal_invoice_remind' === $action_name) {
+                        $invoice_id = get_post_meta($post_id, 'id', true);
+                        $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
+                        $email = get_post_meta($post_id, 'email', true);
+                        $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1025'));
+                        exit();
+                    }
+                } else {
+                    $this->angelleye_paypal_invoicing_print_error();
+                }
+            }
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+        }
     }
 
 }
