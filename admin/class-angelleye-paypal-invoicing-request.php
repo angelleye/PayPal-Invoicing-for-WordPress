@@ -754,5 +754,10 @@ class AngellEYE_PayPal_Invoicing_Request {
                 ->setSendToPayer(apply_filters('angelleye_paypal_invoice_send_to_payer', true));
         $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
     }
+    
+    public function angelleye_paypal_invoicing_delete_invoice($invoiceId) {
+        $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+        $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
+    }
 
 }
