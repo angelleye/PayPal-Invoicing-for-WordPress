@@ -617,7 +617,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 } elseif ('remind' === $action_name) {
                     foreach ($post_ids as $post_id) {
                         $status = get_post_meta($post_id, 'status', true);
-                        if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED') {
+                        if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
                             $invoice_id = get_post_meta($post_id, 'id', true);
                             $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
                             $email = get_post_meta($post_id, 'email', true);

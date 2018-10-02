@@ -258,11 +258,11 @@
                     </div> <!-- close terms col-xs -->
                 <?php endif; ?>
             </div>
-            <br><br><br><br>
             <?php
             $invoice_history = $this->get_invoice_notes($post->ID);
             if (!empty($invoice_history)) :
                 ?>
+                <br><br><br><br>
                 <div class="row">
                     <div class="col-sm-12">
                         <h4 class="headline">History</h4>
