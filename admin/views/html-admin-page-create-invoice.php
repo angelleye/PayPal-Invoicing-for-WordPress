@@ -11,7 +11,7 @@ $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['sh
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
 
-echo print_r(_get_cron_array(), true);
+//echo print_r(_get_cron_array(), true);
 ?>
 
 <div class="container-fluid pifw_section" id="angelleye-paypal-invoicing">

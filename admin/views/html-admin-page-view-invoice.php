@@ -20,7 +20,7 @@
                         ?>
                         <div class="row" style="margin-bottom: 20px;">
                             <span class="col-sm-6 text-right"></span>
-                            <span class="invoiceStatus <?php echo $invoice_status_array['class']; ?>"><?php echo $invoice_status_array['lable']; ?></span>
+                            <span class="invoiceStatus <?php echo isset($invoice_status_array['class']) ? $invoice_status_array['class'] : 'isDraft'; ?>"><?php echo $invoice_status_array['lable']; ?></span>
                         </div>
                     <?php endif; ?>
                     <?php if (!empty($invoice['number'])) : ?>

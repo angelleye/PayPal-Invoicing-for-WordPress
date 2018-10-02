@@ -550,6 +550,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_GET['message']) && $_GET['message'] == '1025') {
             echo "<div class='notice notice-success is-dismissible'><p>Your reminder was sent.</p></div>";
         }
+        if (!empty($_GET['message']) && $_GET['message'] == '1026') {
+            echo "<div class='notice notice-success is-dismissible'><p>Your invoice is canceled.</p></div>";
+        }
     }
 
     public function angelleye_paypal_invoicing_get_payer_view($invoice) {
@@ -577,9 +580,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if ($status == 'DRAFT') {
                     $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice') . '</a>';
                 }
-
                 if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
                     $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice') . '</a>';
+                }
+                if ($status == 'SENT') {
+                    $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice') . '</a>';
                 }
             }
         }
@@ -593,8 +598,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
           $actions[$key] = $value;
           }
           } */
-        $actions['send'] = __('Send', '');
-        $actions['remind'] = __('Remind', '');
+        $actions['send'] = __('Send Invoice', '');
+        $actions['remind'] = __('Remind Invoice', '');
+        $actions['cancel'] = __('Cancel Invoice', '');
         return $actions;
     }
 
@@ -610,6 +616,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
                             $email = get_post_meta($post_id, 'email', true);
                             $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                            $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                            $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         }
                     }
                     $redirect_to = add_query_arg('message', 1024, $redirect_to);
@@ -622,9 +630,24 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
                             $email = get_post_meta($post_id, 'email', true);
                             $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                            $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                            $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         }
                     }
                     $redirect_to = add_query_arg('message', 1025, $redirect_to);
+                    return $redirect_to;
+                } elseif ('cancel' === $action_name) {
+                    foreach ($post_ids as $post_id) {
+                        $status = get_post_meta($post_id, 'status', true);
+                        if ($status == 'SENT') {
+                            $invoice_id = get_post_meta($post_id, 'id', true);
+                            $this->request->angelleye_paypal_invoicing_cancel_invoice($invoice_id);
+                            $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice.', 'woocommerce')), $is_customer_note = 1);
+                            $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                            $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
+                        }
+                    }
+                    $redirect_to = add_query_arg('message', 1026, $redirect_to);
                     return $redirect_to;
                 }
             } else {
@@ -705,6 +728,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
                         $email = get_post_meta($post_id, 'email', true);
                         $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                        $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1024'));
                         exit();
                     } elseif ('paypal_invoice_remind' === $action_name) {
@@ -712,9 +737,19 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
                         $email = get_post_meta($post_id, 'email', true);
                         $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                        $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1025'));
                         exit();
-                    }
+                    } elseif ('paypal_invoice_cancel' === $action_name) {
+                        $invoice_id = get_post_meta($post_id, 'id', true);
+                        $this->request->angelleye_paypal_invoicing_cancel_invoice($invoice_id);
+                        $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice', 'woocommerce')), $is_customer_note = 1);
+                        $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                        $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
+                        wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1026'));
+                        exit();
+                    } 
                 } else {
                     $this->angelleye_paypal_invoicing_print_error();
                 }

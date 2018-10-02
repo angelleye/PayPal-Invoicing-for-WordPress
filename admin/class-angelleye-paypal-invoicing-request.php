@@ -17,6 +17,7 @@ use PayPal\Api\Templates;
 use PayPal\Api\Participant;
 use PayPal\Api\ShippingCost;
 use PayPal\Api\Notification;
+use PayPal\Api\CancelNotification;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -708,7 +709,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'status' => $invoice['status'],
             'invoice_date' => $invoice['invoice_date'],
             'number' => $invoice['number'],
-            'email' => $billing_info[0]['email'],
+            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
             'currency' => $amount['currency'],
             'total_amount_value' => $amount['value'],
         );
@@ -741,6 +742,17 @@ class AngellEYE_PayPal_Invoicing_Request {
         $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
         $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
         $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
+    }
+
+    public function angelleye_paypal_invoicing_cancel_invoice($invoiceId) {
+        $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+        $notify = new CancelNotification();
+        $notify
+                ->setSubject(apply_filters('angelleye_paypal_invoice_cancel_subject', "Past due"))
+                ->setNote(apply_filters('angelleye_paypal_invoice_cancel_note', "Please pay soon"))
+                ->setSendToMerchant(apply_filters('angelleye_paypal_invoice_send_to_merchant', true))
+                ->setSendToPayer(apply_filters('angelleye_paypal_invoice_send_to_payer', true));
+        $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
     }
 
 }

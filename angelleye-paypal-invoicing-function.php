@@ -184,7 +184,6 @@ function pifw_get_invoice_status_name_and_class($status) {
         "REFUNDED" => array('lable' => 'Refunded', 'class' => 'isDraft'),
         "PARTIALLY_REFUNDED" => array('lable' => 'Partially refunded', 'class' => 'isDraft'),
         "MARKED_AS_REFUNDED" => array('lable' => 'Mark as refunded', 'class' => 'isDraft'),
-        "UNPAID" => array('lable' => 'Draft', 'Unpaid' => 'isDraft'),
         "PAYMENT_PENDING" => array('lable' => 'Payment pending', 'class' => 'isDraft'),
         "PARTIALLY_PAID" => array('lable' => 'Partially paid', 'class' => 'isPartiallyPaid', 'action' => array('remind' => 'Remind')),
     );
