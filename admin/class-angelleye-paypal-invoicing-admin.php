@@ -780,4 +780,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
             echo $ex->getMessage();
         }
     }
+    
+    public function angelleye_paypal_invoicing_handle_webhook_request() {
+        if (isset($_GET['action']) && $_GET['action'] == 'webhook_handler') {
+            $log = new AngellEYE_PayPal_Invoicing_Logger();
+            $posted = wp_unslash( $_POST );
+            $log->add('paypal_invoice_log', print_r($posted, true));
+        }
+    }
 }

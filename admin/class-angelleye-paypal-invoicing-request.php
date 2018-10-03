@@ -803,17 +803,19 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $data = $ex->getData();
                 if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false) {
                     $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
-                    try {
-                        foreach ($webhookList->getWebhooks() as $webhook) {
-                            $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                    if (!empty($list_webhooks)) {
+                        try {
+                            foreach ($webhookList->getWebhooks() as $webhook) {
+                                $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                            }
+                        } catch (Exception $ex) {
+                            return false;
                         }
-                    } catch (Exception $ex) {
-                        return false;
-                    }
-                    try {
-                        $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
-                    } catch (Exception $ex) {
-                        return false;
+                        try {
+                            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                        } catch (Exception $ex) {
+                            return false;
+                        }
                     }
                 } else {
                     return false;

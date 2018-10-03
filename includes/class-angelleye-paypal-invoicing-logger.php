@@ -69,7 +69,8 @@ class AngellEYE_PayPal_Invoicing_Logger {
     public function add($handle, $message) {
         if ($this->open($handle) && is_resource($this->_handles[$handle])) {
             $time = date_i18n('m-d-Y @ H:i:s -'); // Grab Time
-            @fwrite($this->_handles[$handle], $time . " " . $message . "\n");
+            $timestamp = current_time( 'timestamp' );
+            @fwrite($this->_handles[$handle.$timestamp], $time . " " . $message . "\n");
         }
     }
 
