@@ -153,16 +153,16 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice) {
-        $billing_info = $invoice['billing_info'];
+        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
         $amount = $invoice['total_amount'];
         $paypal_invoice_data_array = array(
             'id' => $invoice['id'],
-            'status' => $invoice['status'],
-            'invoice_date' => $invoice['invoice_date'],
-            'number' => $invoice['number'],
-            'email' => $billing_info[0]['email'],
-            'currency' => $amount['currency'],
-            'total_amount_value' => $amount['value'],
+            'status' => isset($invoice['status']) ? $invoice['status'] : '',
+            'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
+            'number' => isset($invoice['number']) ? $invoice['number'] : '',
+            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
+            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
         );
         $insert_invoice_array = array(
             'ID' => '',
@@ -702,16 +702,16 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
-        $billing_info = $invoice['billing_info'];
-        $amount = $invoice['total_amount'];
+        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
+        $amount = isset($invoice['total_amount']) ? $invoice['total_amount'] : '';
         $paypal_invoice_data_array = array(
-            'id' => $invoice['id'],
-            'status' => $invoice['status'],
-            'invoice_date' => $invoice['invoice_date'],
-            'number' => $invoice['number'],
+            'id' => isset($invoice['id']) ? $invoice['id'] : '',
+            'status' => isset($invoice['status']) ? $invoice['status'] : '',
+            'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
+            'number' => isset($invoice['number']) ? $invoice['number'] : '',
             'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
-            'currency' => $amount['currency'],
-            'total_amount_value' => $amount['value'],
+            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
         );
         $insert_invoice_array = array(
             'ID' => $post_id,

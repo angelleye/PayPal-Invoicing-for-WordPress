@@ -786,6 +786,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $log = new AngellEYE_PayPal_Invoicing_Logger();
             $posted = wp_unslash( $_POST );
             $log->add('paypal_invoice_log', print_r($posted, true));
+            @ob_clean();
+		header( 'HTTP/1.1 200 OK' );
+                exit();
         }
     }
 }
