@@ -785,7 +785,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (isset($_GET['action']) && $_GET['action'] == 'webhook_handler') {
             $log = new AngellEYE_PayPal_Invoicing_Logger();
             $posted = wp_unslash($this->angelleye_paypal_invoicing_get_raw_data());
-            //$posted = array('test' => 'abc');
             $log->add('paypal_invoice_log', print_r($posted, true));
             @ob_clean();
             header('HTTP/1.1 200 OK');
