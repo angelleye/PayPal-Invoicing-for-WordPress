@@ -160,7 +160,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_bulk_actions', 10, 2);
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
-        $this->loader->add_action('parse_request', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 10);
+        $this->loader->add_action('parse_request', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 0);
         
     }
 

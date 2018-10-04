@@ -576,7 +576,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             unset($actions['inline hide-if-no-js']);
             unset($actions['trash']);
             $actions['view'] = str_replace('Edit', 'View', $actions['edit']);
-             unset($actions['edit']);
+            unset($actions['edit']);
             if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
                 $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
             }
@@ -780,15 +780,27 @@ class AngellEYE_PayPal_Invoicing_Admin {
             echo $ex->getMessage();
         }
     }
-    
+
     public function angelleye_paypal_invoicing_handle_webhook_request() {
         if (isset($_GET['action']) && $_GET['action'] == 'webhook_handler') {
             $log = new AngellEYE_PayPal_Invoicing_Logger();
-            $posted = wp_unslash( $_POST );
+            $posted = wp_unslash($this->angelleye_paypal_invoicing_get_raw_data());
             $log->add('paypal_invoice_log', print_r($posted, true));
             @ob_clean();
-		header( 'HTTP/1.1 200 OK' );
-                exit();
+            header('HTTP/1.1 200 OK');
+            exit();
         }
     }
+
+    public function angelleye_paypal_invoicing_get_raw_data() {
+        if (function_exists('phpversion') && version_compare(phpversion(), '5.6', '>=')) {
+            return file_get_contents('php://input');
+        }
+        global $HTTP_RAW_POST_DATA;
+        if (!isset($HTTP_RAW_POST_DATA)) {
+            $HTTP_RAW_POST_DATA = file_get_contents('php://input');
+        }
+        return $HTTP_RAW_POST_DATA;
+    }
+
 }
