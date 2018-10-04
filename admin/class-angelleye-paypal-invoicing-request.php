@@ -800,11 +800,11 @@ class AngellEYE_PayPal_Invoicing_Request {
   }'
             );
             $webhook->setEventTypes($webhookEventTypes);
-            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());//
         } catch (Exception $ex) {
             if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
                 $data = $ex->getData();
-                if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false) {
+                if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
                     $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
                     if (!empty($list_webhooks)) {
                         try {
@@ -852,7 +852,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $status = $output->getVerificationStatus();
             if ($status == 'SUCCESS') {
                 $request_array = json_decode($request_body, true);
-                if ($request_array['resource_type'] == 'invoices') {
+                if ($request_array['resource_type'] == 'invoices' || 'invoice' == $request_array['resource_type']) {
                     if (!empty($request_array['resource']['invoice'])) {
                         $post_id = $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($request_array['resource']['invoice']);
                         return $post_id;
