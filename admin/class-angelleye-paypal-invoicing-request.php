@@ -847,7 +847,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $signatureVerification->setWebhookId("9XL90610J3647323C");
             $signatureVerification->setTransmissionSig($headers['PAYPAL-TRANSMISSION-SIG']);
             $signatureVerification->setTransmissionTime($headers['PAYPAL-TRANSMISSION-TIME']);
-            $signatureVerification->setRequestBody($requestBody);
+            $signatureVerification->setRequestBody($request_body);
             $output = $signatureVerification->post($this->angelleye_paypal_invoicing_getAuth());
             $status = $output->getVerificationStatus();
             if ($status == 'SUCCESS') {

@@ -786,13 +786,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
                 $this->angelleye_paypal_invoicing_load_rest_api();
                 $log = new AngellEYE_PayPal_Invoicing_Logger();
-                $posted = wp_unslash($this->angelleye_paypal_invoicing_get_raw_data());
-                $log->add('paypal_invoice_log', print_r($posted, true));
+                $posted_raw = $this->angelleye_paypal_invoicing_get_raw_data();
+                $log->add('paypal_invoice_log', print_r($posted_raw, true));
                 $headers = getallheaders();
                 $headers = array_change_key_case($headers, CASE_UPPER);
-                $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted);
-                if( $post_id != false & !empty($posted['summary'])) {
-                    $this->add_invoice_note($post_id, 'Webhook: ' .$posted['summary'], $is_customer_note = 1);
+                $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
+                $posted = json_decode($posted_raw, true);
+                if ($post_id != false && !empty($posted['summary'])) {
+                    $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                 }
                 @ob_clean();
                 header('HTTP/1.1 200 OK');
