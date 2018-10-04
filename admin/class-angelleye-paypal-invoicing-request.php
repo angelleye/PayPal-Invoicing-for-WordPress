@@ -800,7 +800,9 @@ class AngellEYE_PayPal_Invoicing_Request {
   }'
             );
             $webhook->setEventTypes($webhookEventTypes);
-            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());//
+            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+            $webhook_id = $output->getId();
+            update_option('webhook_id', $webhook_id);
         } catch (Exception $ex) {
             if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
                 $data = $ex->getData();
@@ -808,7 +810,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
                     if (!empty($list_webhooks)) {
                         try {
-                            foreach ($webhookList->getWebhooks() as $webhook) {
+                            foreach ($list_webhooks->getWebhooks() as $webhook) {
                                 $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
                             }
                         } catch (Exception $ex) {
@@ -816,6 +818,8 @@ class AngellEYE_PayPal_Invoicing_Request {
                         }
                         try {
                             $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                            $webhook_id = $output->getId();
+                            update_option('webhook_id', $webhook_id);
                         } catch (Exception $ex) {
                             return false;
                         }
