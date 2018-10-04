@@ -854,7 +854,8 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $request_array = json_decode($request_body, true);
                 if ($request_array['resource_type'] == 'invoices') {
                     if (!empty($request_array['resource']['invoice'])) {
-                        
+                        $post_id = $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($request_array['resource']['invoice']);
+                        return $post_id;
                     }
                 }
             }
