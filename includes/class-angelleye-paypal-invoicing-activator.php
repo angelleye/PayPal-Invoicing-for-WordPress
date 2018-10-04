@@ -26,7 +26,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
             wp_schedule_event(time(), 'every_ten_minutes', 'angelleye_paypal_invoicing_sync_event');
         }
         $webhook_id = get_option('webhook_id', false);
-        if( $webhook_id ) {
+        if( $webhook_id == false) {
             self::angelleye_paypal_invoicing_create_web_hook();
         }
         //self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
