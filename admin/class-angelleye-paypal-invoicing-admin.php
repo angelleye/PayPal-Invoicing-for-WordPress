@@ -783,12 +783,21 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_handle_webhook_request() {
         if (isset($_GET['action']) && $_GET['action'] == 'webhook_handler') {
-            $log = new AngellEYE_PayPal_Invoicing_Logger();
-            $posted = wp_unslash($this->angelleye_paypal_invoicing_get_raw_data());
-            $log->add('paypal_invoice_log', print_r($posted, true));
-            @ob_clean();
-            header('HTTP/1.1 200 OK');
-            exit();
+            if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+                $this->angelleye_paypal_invoicing_load_rest_api();
+                $log = new AngellEYE_PayPal_Invoicing_Logger();
+                $posted = wp_unslash($this->angelleye_paypal_invoicing_get_raw_data());
+                $log->add('paypal_invoice_log', print_r($posted, true));
+                $headers = getallheaders();
+                $headers = array_change_key_case($headers, CASE_UPPER);
+                $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted);
+                if( $post_id != false & !empty($posted['summary'])) {
+                    $this->add_invoice_note($post_id, 'Webhook: ' .$posted['summary'], $is_customer_note = 1);
+                }
+                @ob_clean();
+                header('HTTP/1.1 200 OK');
+                exit();
+            }
         }
     }
 

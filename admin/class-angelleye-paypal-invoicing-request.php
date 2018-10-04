@@ -18,6 +18,8 @@ use PayPal\Api\Participant;
 use PayPal\Api\ShippingCost;
 use PayPal\Api\Notification;
 use PayPal\Api\CancelNotification;
+use \PayPal\Api\VerifyWebhookSignature;
+use \PayPal\Api\WebhookEvent;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -186,6 +188,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             update_post_meta($existing_post_id, 'all_invoice_data', $invoice);
         }
+        return $existing_post_id;
     }
 
     public function angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_txn_id) {
@@ -832,6 +835,31 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $output;
         } catch (Exception $ex) {
             return '';
+        }
+    }
+
+    public function angelleye_paypal_invoicing_validate_webhook_event($headers, $request_body) {
+        try {
+            $signatureVerification = new VerifyWebhookSignature();
+            $signatureVerification->setAuthAlgo($headers['PAYPAL-AUTH-ALGO']);
+            $signatureVerification->setTransmissionId($headers['PAYPAL-TRANSMISSION-ID']);
+            $signatureVerification->setCertUrl($headers['PAYPAL-CERT-URL']);
+            $signatureVerification->setWebhookId("9XL90610J3647323C");
+            $signatureVerification->setTransmissionSig($headers['PAYPAL-TRANSMISSION-SIG']);
+            $signatureVerification->setTransmissionTime($headers['PAYPAL-TRANSMISSION-TIME']);
+            $signatureVerification->setRequestBody($requestBody);
+            $output = $signatureVerification->post($this->angelleye_paypal_invoicing_getAuth());
+            $status = $output->getVerificationStatus();
+            if ($status == 'SUCCESS') {
+                $request_array = json_decode($request_body, true);
+                if ($request_array['resource_type'] == 'invoices') {
+                    if (!empty($request_array['resource']['invoice'])) {
+                        
+                    }
+                }
+            }
+        } catch (Exception $ex) {
+            
         }
     }
 
