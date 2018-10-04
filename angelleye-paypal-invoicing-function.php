@@ -187,7 +187,15 @@ function pifw_get_invoice_status_name_and_class($status) {
         "PAYMENT_PENDING" => array('lable' => 'Payment pending', 'class' => 'isDraft'),
         "PARTIALLY_PAID" => array('lable' => 'Partially paid', 'class' => 'isPartiallyPaid', 'action' => array('remind' => 'Remind')),
     );
-    if( !empty($invoice_status[$status]) ) {
+    if (!empty($invoice_status[$status])) {
         return $invoice_status[$status];
+    }
+}
+
+function pifw_clean($var) {
+    if (is_array($var)) {
+        return array_map('pifw_clean', $var);
+    } else {
+        return is_scalar($var) ? sanitize_text_field($var) : $var;
     }
 }

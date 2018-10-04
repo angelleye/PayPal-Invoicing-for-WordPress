@@ -177,16 +177,16 @@ class AngellEYE_PayPal_Invoicing_Request {
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
-                update_post_meta($post_id, $key, $value);
+                update_post_meta($post_id, $key, pifw_clean($value));
             }
-            update_post_meta($post_id, 'all_invoice_data', $invoice);
+            update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
         } else {
             $insert_invoice_array['ID'] = $existing_post_id;
             wp_update_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
-                update_post_meta($existing_post_id, $key, $value);
+                update_post_meta($existing_post_id, $key, pifw_clean($value));
             }
-            update_post_meta($existing_post_id, 'all_invoice_data', $invoice);
+            update_post_meta($existing_post_id, 'all_invoice_data', pifw_clean($invoice));
         }
         return $existing_post_id;
     }
@@ -570,7 +570,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update) {
         try {
-            $post_data = $_REQUEST;
+            $post_data = pifw_clean($_REQUEST);
             $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date("d/m/Y");
             $invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
             $invoice_date = $invoice_date_obj->format('Y-m-d e');
@@ -725,9 +725,9 @@ class AngellEYE_PayPal_Invoicing_Request {
         );
         wp_update_post($insert_invoice_array);
         foreach ($paypal_invoice_data_array as $key => $value) {
-            update_post_meta($post_id, $key, $value);
+            update_post_meta($post_id, $key, pifw_clean($value));
         }
-        update_post_meta($post_id, 'all_invoice_data', $invoice);
+        update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
     }
 
     public function angelleye_paypal_invoicing_send_invoice_remind($invoiceId) {

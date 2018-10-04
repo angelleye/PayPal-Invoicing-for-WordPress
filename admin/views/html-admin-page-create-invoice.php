@@ -28,7 +28,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', ''); ?> </label>
                 <div class="col-sm-6 col-11 ">
-                    <input type="text" class="form-control" value="<?php echo isset($this->response['number']) ? $this->response['number'] : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
+                    <input type="text" class="form-control" value="<?php echo isset($this->response['number']) ? esc_attr($this->response['number']) : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("Invoices are numbered automatically beginning with invoice number 0001. You can customize the invoice number any way you'd like, and the next number will increment by 1.", ''); ?>"></span>
@@ -184,9 +184,9 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                             <tr>
                                 <th><?php echo __('Shipping', ''); ?></th>
                                 <td colspan="2">
-                                    <input name="shippingAmount" id="shippingAmount" class="text short-field" value="<?php echo $shipping_amount; ?>" type="text">
+                                    <input name="shippingAmount" id="shippingAmount" class="text short-field" value="<?php echo esc_attr($shipping_amount); ?>" type="text">
                                 </td>
-                                <td class="grey-bg shippingAmountTd"><?php echo $shipping_amount; ?></td>
+                                <td class="grey-bg shippingAmountTd"><?php echo esc_attr($shipping_amount); ?></td>
                             </tr>
                             <tr class="dynamic_tax" id="tax_tr_0"><td colspan="3"><b>Tax (2.5%) </b>GST</td><td>$<span class="tax_to_add">0.00</span></td></tr>
                             <tr class="grey-bg">

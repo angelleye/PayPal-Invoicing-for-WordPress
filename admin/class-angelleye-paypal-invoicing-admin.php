@@ -291,7 +291,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'sandbox_paypal_email', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
-                    $api_setting_field[$value] = $_POST[$value];
+                    $api_setting_field[$value] = pifw_clean($_POST[$value]);
                 }
             }
             update_option('apifw_setting', $api_setting_field);
@@ -463,7 +463,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     if (!empty($invoice_status_array['action'])) {
                         foreach ($invoice_status_array['action'] as $key => $value) {
                             ?><select name="pifw_action">
-                                <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                                <option value="<?php echo $key; ?>"><?php echo esc_attr($value); ?></option>
                             </select> <?php
                         }
                     }
@@ -497,7 +497,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             } else {
                 $query->query_vars['orderby'] = 'meta_value';
             }
-            $query->query_vars['meta_key'] = $_GET['orderby'];
+            $query->query_vars['meta_key'] = pifw_clean($_GET['orderby']);
             if (isset($query->query_vars['s']) && empty($query->query_vars['s'])) {
                 $query->is_search = false;
             }
@@ -735,8 +735,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_handle_post_row_action() {
         try {
             if (isset($_REQUEST['invoice_action']) && !empty($_REQUEST['invoice_action']) && isset($_REQUEST['post_id']) && !empty($_REQUEST['post_id'])) {
-                $action_name = $_REQUEST['invoice_action'];
-                $post_id = $_REQUEST['post_id'];
+                $action_name = pifw_clean($_REQUEST['invoice_action']);
+                $post_id = pifw_clean($_REQUEST['post_id']);
                 if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
                     $this->angelleye_paypal_invoicing_load_rest_api();
                     if ('paypal_invoice_send' === $action_name) {

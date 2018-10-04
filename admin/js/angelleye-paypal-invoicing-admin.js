@@ -19,6 +19,7 @@
                 jQuery('#dueDate_box').hide();
             }
         }).change();
+        
         jQuery('#allowPartialPayments').change(function () {
             if (jQuery(this).is(':checked')) {
                 jQuery('.allow_partial_payment_content_box').show();
@@ -55,6 +56,19 @@
             event.preventDefault();
             jQuery(".memoDetail").hide();
             jQuery(".memoHead").show();
+        });
+        jQuery('#apifw_shipping_amount').change(function () {
+            if (jQuery(this).val() === 'DUE_ON_DATE_SPECIFIED') {
+                jQuery('#dueDate_box').show();
+            } else {
+                jQuery('#dueDate_box').hide();
+            }
+        }).change();
+        jQuery(document).on('change', '#apifw_shipping_amount', function (event) {
+            var newVal = parseFloat(jQuery('#apifw_shipping_amount').val(),10).toFixed(2);
+            if(newVal != 'NaN') {
+                jQuery('#apifw_shipping_amount').val(newVal);
+            }
         });
         jQuery(document).on('change blur keyup', '#angelleye-paypal-invoicing input, #angelleye-paypal-invoicing select', function (event) {
             count_sub_total();
