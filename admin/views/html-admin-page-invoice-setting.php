@@ -151,7 +151,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     <div class="form-group row">
                         <label for="apifw_country" class="col-sm-2 col-form-label"><?php echo __('Country', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="apifw_country" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="country" value="<?php echo esc_attr($country); ?>">
+                            <input type="text" maxlength="2" class="form-control" id="apifw_country" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="country" value="<?php echo esc_attr($country); ?>">
                         </div>
                     </div>
                     <h3><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h3>
