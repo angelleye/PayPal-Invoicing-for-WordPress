@@ -221,12 +221,14 @@ $status = get_post_meta($post->ID, 'status', true);
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
+                                <?php if( !empty($invoice_total_array['sub_total']) ) : ?>
                                 <tr>
                                     <td class="left">
                                         <?php echo __('Subtotal', ''); ?>
                                     </td>
                                     <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
                                 </tr>
+                                <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
                                     <tr>
                                         <td class="left">
