@@ -29,7 +29,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
         if( $webhook_id == false) {
             self::angelleye_paypal_invoicing_create_web_hook();
         }
-        //self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
+        self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
     }
 
     private static function create_files() {
