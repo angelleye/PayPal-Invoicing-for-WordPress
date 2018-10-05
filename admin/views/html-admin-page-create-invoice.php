@@ -18,7 +18,8 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-sm-12 col-12" style="float: right;">
             <div class="form-group row paypal-invoice-create-action-box">
-                <button class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+                <button value="send_invoice" class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+                &nbsp;<button value="save_invoice" class="btn btn-primary" type="submit" id="save_invoice" name="save_invoice"><?php echo __('Save as Draft', ''); ?></button>
             </div>
         </div>
     </div>
@@ -228,9 +229,10 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-sm-12 col-12" style="float: right;">
             <div class="form-group row paypal-invoice-create-action-box">
-                    <button class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+                <button value="send_invoice" class="btn btn-primary" type="submit" id="send_invoice" name="send_invoice"><?php echo __('Send Invoice', ''); ?></button>
+                &nbsp;<button value="save_invoice" class="btn btn-primary" type="submit" id="save_invoice" name="save_invoice"><?php echo __('Save as Draft', ''); ?></button>
                 </div>
         </div>
     </div>
 </div>
-    
+

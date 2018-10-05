@@ -522,7 +522,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (isset($post->post_status) && $post->post_status == 'trash') {
             return false;
         }
-        if (!isset($_REQUEST['send_invoice'])) {
+        if (empty($_REQUEST['send_invoice']) && empty($_REQUEST['save_invoice'])) {
             return false;
         }
         $is_paypal_invoice_sent = get_post_meta($post_ID, 'is_paypal_invoice_sent', true);

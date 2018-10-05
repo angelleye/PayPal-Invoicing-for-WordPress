@@ -677,7 +677,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice->getPaymentTerm()
                     ->setTermType($term_type);
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            if( !empty($_REQUEST['send_invoice']) ) {
+                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
             return $invoice->getId();
         } catch (Exception $ex) {
