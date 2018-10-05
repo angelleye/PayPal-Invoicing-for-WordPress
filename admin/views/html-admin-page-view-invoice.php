@@ -1,4 +1,7 @@
-<?php //echo print_r($invoice, true);         ?>
+<?php
+$all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
+$status = get_post_meta($post->ID, 'status', true);
+?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -23,6 +26,34 @@
                             <span class="invoiceStatus <?php echo isset($invoice_status_array['class']) ? $invoice_status_array['class'] : 'isDraft'; ?>"><?php echo $invoice_status_array['lable']; ?></span>
                         </div>
                     <?php endif; ?>
+                    <div class="row">
+                        <div class="col-sm-6 text-right"></div>
+                        <div class="col-sm-6 text-left">
+                            <div class="btn-group">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <?php echo __('Action', ''); ?>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <?php
+                                    if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
+                                        echo '<a class="dropdown-item" target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
+                                    }
+                                    if ($status == 'DRAFT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice') . '</a>';
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice') . '</a>';
+                                    }
+                                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice') . '</a>';
+                                    }
+                                    if ($status == 'SENT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice') . '</a>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <?php if (!empty($invoice['number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', ''); ?></span>
