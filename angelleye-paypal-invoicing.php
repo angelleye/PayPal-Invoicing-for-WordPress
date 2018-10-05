@@ -30,6 +30,9 @@ if (!defined('PAYPAL_INVOICE_PLUGIN_URL')) {
 if (!defined('PAYPAL_INVOICE_PLUGIN_DIR')) {
     define('PAYPAL_INVOICE_PLUGIN_DIR', dirname(__FILE__));
 }
+if (!defined('PAYPAL_INVOICE_PLUGIN_BASENAME')) {
+    define('PAYPAL_INVOICE_PLUGIN_BASENAME', plugin_basename(__FILE__));
+}
 
 
 if (!defined('PAYPAL_INVOICE_LOG_DIR')) {

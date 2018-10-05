@@ -67,6 +67,8 @@ class AngellEYE_PayPal_Invoicing {
         include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/angelleye-paypal-invoicing-function.php' );
         add_filter('cron_schedules', array($this, 'angelleye_paypal_invoicing_new_interval_cron_time'));
         add_action('angelleye_paypal_invoicing_sync_event', array($this, 'angelleye_paypal_invoicing_sync_with_paypal'));
+        $prefix = is_network_admin() ? 'network_admin_' : '';
+        add_filter("{$prefix}plugin_action_links_" . PAYPAL_INVOICE_PLUGIN_BASENAME, array($this, 'angelleye_paypal_invoicing_plugin_action_links'), 10, 4);
     }
 
     /**
@@ -161,7 +163,6 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
         $this->loader->add_action('parse_request', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 0);
-        
     }
 
     /**
@@ -233,6 +234,16 @@ class AngellEYE_PayPal_Invoicing {
         include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
         $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
         $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
+    }
+
+    public function angelleye_paypal_invoicing_plugin_action_links($actions, $plugin_file, $plugin_data, $context) {
+        $custom_actions = array(
+            'configure' => sprintf('<a href="%s">%s</a>', admin_url('admin.php?page=apifw_settings'), __('Configure', 'angelleye-paypal-invoicing')),
+            'docs' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.angelleye.com/category/docs/angelleye-paypal-invoicing-documentation/?utm_source=angelleye-paypal-invoicing&utm_medium=docs_link&utm_campaign=plugin', __('Docs', 'angelleye-paypal-invoicing')),
+            'support' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.angelleye.com/support/?utm_source=angelleye-paypal-invoicing&utm_medium=support_link&utm_campaign=plugin', __('Support', 'angelleye-paypal-invoicing')),
+            'review' => sprintf('<a href="%s" target="_blank">%s</a>', 'https://www.angelleye.com/product/angelleye-paypal-invoicing?utm_source=angelleye-paypal-invoicing&utm_medium=review_link&utm_campaign=plugin', __('Write a Review', 'angelleye-paypal-invoicing')),
+        );
+        return array_merge($custom_actions, $actions);
     }
 
 }
