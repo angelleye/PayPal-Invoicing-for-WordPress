@@ -1,4 +1,4 @@
-=== PayPal Invoicing for WordPress ===
+=== Angelleye PayPal Invoicing ===
 Contributors: angelleye
 Donate link: http://www.angelleye.com/
 Tags: paypal, invoicing, woocommerce, angelleye,

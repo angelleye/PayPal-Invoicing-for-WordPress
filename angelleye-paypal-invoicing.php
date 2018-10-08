@@ -2,7 +2,7 @@
 
 /**
  * @wordpress-plugin
- * Plugin Name:       PayPal Invoicing for WordPress
+ * Plugin Name:       Angelleye PayPal Invoicing
  * Plugin URI:        http://www.angelleye.com/product/angelleye-paypal-invoicing/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0
