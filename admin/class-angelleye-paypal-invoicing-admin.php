@@ -830,14 +830,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!is_array($actions)) {
             $actions = array();
         }
-
-        if (empty($paypal_invoice_id)) {
-            $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'woocommerce-gateway-paypal-express-checkout');
-            $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
-        } else {
-            $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'woocommerce-gateway-paypal-express-checkout');
-            $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
-            $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            if (empty($paypal_invoice_id)) {
+                $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'woocommerce-gateway-paypal-express-checkout');
+                $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+            } else {
+                $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'woocommerce-gateway-paypal-express-checkout');
+                $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+                $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+            }
         }
         return $actions;
     }
