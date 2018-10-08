@@ -843,42 +843,81 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_wc_save_paypal_invoice($order) {
-        if (!is_object($order)) {
-            $order = wc_get_order($order);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         }
-        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+
         return true;
     }
 
     public function angelleye_paypal_invoicing_wc_send_paypal_invoice($order) {
-        if (!is_object($order)) {
-            $order = wc_get_order($order);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order);
+            if (is_array($invoice_id)) {
+                $order->add_order_note($invoice_id['message']);
+                return false;
+            } else {
+                if (!empty($invoice_id) && $invoice_id != false) {
+                    update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
+                    update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
+                    $order->add_order_note(__("We've sent your invoice.", ''));
+                    update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
+                    $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                    $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                    if ($order->get_total() > 0) {
+                        $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
+                    } else {
+                        $order->payment_complete();
+                    }
+                    wc_reduce_stock_levels($order_id);
+                }
+            }
         }
-        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         return true;
     }
 
     public function angelleye_paypal_invoicing_wc_remind_paypal_invoice($order) {
-        if (!is_object($order)) {
-            $order = wc_get_order($order);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         }
-        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+
         return true;
     }
 
     public function angelleye_paypal_invoicing_wc_cancel_paypal_invoice($order) {
-        if (!is_object($order)) {
-            $order = wc_get_order($order);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         }
-        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+
         return true;
     }
 
     public function angelleye_paypal_invoicing_wc_delete_paypal_invoice($order) {
-        if (!is_object($order)) {
-            $order = wc_get_order($order);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         }
-        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+
         return true;
     }
 

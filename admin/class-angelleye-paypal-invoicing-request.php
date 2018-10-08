@@ -18,8 +18,9 @@ use PayPal\Api\Participant;
 use PayPal\Api\ShippingCost;
 use PayPal\Api\Notification;
 use PayPal\Api\CancelNotification;
-use \PayPal\Api\VerifyWebhookSignature;
-use \PayPal\Api\WebhookEvent;
+use PayPal\Api\VerifyWebhookSignature;
+use PayPal\Api\WebhookEvent;
+use PayPal\Exception\PayPalConnectionException;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -322,8 +323,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
             $invoice->send($this->angelleye_paypal_invoicing_getAuth());
             return $invoice->getId();
-        } catch (Exception $ex) {
-            return false;
+        } catch (PayPalConnectionException $ex) {
+            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
         }
     }
 
@@ -677,7 +678,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice->getPaymentTerm()
                     ->setTermType($term_type);
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            if( !empty($_REQUEST['send_invoice']) ) {
+            if (!empty($_REQUEST['send_invoice'])) {
                 $invoice->send($this->angelleye_paypal_invoicing_getAuth());
             }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
@@ -869,6 +870,23 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (Exception $ex) {
             
         }
+    }
+
+    public function angelleye_paypal_invoicing_get_readable_message($json_error) {
+        $message = '';
+        $error_object = json_decode($json_error);
+        switch ($error_object->name) {
+            case 'VALIDATION_ERROR':
+                echo "Payment failed due to invalid Credit Card details:\n";
+                foreach ($error_object->details as $e) {
+                    $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
+                }
+                break;
+        }
+        if( empty($message) ) {
+            $message = $json_error;
+        }
+        return $message;
     }
 
 }
