@@ -817,13 +817,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $order = wc_get_order($_REQUEST['post']);
         $old_wc = version_compare(WC_VERSION, '3.0', '<');
         $order_id = $old_wc ? $order->id : $order->get_id();
-        /* $payment_method = $old_wc ? $order->payment_method : $order->get_payment_method();
-          $paypal_status = $old_wc ? get_post_meta($order_id, '_paypal_status', true) : $order->get_meta('_paypal_status', true);
-          if ('ppec_paypal' !== $payment_method || 'pending' !== $paypal_status) {
-          //return $actions;
-          } */
         $paypal_invoice_id = $old_wc ? get_post_meta($order_id, '_paypal_invoice_id', true) : $order->get_meta('_paypal_invoice_id', true);
-
         if (!is_array($actions)) {
             $actions = array();
         }
@@ -832,9 +826,20 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing');
                 $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'angelleye-paypal-invoicing');
             } else {
-                $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'angelleye-paypal-invoicing');
-                $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'angelleye-paypal-invoicing');
-                $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'angelleye-paypal-invoicing');
+                $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
+                $status = get_post_meta($paypal_invoice_wp_post_id, 'status', true);
+                if (!empty($status)) {
+                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
+                        $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'angelleye-paypal-invoicing');
+                    }
+                    if ($status == 'SENT') {
+                        $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'angelleye-paypal-invoicing');
+                    }
+                    if ($status == 'DRAFT') {
+                        $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'angelleye-paypal-invoicing');
+                        $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'angelleye-paypal-invoicing');
+                    }
+                }
             }
         }
         return $actions;
@@ -939,7 +944,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
         return true;
     }
-    
+
     public function angelleye_paypal_invoicing_wc_display_paypal_invoice_status($order) {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             if (!is_object($order)) {
@@ -948,10 +953,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
             $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
             $invoice_status = get_post_meta($paypal_invoice_wp_post_id, 'status', true);
-            if( !empty($invoice_status) ) {
+            if (!empty($invoice_status)) {
                 echo "<p class='form-field form-field-wide wc-order-status'><strong>PayPal Invoice Status: </strong><label>" . ucfirst(strtolower($invoice_status)) . "</lable></p>";
             }
-            
         }
     }
 
