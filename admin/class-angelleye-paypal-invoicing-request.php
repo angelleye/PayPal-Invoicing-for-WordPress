@@ -217,12 +217,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order) {
+    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order, $is_send = true) {
         include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
         $this->calculation = new AngellEYE_PayPal_Invoicing_Calculation();
         $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         $this->order_param = $this->calculation->order_calculation($order_id);
-
         $billing_company = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_company : $order->get_billing_company();
         $billing_first_name = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_first_name : $order->get_billing_first_name();
         $billing_last_name = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_last_name : $order->get_billing_last_name();
@@ -253,7 +252,6 @@ class AngellEYE_PayPal_Invoicing_Request {
             $shipping_country = $billing_country;
             $shipping_state = $billing_state;
         }
-
         $currency = version_compare(WC_VERSION, '3.0', '<') ? $order->get_order_currency() : $order->get_currency();
         $invoice = new Invoice();
         $invoice
@@ -322,7 +320,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                 ->setTermType("DUE_ON_RECEIPT");
         try {
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            if($is_send == true) {
+                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            }
             return $invoice->getId();
         } catch (PayPalConnectionException $ex) {
             return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));

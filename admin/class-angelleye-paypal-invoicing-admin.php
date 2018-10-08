@@ -844,8 +844,28 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $order = wc_get_order($order);
             }
             $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order, false);
+            if (is_array($invoice_id)) {
+                $order->add_order_note($invoice_id['message']);
+                return false;
+            } else {
+                if (!empty($invoice_id) && $invoice_id != false) {
+                    update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
+                    update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
+                    $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
+                    update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
+                    $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                    $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                    update_post_meta($order_id, '_paypal_invoice_wp_post_id', $paypal_invoice_wp_post_id);
+                    if ($order->get_total() > 0) {
+                        $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
+                    } else {
+                        $order->payment_complete();
+                    }
+                    wc_reduce_stock_levels($order_id);
+                }
+            }
         }
-
         return true;
     }
 
@@ -856,7 +876,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $order = wc_get_order($order);
             }
             $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
-            $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order);
+            $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order, true);
             if (is_array($invoice_id)) {
                 $order->add_order_note($invoice_id['message']);
                 return false;
