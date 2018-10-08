@@ -535,7 +535,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if (!empty($invoice_id) && $invoice_id != false) {
                 $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                 $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_ID);
-                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1024'));
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1028'));
                 exit();
             }
         } else {
@@ -548,13 +548,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
             echo "<div class='notice notice-success is-dismissible'><p>We've sent your invoice.</p></div>";
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1025') {
-            echo "<div class='notice notice-success is-dismissible'><p>Your reminder was sent.</p></div>";
+            echo "<div class='notice notice-success is-dismissible'><p>Your reminder is sent.</p></div>";
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1026') {
             echo "<div class='notice notice-success is-dismissible'><p>Your invoice is canceled.</p></div>";
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1027') {
             echo "<div class='notice notice-success is-dismissible'><p>Your invoice is deleted.</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1028') {
+            echo "<div class='notice notice-success is-dismissible'><p>Your invoice is created.</p></div>";
         }
     }
 
@@ -852,7 +855,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if (!empty($invoice_id) && $invoice_id != false) {
                     update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                     update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
-                    $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
+                    $order->add_order_note(__("Your invoice is created.", 'angelleye-paypal-invoicing'));
                     update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
                     $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                     $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
