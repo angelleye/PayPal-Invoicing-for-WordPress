@@ -277,7 +277,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         ?>
         <br>
         <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
-            <?php echo wp_kses_post(__('PayPal API credentials is not set up, <a href="?page=apifw_settings" class="alert-link">Click here to set up</a>.', '')) . PHP_EOL; ?>
+            <?php echo wp_kses_post(__('PayPal API credentials is not set up, <a href="?page=apifw_settings" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing')) . PHP_EOL; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -295,7 +295,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
             update_option('apifw_setting', $api_setting_field);
-            echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Your settings have been saved.') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+            echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Your settings have been saved.', 'angelleye-paypal-invoicing') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
         }
@@ -345,7 +345,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_POST['apifw_delete_logs']) && 'Delete Logs' == $_POST['apifw_delete_logs']) {
             try {
                 self::delete_logs_before_timestamp();
-                echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Successfully deleted log files.') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Successfully deleted log files.', 'angelleye-paypal-invoicing') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
             } catch (Exception $ex) {
@@ -578,34 +578,28 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $actions['view'] = str_replace('Edit', 'View', $actions['edit']);
             unset($actions['edit']);
             if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
-                $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
+                $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'DRAFT') {
-                $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice') . '</a>';
-                $actions['paypal_invoice_delete'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice') . '</a>';
+                $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                $actions['paypal_invoice_delete'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
-                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice') . '</a>';
+                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'SENT') {
-                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice') . '</a>';
+                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
         }
         return $actions;
     }
 
     public function angelleye_paypal_invoicing_bulk_actions($actions) {
-        global $post;
-        /* if( !empty($this->paypal_invoice_post_status_list)) {
-          foreach ($this->paypal_invoice_post_status_list as $key => $value) {
-          $actions[$key] = $value;
-          }
-          } */
         unset($actions);
-        $actions['send'] = __('Send Invoice', '');
-        $actions['remind'] = __('Remind Invoice', '');
-        $actions['cancel'] = __('Cancel Invoice', '');
-        $actions['delete'] = __('Delete Invoice', '');
+        $actions['send'] = __('Send Invoice', 'angelleye-paypal-invoicing');
+        $actions['remind'] = __('Remind Invoice', 'angelleye-paypal-invoicing');
+        $actions['cancel'] = __('Cancel Invoice', 'angelleye-paypal-invoicing');
+        $actions['delete'] = __('Delete Invoice', 'angelleye-paypal-invoicing');
         return $actions;
     }
 
@@ -620,7 +614,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             $invoice_id = get_post_meta($post_id, 'id', true);
                             $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
                             $email = get_post_meta($post_id, 'email', true);
-                            $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'angelleye-paypal-invoicing'), $email), $is_customer_note = 1);
                             $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                             $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         }
@@ -634,7 +628,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             $invoice_id = get_post_meta($post_id, 'id', true);
                             $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
                             $email = get_post_meta($post_id, 'email', true);
-                            $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'angelleye-paypal-invoicing'), $email), $is_customer_note = 1);
                             $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                             $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         }
@@ -647,7 +641,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         if ($status == 'SENT') {
                             $invoice_id = get_post_meta($post_id, 'id', true);
                             $this->request->angelleye_paypal_invoicing_cancel_invoice($invoice_id);
-                            $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice.', 'woocommerce')), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice.', 'angelleye-paypal-invoicing')), $is_customer_note = 1);
                             $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                             $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         }
@@ -743,7 +737,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $invoice_id = get_post_meta($post_id, 'id', true);
                         $this->request->angelleye_paypal_invoicing_send_invoice_from_draft($invoice_id, $post_id);
                         $email = get_post_meta($post_id, 'email', true);
-                        $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, sprintf(__('You sent a invoice to %1$s', 'angelleye-paypal-invoicing'), $email), $is_customer_note = 1);
                         $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                         $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1024'));
@@ -752,7 +746,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $invoice_id = get_post_meta($post_id, 'id', true);
                         $this->request->angelleye_paypal_invoicing_send_invoice_remind($invoice_id);
                         $email = get_post_meta($post_id, 'email', true);
-                        $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'woocommerce'), $email), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, sprintf(__('You sent a payment reminder to %1$s', 'angelleye-paypal-invoicing'), $email), $is_customer_note = 1);
                         $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                         $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1025'));
@@ -760,7 +754,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     } elseif ('paypal_invoice_cancel' === $action_name) {
                         $invoice_id = get_post_meta($post_id, 'id', true);
                         $this->request->angelleye_paypal_invoicing_cancel_invoice($invoice_id);
-                        $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice', 'woocommerce')), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, sprintf(__('You canceled this invoice', 'angelleye-paypal-invoicing')), $is_customer_note = 1);
                         $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                         $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
                         wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1026'));
@@ -832,12 +826,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             if (empty($paypal_invoice_id)) {
-                $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'woocommerce-gateway-paypal-express-checkout');
-                $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+                $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing');
+                $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'angelleye-paypal-invoicing');
             } else {
-                $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'woocommerce-gateway-paypal-express-checkout');
-                $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
-                $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+                $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'angelleye-paypal-invoicing');
+                $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'angelleye-paypal-invoicing');
+                $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'angelleye-paypal-invoicing');
             }
         }
         return $actions;
@@ -870,7 +864,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if (!empty($invoice_id) && $invoice_id != false) {
                     update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                     update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
-                    $order->add_order_note(__("We've sent your invoice.", ''));
+                    $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
                     update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
                     $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                     $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);

@@ -133,7 +133,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     <div class="form-group row">
                         <label for="apifw_city" class="col-sm-2 col-form-label"><?php echo __('City', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="apifw_city" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="city" value="<?php echo esc_attr($city); ?>">
+                            <input type="text" class="form-control" id="apifw_city" placeholder="<?php echo __('City', 'angelleye-paypal-invoicing'); ?>" name="city" value="<?php echo esc_attr($city); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -170,7 +170,7 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     <div class="form-group row">
                         <label for="apifw_tax_name" class="col-sm-2 col-form-label"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
-                            <input type="text" class="form-control" id="apifw_tax_name" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="tax_name" value="<?php echo esc_attr($tax_name); ?>">
+                            <input type="text" class="form-control" id="apifw_tax_name" placeholder="" name="tax_name" value="<?php echo esc_attr($tax_name); ?>">
                         </div>
                     </div>
                     <div class="form-group row">

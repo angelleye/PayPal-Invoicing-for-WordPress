@@ -17,12 +17,12 @@ if (!defined('ABSPATH')) {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th scope="col"><?php echo __('Date', ''); ?></th>
-                                <th scope="col"><?php echo __('Invoice #', ''); ?></th>
-                                <th scope="col"><?php echo __('Recipient', ''); ?></th>
-                                <th scope="col"><?php echo __('Status', ''); ?></th>
-                                <th scope="col"><?php echo __('Action', ''); ?></th>
-                                <th scope="col"><?php echo __('Amount', ''); ?></th>
+                                <th scope="col"><?php echo __('Date', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Invoice #', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Recipient', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Status', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Action', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -30,18 +30,18 @@ if (!defined('ABSPATH')) {
                             if (!empty($this->response)) {
                                 echo print_r($this->response, true);
                             } else {
-                                echo __('You haven’t created any invoices');
+                                echo __('You haven’t created any invoices', 'angelleye-paypal-invoicing');
                             }
                             ?>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th scope="col"><?php echo __('Date', ''); ?></th>
-                                <th scope="col"><?php echo __('Invoice #', ''); ?></th>
-                                <th scope="col"><?php echo __('Recipient', ''); ?></th>
-                                <th scope="col"><?php echo __('Status', ''); ?></th>
-                                <th scope="col"><?php echo __('Action', ''); ?></th>
-                                <th scope="col"><?php echo __('Amount', ''); ?></th>
+                                <th scope="col"><?php echo __('Date', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Invoice #', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Recipient', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Status', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Action', 'angelleye-paypal-invoicing'); ?></th>
+                                <th scope="col"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
                             </tr>
                         </tfoot>
                     </table>
