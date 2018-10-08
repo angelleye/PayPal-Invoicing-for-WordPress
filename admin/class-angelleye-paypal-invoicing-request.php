@@ -181,6 +181,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 update_post_meta($post_id, $key, pifw_clean($value));
             }
             update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
+            return $post_id;
         } else {
             $insert_invoice_array['ID'] = $existing_post_id;
             wp_update_post($insert_invoice_array);

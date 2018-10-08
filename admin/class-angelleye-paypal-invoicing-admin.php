@@ -873,7 +873,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     $order->add_order_note(__("We've sent your invoice.", ''));
                     update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
                     $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
-                    $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                    $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                    update_post_meta($order_id, '_paypal_invoice_wp_post_id', $paypal_invoice_wp_post_id);
                     if ($order->get_total() > 0) {
                         $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
                     } else {
@@ -920,6 +921,21 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
 
         return true;
+    }
+    
+    public function angelleye_paypal_invoicing_wc_display_paypal_invoice_status($order) {
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            if (!is_object($order)) {
+                $order = wc_get_order($order);
+            }
+            $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
+            $invoice_status = get_post_meta($paypal_invoice_wp_post_id, 'status', true);
+            if( !empty($invoice_status) ) {
+                echo "<p class='form-field form-field-wide wc-order-status'><strong>PayPal Invoice Status: </strong><label>" . ucfirst(strtolower($invoice_status)) . "</lable></p>";
+            }
+            
+        }
     }
 
 }
