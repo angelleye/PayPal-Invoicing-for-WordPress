@@ -813,4 +813,73 @@ class AngellEYE_PayPal_Invoicing_Admin {
         return $HTTP_RAW_POST_DATA;
     }
 
+    public function angelleye_paypal_invoicing_add_order_action($actions) {
+        if (!isset($_REQUEST['post'])) {
+            return $actions;
+        }
+        $order = wc_get_order($_REQUEST['post']);
+        $old_wc = version_compare(WC_VERSION, '3.0', '<');
+        $order_id = $old_wc ? $order->id : $order->get_id();
+        /* $payment_method = $old_wc ? $order->payment_method : $order->get_payment_method();
+          $paypal_status = $old_wc ? get_post_meta($order_id, '_paypal_status', true) : $order->get_meta('_paypal_status', true);
+          if ('ppec_paypal' !== $payment_method || 'pending' !== $paypal_status) {
+          //return $actions;
+          } */
+        $paypal_invoice_id = $old_wc ? get_post_meta($order_id, '_paypal_invoice_id', true) : $order->get_meta('_paypal_invoice_id', true);
+
+        if (!is_array($actions)) {
+            $actions = array();
+        }
+
+        if (empty($paypal_invoice_id)) {
+            $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'woocommerce-gateway-paypal-express-checkout');
+            $actions['angelleye_paypal_invoicing_wc_send_paypal_invoice'] = esc_html__('Send PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+        } else {
+            $actions['angelleye_paypal_invoicing_wc_remind_paypal_invoice'] = esc_html__('Send PayPal Invoice Reminder', 'woocommerce-gateway-paypal-express-checkout');
+            $actions['angelleye_paypal_invoicing_wc_cancel_paypal_invoice'] = esc_html__('Cancel PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+            $actions['angelleye_paypal_invoicing_wc_delete_paypal_invoice'] = esc_html__('Delete PayPal Invoice', 'woocommerce-gateway-paypal-express-checkout');
+        }
+        return $actions;
+    }
+
+    public function angelleye_paypal_invoicing_wc_save_paypal_invoice($order) {
+        if (!is_object($order)) {
+            $order = wc_get_order($order);
+        }
+        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+        return true;
+    }
+
+    public function angelleye_paypal_invoicing_wc_send_paypal_invoice($order) {
+        if (!is_object($order)) {
+            $order = wc_get_order($order);
+        }
+        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+        return true;
+    }
+
+    public function angelleye_paypal_invoicing_wc_remind_paypal_invoice($order) {
+        if (!is_object($order)) {
+            $order = wc_get_order($order);
+        }
+        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+        return true;
+    }
+
+    public function angelleye_paypal_invoicing_wc_cancel_paypal_invoice($order) {
+        if (!is_object($order)) {
+            $order = wc_get_order($order);
+        }
+        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+        return true;
+    }
+
+    public function angelleye_paypal_invoicing_wc_delete_paypal_invoice($order) {
+        if (!is_object($order)) {
+            $order = wc_get_order($order);
+        }
+        $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+        return true;
+    }
+
 }
