@@ -159,10 +159,11 @@
                     var data = {
                         'action': 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax',
                         'invoice_post_id': angelleye_paypal_invoicing_js.invoice_post_id,
-                        'order_id' : angelleye_paypal_invoicing_js.order_id
+                        'order_id' : angelleye_paypal_invoicing_js.order_id,
+                        'move_to_trace_url' : jQuery(this).attr("href")
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-                        alert('Got this from the server: ' + response);
+                        
                     });
                 }
             });

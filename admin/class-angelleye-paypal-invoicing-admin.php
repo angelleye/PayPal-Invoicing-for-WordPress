@@ -111,14 +111,19 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if (is_object($screen) && $cpt == $screen->post_type) {
                 $paypal_invoice_wp_post_id = get_post_meta($post->ID, '_paypal_invoice_wp_post_id', true);
                 if (!empty($paypal_invoice_wp_post_id)) {
-                    wp_enqueue_script($this->plugin_name . 'bootstrap');
-                    wp_enqueue_script($this->plugin_name);
-                    $translation_array = array(
-                        'move_trace_confirm_string' => __('Would you like to delete the invoice at PayPal?', 'angelleye-paypal-invoicing'),
-                        'invoice_post_id' => $paypal_invoice_wp_post_id,
-                        'order_id' => $post->ID
-                    );
-                    wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
+                    $status = get_post_meta($paypal_invoice_wp_post_id, 'status', true);
+                    if (!empty($status)) {
+                        if ($status == 'DRAFT') {
+                            wp_enqueue_script($this->plugin_name . 'bootstrap');
+                            wp_enqueue_script($this->plugin_name);
+                            $translation_array = array(
+                                'move_trace_confirm_string' => __('Would you like to delete the invoice at PayPal?', 'angelleye-paypal-invoicing'),
+                                'invoice_post_id' => $paypal_invoice_wp_post_id,
+                                'order_id' => $post->ID
+                            );
+                            wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
+                        }
+                    }
                 }
             }
         }
@@ -1016,10 +1021,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
             }
         }
     }
-    
+
     public function angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax() {
-        $invoice_post_id = pifw_clean( $_POST['invoice_post_id'] );
-        $order_id = pifw_clean( $_POST['order_id'] );
+        $invoice_post_id = pifw_clean($_POST['invoice_post_id']);
+        $order_id = pifw_clean($_POST['order_id']);
         $this->angelleye_paypal_invoicing_wc_delete_paypal_invoice($order_id);
     }
 
