@@ -885,7 +885,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             }
             $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
             $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
-            if( !empty($paypal_invoice_wp_post_id) ) {
+            if (!empty($paypal_invoice_wp_post_id)) {
                 $invoice_id = get_post_meta($paypal_invoice_wp_post_id, 'id', true);
             } else {
                 $invoice_id = '';
@@ -946,8 +946,18 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $order = wc_get_order($order);
             }
             $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
+            $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
+            if (!empty($paypal_invoice_wp_post_id)) {
+                $invoice_id = get_post_meta($paypal_invoice_wp_post_id, 'id', true);
+                if (!empty($invoice_id)) {
+                    $this->request->angelleye_paypal_invoicing_cancel_invoice($invoice_id);
+                    $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+                    $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $paypal_invoice_wp_post_id);
+                    $order->add_order_note(__('You canceled this invoice.', 'angelleye-paypal-invoicing'));
+                    $order->update_status('cancelled');
+                }
+            }
         }
-
         return true;
     }
 
