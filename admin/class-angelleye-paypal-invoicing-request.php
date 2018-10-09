@@ -668,7 +668,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice->setDiscount($cost);
             }
             if ($allow_tips == 'on') {
-                $invoice->setAllowtip('true');
+                //$invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
                 $invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);

@@ -19,7 +19,7 @@
                 jQuery('#dueDate_box').hide();
             }
         }).change();
-        
+
         jQuery('#allowPartialPayments').change(function () {
             if (jQuery(this).is(':checked')) {
                 jQuery('.allow_partial_payment_content_box').show();
@@ -65,8 +65,8 @@
             }
         }).change();
         jQuery(document).on('change', '#apifw_shipping_amount', function (event) {
-            var newVal = parseFloat(jQuery('#apifw_shipping_amount').val(),10).toFixed(2);
-            if(newVal != 'NaN') {
+            var newVal = parseFloat(jQuery('#apifw_shipping_amount').val(), 10).toFixed(2);
+            if (newVal != 'NaN') {
                 jQuery('#apifw_shipping_amount').val(newVal);
             }
         });
@@ -96,7 +96,7 @@
                 if (isNaN(amount)) {
                     amount = 0.00;
                 }
-                
+
                 if (jQuery('#tax_tr_' + i).length) {
                     if (tax > 0 && jQuery.isNumeric(temp_amount)) {
                         jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
@@ -150,6 +150,23 @@
 
             jQuery('.finalTotal').text('$' + finalTotal.toFixed(2) + ' USD');
         }
+
+        jQuery(document).ready(function ($) {
+            jQuery('.order_actions .submitdelete').click(function (event) {
+                if (!confirm(angelleye_paypal_invoicing_js.move_trace_confirm_string)) {
+                    event.preventDefault();
+                } else {
+                    var data = {
+                        'action': 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax',
+                        'invoice_post_id': angelleye_paypal_invoicing_js.invoice_post_id,
+                        'order_id' : angelleye_paypal_invoicing_js.order_id
+                    };
+                    jQuery.post(ajaxurl, data, function (response) {
+                        alert('Got this from the server: ' + response);
+                    });
+                }
+            });
+        });
     });
 })(jQuery);
 
