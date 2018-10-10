@@ -111,8 +111,8 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                         <td><input name="item_name[]" value="" id="item_name" type="text" placeholder="<?php echo __('Item name'); ?>" required></td>
                         <td><input name="item_qty[]" value="" id="item_qty" type="text" placeholder="<?php echo __('0'); ?>" required></td>
                         <td><input name="item_amt[]" value="" id="item_amt" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
-                        <td><input name="item_txt_name[]" value="" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name'); ?>" required></td>
-                        <td><input name="item_txt_rate[]" value="" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount'); ?>" required></td>
+                        <td><input name="item_txt_name[]" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name'); ?>" required></td>
+                        <td><input name="item_txt_rate[]" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount'); ?>" required></td>
                         <td rowspan="2" class="amount">0.00</td>
                         <td></td>
                     </tr>
@@ -188,10 +188,10 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                                 </td>
                                 <td class="grey-bg shippingAmountTd"><?php echo $shipping_amount; ?></td>
                             </tr>
-                            <tr class="dynamic_tax" id="tax_tr_0"><td colspan="3"><b>Tax (2.5%) </b>GST</td><td>$<span class="tax_to_add">0.00</span></td></tr>
+                            <tr class="dynamic_tax" id="tax_tr_0"><td colspan="3"></td><td>$<span class="tax_to_add">0.00</span></td></tr>
                             <tr class="grey-bg">
-                                <th colspan="3"><?php echo __('Total', ''); ?></th>
-                                <td class="finalTotal">$15.00 USD</td>
+                                <th colspan="3"><?php echo __('Total', 'angelleye-paypal-invoicing'); ?></th>
+                                <td class="finalTotal"></td>
                             </tr>
                         </tbody>
                     </table>
