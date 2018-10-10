@@ -578,21 +578,22 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($post->post_type == 'paypal_invoices') {
             $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
             $status = get_post_meta($post->ID, 'status', true);
-            unset($actions);
-            $actions = array();
+            unset($actions['inline hide-if-no-js']);
+            unset($actions['trash']);
             $actions['view'] = str_replace('Edit', 'View', $actions['edit']);
+            unset($actions['edit']);
             if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
-                $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice') . '</a>';
+                $actions['paypal_invoice_link'] = '<a target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'DRAFT') {
-                $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice') . '</a>';
-                $actions['paypal_invoice_delete'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice') . '</a>';
+                $actions['paypal_invoice_send'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                $actions['paypal_invoice_delete'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
-                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice') . '</a>';
+                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'SENT') {
-                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice') . '</a>';
+                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
         }
         return $actions;

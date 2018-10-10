@@ -569,8 +569,9 @@ class AngellEYE_PayPal_Invoicing_Request {
         try {
             $post_data = $_REQUEST;
             $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date("d/m/Y");
-            $invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
-            $invoice_date = $invoice_date_obj->format('Y-m-d e');
+            //$invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
+            //$invoice_date = $invoice_date_obj->format('Y-m-d e');
+            $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
             $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
             $reference = isset($post_data['reference']) ? $post_data['reference'] : '';
@@ -666,8 +667,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                // $invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
-                $invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
-                $invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
+                //$invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
+                //$invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
+                $invoice_due_date = pifw_get_paypal_invoice_date_format($due_date);
                 $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
             }
             $invoice->setItems($items);
