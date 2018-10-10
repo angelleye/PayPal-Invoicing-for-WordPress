@@ -64,7 +64,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->set_locale();
         $this->define_admin_hooks();
         $this->define_public_hooks();
-        include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/angelleye-paypal-invoicing-function.php' );
+        include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/angelleye-paypal-invoicing-function.php' );
         add_filter('cron_schedules', array($this, 'angelleye_paypal_invoicing_new_interval_cron_time'));
         add_action('angelleye_paypal_invoicing_sync_event', array($this, 'angelleye_paypal_invoicing_sync_with_paypal'));
     }
@@ -229,7 +229,7 @@ class AngellEYE_PayPal_Invoicing {
     }
 
     public function angelleye_paypal_invoicing_sync_with_paypal() {
-        include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
+        include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
         $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
         $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
     }

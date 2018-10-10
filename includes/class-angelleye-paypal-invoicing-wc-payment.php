@@ -246,7 +246,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
         $order = wc_get_order($order_id);
 
-        include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
+        include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
         $this->request = new AngellEYE_PayPal_Invoicing_Request(null, null);
         $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order);
         if (!empty($invoice_id) && $invoice_id != false) {
