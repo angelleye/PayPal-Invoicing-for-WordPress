@@ -1,4 +1,3 @@
-<?php //echo print_r($invoice, true);         ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
         <span class="folded-corner"></span>
@@ -285,3 +284,4 @@
             <?php endif; ?>  
         </div>
     </div>
+</div>

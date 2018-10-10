@@ -9,33 +9,33 @@ if (!defined('ABSPATH')) {
     exit;
 }
 $apifw_setting = get_option('apifw_setting');
-$enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : $this->enable_paypal_sandbox;
-$sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : $this->sandbox_client_id;
-$sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : $this->sandbox_paypal_email;
-$sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : $this->sandbox_secret;
-$client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : $this->client_id;
-$secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : $this->secret;
-$paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_email'] : $this->paypal_email;
+$enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
+$sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
+$sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
+$sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : '';
+$client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
+$secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : '';
+$paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_email'] : '';
 
-$first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name'] : $this->first_name;
-$last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : $this->last_name;
-$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : $this->compnay_name;
-$phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : $this->phone_number;
+$first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name'] : '';
+$last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : '';
+$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : '';
+$phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : '';
 
-$address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : $this->address_line_1;
-$address_line_2 = isset($apifw_setting['address_line_2']) ? $apifw_setting['address_line_2'] : $this->address_line_2;
-$city = isset($apifw_setting['city']) ? $apifw_setting['city'] : $this->city;
-$post_code = isset($apifw_setting['post_code']) ? $apifw_setting['post_code'] : $this->post_code;
-$state = isset($apifw_setting['state']) ? $apifw_setting['state'] : $this->state;
-$country = isset($apifw_setting['country']) ? $apifw_setting['country'] : $this->country;
+$address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : '';
+$address_line_2 = isset($apifw_setting['address_line_2']) ? $apifw_setting['address_line_2'] : '';
+$city = isset($apifw_setting['city']) ? $apifw_setting['city'] : '';
+$post_code = isset($apifw_setting['post_code']) ? $apifw_setting['post_code'] : '';
+$state = isset($apifw_setting['state']) ? $apifw_setting['state'] : '';
+$country = isset($apifw_setting['country']) ? $apifw_setting['country'] : '';
 
-$shipping_rate = isset($apifw_setting['shipping_rate']) ? $apifw_setting['shipping_rate'] : $this->shipping_rate;
-$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : $this->shipping_amount;
-$tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
-$tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
-$note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : $this->note_to_recipient;
-$terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : $this->terms_and_condition;
-$debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : $this->debug_log;
+$shipping_rate = isset($apifw_setting['shipping_rate']) ? $apifw_setting['shipping_rate'] : '';
+$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
+$tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : '';
+$tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : '';
+$note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
+$terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
+$debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
