@@ -162,7 +162,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'exclude_from_search' => true,
             'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
             'query_var' => false,
-            'menu_icon' => PAYPAL_INVOICE_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-for-wordpress-icon.png',
+            'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-for-wordpress-icon.png',
             'supports' => array('', ''),
             'has_archive' => false,
             'show_in_nav_menus' => false
@@ -181,7 +181,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         remove_meta_box('revisionsdiv', 'paypal_invoices', 'normal');
         remove_meta_box('authordiv', 'paypal_invoices', 'normal');
         remove_meta_box('sqpt-meta-tags', 'paypal_invoices', 'normal');
-        add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, PAYPAL_INVOICE_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
+        add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
         // add_submenu_page('apifw_manage_invoces', 'Manage Invoces', 'Manage Invoces', 'manage_options', 'apifw_manage_invoces', array($this, 'angelleye_paypal_invoicing_manage_invoicing_content'));
         // add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'apifw_create_invoces', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
         //add_submenu_page('apifw_manage_invoces', 'Manage Items', 'Manage Items', 'manage_options', 'apifw_manage_items', array($this, 'angelleye_paypal_invoicing_manage_items_content'));
@@ -204,7 +204,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $this->response = $this->request->angelleye_paypal_invoicing_get_all_invoice();
-            include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-invoice-list.php';
+            include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-invoice-list.php';
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -218,15 +218,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $this->response = $this->request->angelleye_paypal_invoicing_get_next_invoice_number();
             if (empty($_GET['action'])) {
-                include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
+                include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
             } elseif (!empty($_GET['action']) && $_GET['action'] == 'edit') {
                 $invoice_id = get_post_meta($post->ID, 'id', true);
                 if (!empty($invoice_id)) {
                     $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                     $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post->ID);
-                    include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-view-invoice.php';
+                    include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-view-invoice.php';
                 } else {
-                    include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
+                    include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
                 }
             }
         } else {
@@ -247,7 +247,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->angelleye_paypal_invoicing_delete_log_file();
         $this->angelleye_paypal_invoicing_save_setting();
         $this->angelleye_paypal_invoicing_add_bootstrap();
-        include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-invoice-setting.php';
+        include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-invoice-setting.php';
     }
 
     public function angelleye_paypal_invoicing_address_book_content() {
@@ -282,7 +282,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $this->response = $this->request->angelleye_paypal_invoicing_get_all_templates();
-            include_once PAYPAL_INVOICE_PLUGIN_DIR . '/admin/views/html-admin-page-template_list.php';
+            include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-template_list.php';
         } else {
             $this->angelleye_paypal_invoicing_print_error();
         }
@@ -325,7 +325,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_load_rest_api() {
-        include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
+        include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
         $this->request = new AngellEYE_PayPal_Invoicing_Request(null, null);
     }
 
@@ -378,7 +378,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public static function get_log_files() {
-        $files = @scandir(PAYPAL_INVOICE_LOG_DIR);
+        $files = @scandir(ANGELLEYE_PAYPAL_INVOICING_LOG_DIR);
         $result = array();
         if (!empty($files)) {
             foreach ($files as $key => $value) {
@@ -395,7 +395,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public static function delete_logs_before_timestamp() {
         $log_files = self::get_log_files();
         foreach ($log_files as $log_file) {
-            @unlink(trailingslashit(PAYPAL_INVOICE_LOG_DIR) . $log_file);
+            @unlink(trailingslashit(ANGELLEYE_PAYPAL_INVOICING_LOG_DIR) . $log_file);
         }
     }
 

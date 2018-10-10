@@ -106,12 +106,12 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
 
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
-        include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/paypal-rest/autoload.php' );
+        include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
         $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
-        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => PAYPAL_INVOICE_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => PAYPAL_INVOICE_LOG_DIR . 'paypal_invoice_cache.log'));
+        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
         return $auth;
     }
 
@@ -217,8 +217,8 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order, $is_send = true) {
-        include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
+    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order) {
+        include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
         $this->calculation = new AngellEYE_PayPal_Invoicing_Calculation();
         $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         $this->order_param = $this->calculation->order_calculation($order_id);
@@ -668,7 +668,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice->setDiscount($cost);
             }
             if ($allow_tips == 'on') {
-                //$invoice->setAllowtip('true');
+               // $invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
                 $invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);

@@ -23,21 +23,21 @@ if (!defined('WPINC')) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define('PAYPAL_INVOICE_VERSION', '1.0.0');
-if (!defined('PAYPAL_INVOICE_PLUGIN_URL')) {
-    define('PAYPAL_INVOICE_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('ANGELLEYE_PAYPAL_INVOICING_VERSION', '1.0.0');
+if (!defined('ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL')) {
+    define('ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL', plugin_dir_url(__FILE__));
 }
-if (!defined('PAYPAL_INVOICE_PLUGIN_DIR')) {
-    define('PAYPAL_INVOICE_PLUGIN_DIR', dirname(__FILE__));
+if (!defined('ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR')) {
+    define('ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR', dirname(__FILE__));
 }
 if (!defined('PAYPAL_INVOICE_PLUGIN_BASENAME')) {
     define('PAYPAL_INVOICE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 }
 
 
-if (!defined('PAYPAL_INVOICE_LOG_DIR')) {
+if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
     $upload_dir = wp_upload_dir( null, false );
-    define('PAYPAL_INVOICE_LOG_DIR', $upload_dir['basedir'] . '/angelleye-paypal-invoicing/');
+    define('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR', $upload_dir['basedir'] . '/angelleye-paypal-invoicing/');
 }
 
 
