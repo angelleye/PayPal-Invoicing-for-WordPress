@@ -156,12 +156,6 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     </div>
                     <h3><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
-                        <label for="apifw_shipping_rate" class="col-sm-2 col-form-label"><?php echo __('Shipping Rate', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-5">
-                            <input type="text" class="form-control" id="apifw_shipping_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" name="shipping_rate" value="<?php echo $shipping_rate; ?>">
-                        </div>
-                    </div>
-                    <div class="form-group row">
                         <label for="apifw_shipping_amount" class="col-sm-2 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
                             <input type="text" class="form-control" id="apifw_shipping_amount" placeholder="<?php echo __('0.00', 'angelleye-paypal-invoicing'); ?>" name="shipping_amount" value="<?php echo $shipping_amount; ?>">
