@@ -5,6 +5,8 @@
 }
 #apifw_enable_paypal_sandbox, #apifw_debug_log {
     margin: 8px 0px 0px -20px;
+    height: auto;
+    width: auto;
 }
 .mt30-invoice {
     margin-top: 20px;
