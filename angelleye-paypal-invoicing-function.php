@@ -211,12 +211,12 @@ function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d
     }
     $allowed_zones = timezone_identifiers_list();
     if (in_array($tzstring, $allowed_zones)) {
-        $tz = new DateTimeZone($tzstring);
+        //$tz = new DateTimeZone($tzstring);
+        date_default_timezone_set($tzstring); 
     } else {
-        $tz = new DateTimeZone('UTC');
+        //$tz = new DateTimeZone('UTC');
+        date_default_timezone_set('UTC'); 
     }
     $dt = DateTime::createFromFormat($input_date_format, $string);
-    //$dt = new DateTime($string);
-    $dt->setTimezone($tz);
     return $dt->format($output_date_format);
 }
