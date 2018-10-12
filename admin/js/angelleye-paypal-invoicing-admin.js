@@ -33,6 +33,9 @@
             var $table = $('.invoice-table'),
                     $first_row = $table.find('tbody:last').clone().find('input').val('').end();
             $first_row.removeClass('first_tbody');
+            $first_row.find('.amount').html('');
+            $first_row.find("#item_txt_name").val(angelleye_paypal_invoicing_js.tax_name);
+            $first_row.find("#item_txt_rate").val(angelleye_paypal_invoicing_js.tax_rate);
             $table.append($first_row);
         });
         jQuery(document).on('click', '.deleteItem', function (event) {

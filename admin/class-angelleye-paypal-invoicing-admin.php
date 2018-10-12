@@ -68,8 +68,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->country = isset($woocommerce_pifw_paypal_invoice_settings['country']) ? $woocommerce_pifw_paypal_invoice_settings['country'] : '';
         $this->shipping_rate = isset($woocommerce_pifw_paypal_invoice_settings['shipping_rate']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_rate'] : '';
         $this->shipping_amount = isset($woocommerce_pifw_paypal_invoice_settings['shipping_amount']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_amount'] : '';
-        $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : '';
-        $this->tax_name = isset($woocommerce_pifw_paypal_invoice_settings['tax_name']) ? $woocommerce_pifw_paypal_invoice_settings['tax_name'] : '';
+        $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : $this->apifw_setting['tax_rate'];
+        $this->tax_name = isset($woocommerce_pifw_paypal_invoice_settings['tax_name']) ? $woocommerce_pifw_paypal_invoice_settings['tax_name'] : $this->apifw_setting['tax_name'];
         $this->note_to_recipient = isset($woocommerce_pifw_paypal_invoice_settings['note_to_recipient']) ? $woocommerce_pifw_paypal_invoice_settings['note_to_recipient'] : '';
         $this->terms_and_condition = isset($woocommerce_pifw_paypal_invoice_settings['terms_and_condition']) ? $woocommerce_pifw_paypal_invoice_settings['terms_and_condition'] : '';
         $this->debug_log = isset($woocommerce_pifw_paypal_invoice_settings['debug_log']) ? $woocommerce_pifw_paypal_invoice_settings['debug_log'] : '';
@@ -137,20 +137,20 @@ class AngellEYE_PayPal_Invoicing_Admin {
         do_action('paypal_invoices_for_wordpress_register_post_type');
         register_post_type('paypal_invoices', apply_filters('paypal_invoices_for_wordpress_register_post_type_paypal_invoices', array(
             'labels' => array(
-                'name' => __('Manage invoices', 'angelleye-paypal-invoicing'),
-                'singular_name' => __('PayPal invoice', 'angelleye-paypal-invoicing'),
-                'menu_name' => _x('Manage invoices', 'Manage invoices', 'angelleye-paypal-invoicing'),
-                'add_new' => __('Add invoice', 'angelleye-paypal-invoicing'),
-                'add_new_item' => __('Add New invoice', 'angelleye-paypal-invoicing'),
+                'name' => __('Manage Invoices', 'angelleye-paypal-invoicing'),
+                'singular_name' => __('PayPal Invoice', 'angelleye-paypal-invoicing'),
+                'menu_name' => _x('Manage Invoices', 'Manage Invoices', 'angelleye-paypal-invoicing'),
+                'add_new' => __('Add Invoice', 'angelleye-paypal-invoicing'),
+                'add_new_item' => __('Add New Invoice', 'angelleye-paypal-invoicing'),
                 'edit' => __('Edit', 'angelleye-paypal-invoicing'),
                 'edit_item' => __('Invoice Details', 'angelleye-paypal-invoicing'),
-                'new_item' => __('New invoice', 'angelleye-paypal-invoicing'),
-                'view' => __('View PayPal invoice', 'angelleye-paypal-invoicing'),
-                'view_item' => __('View PayPal invoice', 'angelleye-paypal-invoicing'),
-                'search_items' => __('Search PayPal invoices', 'angelleye-paypal-invoicing'),
-                'not_found' => __('No PayPal invoice found', 'angelleye-paypal-invoicing'),
-                'not_found_in_trash' => __('No PayPal invoice found in trash', 'angelleye-paypal-invoicing'),
-                'parent' => __('Parent PayPal invoice', 'angelleye-paypal-invoicing')
+                'new_item' => __('New Invoice', 'angelleye-paypal-invoicing'),
+                'view' => __('View PayPal Invoice', 'angelleye-paypal-invoicing'),
+                'view_item' => __('View PayPal Invoice', 'angelleye-paypal-invoicing'),
+                'search_items' => __('Search PayPal Invoices', 'angelleye-paypal-invoicing'),
+                'not_found' => __('No PayPal Invoice found', 'angelleye-paypal-invoicing'),
+                'not_found_in_trash' => __('No PayPal Invoice found in trash', 'angelleye-paypal-invoicing'),
+                'parent' => __('Parent PayPal Invoice', 'angelleye-paypal-invoicing')
             ),
             'description' => __('This is where you can add new PayPal Invoice to your store.', 'angelleye-paypal-invoicing'),
             'public' => true,
@@ -195,6 +195,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_add_bootstrap() {
         wp_enqueue_script($this->plugin_name . 'bootstrap');
         wp_enqueue_script($this->plugin_name);
+                $translation_array = array(
+            'tax_name' => $this->tax_name,
+            'tax_rate' => $this->tax_rate
+        );
+        wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
         wp_enqueue_style($this->plugin_name . 'bootstrap');
         wp_enqueue_style($this->plugin_name);
     }
@@ -406,7 +411,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             foreach ($this->paypal_invoice_post_status_list as $paypal_invoice_post_status) {
                 $paypal_invoice_post_status_display_name = ucfirst(str_replace('_', ' ', $paypal_invoice_post_status));
                 register_post_status($paypal_invoice_post_status, array(
-                    'label' => _x($paypal_invoice_post_status_display_name, 'PayPal invoice status', 'angelleye-paypal-invoicing'),
+                    'label' => _x($paypal_invoice_post_status_display_name, 'PayPal Invoice status', 'angelleye-paypal-invoicing'),
                     'public' => ($paypal_invoice_post_status == 'trash') ? false : true,
                     'exclude_from_search' => false,
                     'show_in_admin_all_list' => ($paypal_invoice_post_status == 'trash') ? false : true,
@@ -434,7 +439,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_add_meta_box() {
-        add_meta_box('angelleye_paypal_invoicing_meta_box', __('Add New invoice', 'angelleye-paypal-invoicing'), array($this, 'angelleye_paypal_invoicing_add_meta_box_add_new_invoice'), 'paypal_invoices', 'normal');
+        add_meta_box('angelleye_paypal_invoicing_meta_box', __('Add New Invoice', 'angelleye-paypal-invoicing'), array($this, 'angelleye_paypal_invoicing_add_meta_box_add_new_invoice'), 'paypal_invoices', 'normal');
     }
 
     public function angelleye_paypal_invoicing_add_meta_box_add_new_invoice() {
