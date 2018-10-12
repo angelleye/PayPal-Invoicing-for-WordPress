@@ -248,9 +248,9 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
         include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
         $this->request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-        $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice($order);
+        $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order);
         if (!empty($invoice_id) && $invoice_id != false) {
-            update_post_meta($order_id, '_transaction_id', $invoice_id);
+            update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
             if ($order->get_total() > 0) {
                 // Mark as on-hold (we're awaiting the pifw_paypal_invoice).
                 $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));

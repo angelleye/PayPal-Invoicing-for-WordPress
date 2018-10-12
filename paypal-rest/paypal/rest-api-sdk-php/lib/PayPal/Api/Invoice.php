@@ -1186,7 +1186,7 @@ class Invoice extends PayPalResourceModel
         );
         $ret = new InvoiceSearchResponse();
         $ret->fromJson($json);
-        return $json;
+        return $ret;
     }
 
     /**

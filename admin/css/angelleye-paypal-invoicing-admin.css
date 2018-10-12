@@ -42,7 +42,7 @@
 .invoice-table input {
     width: 100%;
     font-size: inherit;
-    box-shadow: none !important;
+
 }
 .invoice-table input[type="number"] {
     height: inherit !important;
@@ -195,4 +195,158 @@ body {
 }
 #angelleye-paypal-invoicing input {
     font-size: 15px;
+}
+.paypal-invoice-create-action-box {
+    float: right;
+    margin-top: 22px;
+    margin-right: 0px;
+}
+
+.was-submited input:invalida {
+    border: 2px solid red;
+}
+#invoice_view_table .card {
+    min-width: inherit;
+    max-width: inherit;
+    padding: 0px;
+}
+#invoice_view_table table#paypal_invoice_view_table_format thead {
+    margin: 0;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    line-height: 21px;
+    font-weight: 700;
+    font-size: 15px;
+
+}
+#invoice_view_table table#paypal_invoice_view_table_format thead th {
+    border-bottom: none;
+}
+#invoice_view_table table#paypal_invoice_view_table_format tbody {
+    line-height: 21px;
+    margin: 0;
+}
+#invoice_view_table table#paypal_invoice_view_table_format tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+#invoice_view_table table#paypal_invoice_view_table_format tr td, #invoice_view_table table#paypal_invoice_view_table_format tr th {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#invoice_view_table .itemdescription {
+    padding-right: 0;
+}
+#invoice_view_table .itemquantity  {
+    width: 10%;
+    padding-right: 0;
+}
+#invoice_view_table .itemprice   {
+    width: 15%;
+    padding-right: 0;
+}
+#invoice_view_table .itemamount    {
+    width: 15%;
+}
+#invoice_view_table .wrap {
+    margin: 0;
+}
+#invoice_view_table .folded-corner {
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    border-style: none solid solid none;
+    border-width: 0 70px 70px 0;
+    border-style: solid;
+    background: #e6e6e6;
+    border-color: #fff #fff transparent transparent;
+}
+#invoice_view_table .pageCurl {
+    direction: rtl;
+    margin-right: 85px;
+    white-space: nowrap;
+    color: #9da3a6;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 700;
+    margin-bottom: 8px;
+    font-size: 30px;
+}
+#invoice_view_table span {
+    margin-bottom: 5px;
+}
+#invoice_view_table .sectionBottom {
+    border-bottom: 1px solid #ddd;
+}
+#invoice_view_table {
+    color: #555;
+}
+#invoice_view_table h4 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #555;
+}
+.paypal_invoice_view_table_format_total table td {
+    border-top: none;
+}
+.paypal_invoice_view_table_format_total table tbody tr td {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+.table#paypal_invoice_view_table_format {
+    margin-bottom: 0px;
+}
+.paypal_invoice_view_table_format_total table {
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+    line-height: 21px;
+}
+.paypal_invoice_view_table_format_total table tbody tr td.total {
+    background-color: #f9f9f9;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+.paypal_invoice_view_table_format_total table tbody {
+    line-height: 21px;
+}
+
+.paypal_invoice_view_table_format_total table tbody tr td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    padding-right: 10px;
+}
+.invoiceStatus  {
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-weight: 700;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    padding-right: 10px;
+}
+
+.isCancelled {
+    color: #fff;
+    background-color: #f8981f;
+}
+.isPartiallyPaid {
+    color: #1b9e1b;
+    background-color: #f7fff7;
+    border-bottom: 3px solid #1b9e1b;
+    border-top: 3px solid #1b9e1b;
+}
+.isDraft {
+    color: #fff;
+    background-color: #9da3a6;
+}
+.isPaid {
+    color: #fff;
+    background-color: #1b9e1b;
+}
+
+#invoice_view_table table#paypal_invoice_view_table_format tr td, #invoice_view_table table#paypal_invoice_view_table_format tr th {
+    vertical-align: middle !important;
 }

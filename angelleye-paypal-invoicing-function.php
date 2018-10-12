@@ -1,16 +1,5 @@
 <?php
 
-function pifw_get_invoice_status($key) {
-    $invoice_status = array('DRAFT' => 'Draft', 'UNPAID' => 'Unpaid', 'SENT' => 'Unpaid (Sent)', 'SCHEDULED' => 'Scheduled', 'PARTIALLY_PAID' => 'Partially paid', 'PAYMENT_PENDING' => 'Payment pending', 'PAID' => 'Paid',
-        'MARKED_AS_PAID' => 'Mark as paid',
-        'CANCELLED' => 'Cancelled',
-        'REFUNDED' => 'Refunded',
-        'PARTIALLY_REFUNDED' => 'Partially refunded',
-        'MARKED_AS_REFUNDED' => 'Mark as refunded'
-    );
-    return $invoice_status_value = isset($invoice_status[$key]) ? $invoice_status[$key] : '';
-}
-
 function pifw_get_currency_symbol($currency = '') {
 
     $symbols = apply_filters(
@@ -181,4 +170,32 @@ function pifw_get_currency_symbol($currency = '') {
             )
     );
     return $currency_symbol = isset($symbols[$currency]) ? $symbols[$currency] : '';
+}
+
+function pifw_get_invoice_status_name_and_class($status) {
+    $invoice_status = array(
+        "UNPAID" => array('lable' => 'Unpaid', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
+        "SENT" => array('lable' => 'Unpaid (Sent)', 'class' => 'isDraft', 'action' => array('remind' => 'Remind')),
+        'SCHEDULED' => array('lable' => 'Scheduled', 'class' => 'isDraft'),
+        "DRAFT" => array('lable' => 'Draft', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
+        "PAID" => array('lable' => 'Paid', 'class' => 'isPaid'),
+        "MARKED_AS_PAID" => array('lable' => 'Mark as paid', 'class' => 'isPaid'),
+        "CANCELLED" => array('lable' => 'Cancelled', 'class' => 'isCancelled'),
+        "REFUNDED" => array('lable' => 'Refunded', 'class' => 'isDraft'),
+        "PARTIALLY_REFUNDED" => array('lable' => 'Partially refunded', 'class' => 'isDraft'),
+        "MARKED_AS_REFUNDED" => array('lable' => 'Mark as refunded', 'class' => 'isDraft'),
+        "PAYMENT_PENDING" => array('lable' => 'Payment pending', 'class' => 'isDraft'),
+        "PARTIALLY_PAID" => array('lable' => 'Partially paid', 'class' => 'isPartiallyPaid', 'action' => array('remind' => 'Remind')),
+    );
+    if (!empty($invoice_status[$status])) {
+        return $invoice_status[$status];
+    }
+}
+
+function pifw_clean($var) {
+    if (is_array($var)) {
+        return array_map('pifw_clean', $var);
+    } else {
+        return is_scalar($var) ? sanitize_text_field($var) : $var;
+    }
 }
