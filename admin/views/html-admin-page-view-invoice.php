@@ -318,3 +318,4 @@ $status = get_post_meta($post->ID, 'status', true);
             <?php endif; ?>  
         </div>
     </div>
+</div>

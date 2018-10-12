@@ -199,3 +199,32 @@ function pifw_clean($var) {
         return is_scalar($var) ? sanitize_text_field($var) : $var;
     }
 }
+
+function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d T', $input_date_format = 'd/m/Y') {
+    $string = preg_replace('/[(]+[^*]+/', '', $date);
+    $current_offset = get_option('gmt_offset');
+    $tzstring = get_option('timezone_string');
+    $check_zone_info = true;
+    if (false !== strpos($tzstring, 'Etc/GMT')) {
+        $tzstring = '';
+    }
+    if (empty($tzstring)) { // Create a UTC+- zone if no timezone string exists
+        $check_zone_info = false;
+        if (0 == $current_offset)
+            $tzstring = 'UTC+0';
+        elseif ($current_offset < 0)
+            $tzstring = 'UTC' . $current_offset;
+        else
+            $tzstring = 'UTC+' . $current_offset;
+    }
+    $allowed_zones = timezone_identifiers_list();
+    if (in_array($tzstring, $allowed_zones)) {
+        //$tz = new DateTimeZone($tzstring);
+        date_default_timezone_set($tzstring);
+    } else {
+        //$tz = new DateTimeZone('UTC');
+        date_default_timezone_set('UTC');
+    }
+    $dt = DateTime::createFromFormat($input_date_format, $string);
+    return $dt->format($output_date_format);
+}

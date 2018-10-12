@@ -68,8 +68,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->country = isset($woocommerce_pifw_paypal_invoice_settings['country']) ? $woocommerce_pifw_paypal_invoice_settings['country'] : '';
         $this->shipping_rate = isset($woocommerce_pifw_paypal_invoice_settings['shipping_rate']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_rate'] : '';
         $this->shipping_amount = isset($woocommerce_pifw_paypal_invoice_settings['shipping_amount']) ? $woocommerce_pifw_paypal_invoice_settings['shipping_amount'] : '';
-        $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : '';
-        $this->tax_name = isset($woocommerce_pifw_paypal_invoice_settings['tax_name']) ? $woocommerce_pifw_paypal_invoice_settings['tax_name'] : '';
+        $this->tax_rate = isset($woocommerce_pifw_paypal_invoice_settings['tax_rate']) ? $woocommerce_pifw_paypal_invoice_settings['tax_rate'] : $this->apifw_setting['tax_rate'];
+        $this->tax_name = isset($woocommerce_pifw_paypal_invoice_settings['tax_name']) ? $woocommerce_pifw_paypal_invoice_settings['tax_name'] : $this->apifw_setting['tax_name'];
         $this->note_to_recipient = isset($woocommerce_pifw_paypal_invoice_settings['note_to_recipient']) ? $woocommerce_pifw_paypal_invoice_settings['note_to_recipient'] : '';
         $this->terms_and_condition = isset($woocommerce_pifw_paypal_invoice_settings['terms_and_condition']) ? $woocommerce_pifw_paypal_invoice_settings['terms_and_condition'] : '';
         $this->debug_log = isset($woocommerce_pifw_paypal_invoice_settings['debug_log']) ? $woocommerce_pifw_paypal_invoice_settings['debug_log'] : '';
@@ -195,6 +195,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_add_bootstrap() {
         wp_enqueue_script($this->plugin_name . 'bootstrap');
         wp_enqueue_script($this->plugin_name);
+                $translation_array = array(
+            'tax_name' => $this->tax_name,
+            'tax_rate' => $this->tax_rate
+        );
+        wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
         wp_enqueue_style($this->plugin_name . 'bootstrap');
         wp_enqueue_style($this->plugin_name);
     }

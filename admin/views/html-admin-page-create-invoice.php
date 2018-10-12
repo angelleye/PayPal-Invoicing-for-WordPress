@@ -5,9 +5,9 @@
  * and open the template in the editor.
  */
 $apifw_setting = get_option('apifw_setting');
-$note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : $this->note_to_recipient;
-$terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : $this->terms_and_condition;
-$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : $this->shipping_amount;
+$note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
+$terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
+$shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
 
@@ -112,8 +112,8 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                         <td><input name="item_name[]" value="" id="item_name" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
                         <td><input name="item_qty[]" value="" id="item_qty" type="text" placeholder="<?php echo __('0'); ?>" required></td>
                         <td><input name="item_amt[]" value="" id="item_amt" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
-                        <td><input name="item_txt_name[]" value="" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_txt_rate[]" value="" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_txt_name[]" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_txt_rate[]" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
                         <td rowspan="2" class="amount">0.00</td>
                         <td></td>
                     </tr>
