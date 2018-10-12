@@ -217,7 +217,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order) {
+    public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order, $is_send = false) {
         include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
         $this->calculation = new AngellEYE_PayPal_Invoicing_Calculation();
         $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
