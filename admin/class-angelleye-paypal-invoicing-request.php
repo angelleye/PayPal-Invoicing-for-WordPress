@@ -573,7 +573,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             //$invoice_date = $invoice_date_obj->format('Y-m-d e');
             $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
-            $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
+            if($term_type == 'DUE_ON_DATE_SPECIFIED') {
+                $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
+            } else {
+                $due_date = '';
+            }
             $reference = isset($post_data['reference']) ? $post_data['reference'] : '';
             $number = isset($post_data['invoice_number']) ? $post_data['invoice_number'] : '';
             $notes = isset($post_data['notes']) ? $post_data['notes'] : '';
