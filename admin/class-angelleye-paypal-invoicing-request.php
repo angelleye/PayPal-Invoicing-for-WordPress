@@ -18,8 +18,9 @@ use PayPal\Api\Participant;
 use PayPal\Api\ShippingCost;
 use PayPal\Api\Notification;
 use PayPal\Api\CancelNotification;
-use \PayPal\Api\VerifyWebhookSignature;
-use \PayPal\Api\WebhookEvent;
+use PayPal\Api\VerifyWebhookSignature;
+use PayPal\Api\WebhookEvent;
+use PayPal\Exception\PayPalConnectionException;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -105,12 +106,12 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
 
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
-        include_once( PAYPAL_INVOICE_PLUGIN_DIR . '/paypal-rest/autoload.php' );
+        include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
         $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
-        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => PAYPAL_INVOICE_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => PAYPAL_INVOICE_LOG_DIR . 'paypal_invoice_cache.log'));
+        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
         return $auth;
     }
 
@@ -180,6 +181,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 update_post_meta($post_id, $key, pifw_clean($value));
             }
             update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
+            return $post_id;
         } else {
             $insert_invoice_array['ID'] = $existing_post_id;
             wp_update_post($insert_invoice_array);
@@ -216,11 +218,10 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_create_invoice_for_wc_order($order) {
-        include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
+        include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/includes/class-angelleye-paypal-invoicing-calculations.php');
         $this->calculation = new AngellEYE_PayPal_Invoicing_Calculation();
         $order_id = version_compare(WC_VERSION, '3.0', '<') ? $order->id : $order->get_id();
         $this->order_param = $this->calculation->order_calculation($order_id);
-
         $billing_company = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_company : $order->get_billing_company();
         $billing_first_name = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_first_name : $order->get_billing_first_name();
         $billing_last_name = version_compare(WC_VERSION, '3.0', '<') ? $order->billing_last_name : $order->get_billing_last_name();
@@ -251,7 +252,6 @@ class AngellEYE_PayPal_Invoicing_Request {
             $shipping_country = $billing_country;
             $shipping_state = $billing_state;
         }
-
         $currency = version_compare(WC_VERSION, '3.0', '<') ? $order->get_order_currency() : $order->get_currency();
         $invoice = new Invoice();
         $invoice
@@ -320,10 +320,12 @@ class AngellEYE_PayPal_Invoicing_Request {
                 ->setTermType("DUE_ON_RECEIPT");
         try {
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            if($is_send == true) {
+                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            }
             return $invoice->getId();
-        } catch (Exception $ex) {
-            return false;
+        } catch (PayPalConnectionException $ex) {
+            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
         }
     }
 
@@ -666,7 +668,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice->setDiscount($cost);
             }
             if ($allow_tips == 'on') {
-                $invoice->setAllowtip('true');
+               // $invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
                 $invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
@@ -677,7 +679,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice->getPaymentTerm()
                     ->setTermType($term_type);
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            if (!empty($_REQUEST['send_invoice'])) {
+                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+            }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
             return $invoice->getId();
         } catch (Exception $ex) {
@@ -867,6 +871,23 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (Exception $ex) {
             
         }
+    }
+
+    public function angelleye_paypal_invoicing_get_readable_message($json_error) {
+        $message = '';
+        $error_object = json_decode($json_error);
+        switch ($error_object->name) {
+            case 'VALIDATION_ERROR':
+                echo "Payment failed due to invalid Credit Card details:\n";
+                foreach ($error_object->details as $e) {
+                    $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
+                }
+                break;
+        }
+        if( empty($message) ) {
+            $message = $json_error;
+        }
+        return $message;
     }
 
 }

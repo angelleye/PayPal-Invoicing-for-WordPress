@@ -29,18 +29,18 @@ class AngellEYE_PayPal_Invoicing_Activator {
         if( $webhook_id == false) {
             self::angelleye_paypal_invoicing_create_web_hook();
         }
-        //self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
+        self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
     }
 
     private static function create_files() {
         $files = array(
             array(
-                'base' => PAYPAL_INVOICE_LOG_DIR,
+                'base' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR,
                 'file' => '.htaccess',
                 'content' => 'deny from all',
             ),
             array(
-                'base' => PAYPAL_INVOICE_LOG_DIR,
+                'base' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR,
                 'file' => 'index.html',
                 'content' => '',
             ),
@@ -58,7 +58,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
 
     private static function angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp() {
         try {
-            include_once(PAYPAL_INVOICE_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
+            include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
             $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
             $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
         } catch (Exception $ex) {

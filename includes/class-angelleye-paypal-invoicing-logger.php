@@ -94,7 +94,7 @@ class AngellEYE_PayPal_Invoicing_Logger {
      * @return void
      */
     public function angelleye_paypal_invoicing_get_log_file_path($handle) {
-        return trailingslashit(PAYPAL_INVOICE_LOG_DIR) . $handle . '-' . sanitize_file_name(wp_hash($handle)) . '.log';
+        return trailingslashit(ANGELLEYE_PAYPAL_INVOICING_LOG_DIR) . $handle . '-' . sanitize_file_name(wp_hash($handle)) . '.log';
     }
 
 }
