@@ -291,6 +291,7 @@ $status = get_post_meta($post->ID, 'status', true);
                     </div> <!-- close terms col-xs -->
                 <?php endif; ?>
             </div>
+            <?php if(!empty($invoice['merchant_memo'])) : ?>
             <div class="row">
                 <div class="col-xs-12 col-sm-12">
                         <div>
@@ -299,6 +300,7 @@ $status = get_post_meta($post->ID, 'status', true);
                         </div>
                     </div><!-- close note col-xs -->
             </div>
+            <?php endif; ?>
             <?php
             $invoice_history = $this->get_invoice_notes($post->ID);
             if (!empty($invoice_history)) :
