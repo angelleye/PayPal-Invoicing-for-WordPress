@@ -87,6 +87,9 @@
         function count_sub_total() {
             var total = 0;
             var i = 0;
+            var as_temp_tax_name;
+            var as_teamp_tax;
+            var as_teamp_tax_amount = 0;
             jQuery('input[name="item_name[]"]').each(function () {
                 jQuery('#tax_tr_' + (i + 1)).html('');
                 var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
@@ -107,10 +110,23 @@
                 if (isNaN(amount)) {
                     amount = 0.00;
                 }
-
                 if (jQuery('#tax_tr_' + i).length) {
                     if (tax > 0 && jQuery.isNumeric(temp_amount)) {
-                        jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
+                        if(as_temp_tax_name == '' || typeof as_temp_tax_name == 'undefined') {
+                            jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
+                            as_temp_tax_name = tax_name;
+                            as_teamp_tax = tax;
+                            as_teamp_tax_amount = temp_amount;
+                        } else {
+                            if( as_temp_tax_name == tax_name && tax == as_teamp_tax) {
+                                jQuery('#tax_tr_' + ( i - 1 )).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(as_teamp_tax_amount + temp_amount).toFixed(2) + '</span></td>');
+                            } else {
+                                jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
+                                as_temp_tax_name = tax_name;
+                                as_teamp_tax = tax;
+                                as_teamp_tax_amount = temp_amount;
+                            }
+                        }
                     } else {
                         jQuery('#tax_tr_' + i).html('');
                     }
@@ -124,7 +140,6 @@
                     }
                 }
                 jQuery(this).parent().next().next().next().next().next().html('$' + amount.toFixed(2));
-                console.log("qty: " + qty + "  price: " + price + " tax: " + tax + " tax_name: " + tax_name);
                 total = total + amount;
                 i++;
             });
