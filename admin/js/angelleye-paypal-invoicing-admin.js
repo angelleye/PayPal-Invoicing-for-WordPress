@@ -43,7 +43,15 @@
             jQuery(this).closest('tbody').remove();
             count_sub_total();
         });
-        jQuery('#invoice_date, #dueDate').datepicker({dateFormat: 'dd/mm/yy'});
+        jQuery('#invoice_date').datepicker({
+            dateFormat: 'dd/mm/yy',
+            
+            onSelect: function(dateText, inst){
+                jQuery("#dueDate").datepicker("option","minDate",
+                jQuery("#invoice_date").datepicker("getDate"));
+             }
+        });
+        jQuery('#dueDate').datepicker({dateFormat: 'dd/mm/yy'});
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
             jQuery(".memoDetail").show();
