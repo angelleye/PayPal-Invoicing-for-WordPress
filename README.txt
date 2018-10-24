@@ -1,14 +1,14 @@
-=== Angelleye PayPal Invoicing ===
+=== PayPal Invoicing for WordPress ===
 Contributors: angelleye
 Donate link: http://www.angelleye.com/
-Tags: paypal, invoicing, woocommerce, angelleye,
+Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
 Tested up to: 4.9.8
 Stable tag: 0.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-PayPal Invoicing for WordPress gives you the power to create and manage PayPal Invoices from directly inside your WordPress dashboard.
+Add PayPal Invoicing functionality to your WordPress dashboard.  Includes full support for WooCommerce if installed!
 
 == Description ==
 
@@ -69,5 +69,5 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
-= 0.1.0 =
-* Initial Beta Release.
+= 1.0.0 =
+* Initial Release.
