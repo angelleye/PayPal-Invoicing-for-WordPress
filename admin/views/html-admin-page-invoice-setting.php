@@ -46,12 +46,10 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     <div class="form-group row">
                         <div class="col-sm-2"><?php echo __('PayPal Sandbox', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="apifw_enable_paypal_sandbox" name="enable_paypal_sandbox" <?php checked($enable_paypal_sandbox, 'on', true); ?>>
-                                <label class="form-check-label" for="apifw_enable_paypal_sandbox">
-                                    <?php echo __('Enable PayPal Sandbox', 'angelleye-paypal-invoicing'); ?>
-                                </label>
-                            </div>
+                            <label  for="apifw_enable_paypal_sandbox">
+                                <input  type="checkbox" id="apifw_enable_paypal_sandbox" name="enable_paypal_sandbox" <?php checked($enable_paypal_sandbox, 'on', true); ?>>
+                                <?php echo __('Enable PayPal Sandbox', 'angelleye-paypal-invoicing'); ?>
+                            </label>
                         </div>
                     </div>
                     <!-- SandBox -->
@@ -189,16 +187,13 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                     <div class="form-group row">
                         <div class="col-sm-2"><?php echo __('Debug Log', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="apifw_debug_log" name="debug_log" <?php checked($debug_log, 'on', true); ?>>
-
-                                <label class="form-check-label" for="apifw_debug_log">
-                                    <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
-                                </label>
-                                <small id="passwordHelpBlock" class="form-text text-muted">
-                                    <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
-                                </small>
-                            </div>
+                            <label  for="apifw_debug_log">
+                                <input  type="checkbox" id="apifw_debug_log" name="debug_log" <?php checked($debug_log, 'on', true); ?>>
+                                <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
+                            </label>
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
+                            </small>
                         </div>
                     </div>
                     <div class="form-group row">
