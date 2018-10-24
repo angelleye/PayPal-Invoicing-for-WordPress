@@ -56,6 +56,15 @@ In the search field type PayPal Invoicing for WordPress and click Search Plugins
 
 Automatic updates should work great for you.  As always, though, we recommend backing up your site prior to making any updates just to be sure nothing goes wrong.
 
+== Screenshots ==
+
+1. Create a new PayPal Invoice from within the WordPress dashboard (WooCommerce not required!)
+2. PayPal Invoice as displayed to the buyer.
+3. PayPal Invoice details as displayed in the WordPress dashboard.
+4. View PayPal Invoice history within the WordPress dashboard.
+5. PayPal Invoice options available within the Order Actions menu of a WooCommerce order.
+6. PayPal Invoice options available within the Order Actions menu of a WooCommerce order (cont.)
+
 == Frequently Asked Questions ==
 
 = Do buyers need a PayPal account in order to pay a PayPal invoice?
