@@ -166,6 +166,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
             'currency' => isset($amount['currency']) ? $amount['currency'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => '',
@@ -690,9 +691,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
             return $invoice->getId();
-        } catch (Exception $ex) {
-            echo $this->angelleye_paypal_invoicing_print_api_error($ex->getMessage());
-            return false;
+        } catch (PayPalConnectionException $ex) {
+            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
         }
     }
 
@@ -884,10 +884,12 @@ class AngellEYE_PayPal_Invoicing_Request {
         $error_object = json_decode($json_error);
         switch ($error_object->name) {
             case 'VALIDATION_ERROR':
-                echo "Payment failed due to invalid Credit Card details:\n";
                 foreach ($error_object->details as $e) {
                     $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
                 }
+                break;
+            case 'BUSINESS_ERROR':  
+                    $message .= $error_object->message;
                 break;
         }
         if( empty($message) ) {

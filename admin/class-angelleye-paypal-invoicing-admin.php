@@ -73,15 +73,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->note_to_recipient = !empty($woocommerce_pifw_paypal_invoice_settings['note_to_recipient']) ? $woocommerce_pifw_paypal_invoice_settings['note_to_recipient'] : '';
         $this->terms_and_condition = !empty($woocommerce_pifw_paypal_invoice_settings['terms_and_condition']) ? $woocommerce_pifw_paypal_invoice_settings['terms_and_condition'] : '';
         $this->debug_log = !empty($woocommerce_pifw_paypal_invoice_settings['debug_log']) ? $woocommerce_pifw_paypal_invoice_settings['debug_log'] : '';
-        $this->testmode = ( !empty($this->apifw_setting['enable_paypal_sandbox']) && $this->apifw_setting['enable_paypal_sandbox'] == 'on' ) ? true : false;
+        $this->testmode = (!empty($this->apifw_setting['enable_paypal_sandbox']) && $this->apifw_setting['enable_paypal_sandbox'] == 'on' ) ? true : false;
         if ($this->testmode == true) {
-            $this->rest_client_id = ( !empty($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : $this->sandbox_client_id;
-            $this->rest_secret_id = ( !empty($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : $this->sandbox_secret;
-            $this->rest_paypal_email = ( !empty($this->apifw_setting['sandbox_paypal_email']) && !empty($this->apifw_setting['sandbox_paypal_email']) ) ? $this->apifw_setting['sandbox_paypal_email'] : $this->sandbox_paypal_email;
+            $this->rest_client_id = (!empty($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : $this->sandbox_client_id;
+            $this->rest_secret_id = (!empty($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : $this->sandbox_secret;
+            $this->rest_paypal_email = (!empty($this->apifw_setting['sandbox_paypal_email']) && !empty($this->apifw_setting['sandbox_paypal_email']) ) ? $this->apifw_setting['sandbox_paypal_email'] : $this->sandbox_paypal_email;
         } else {
-            $this->rest_client_id = ( !empty($this->apifw_setting['client_id']) && !empty($this->apifw_setting['client_id']) ) ? $this->apifw_setting['client_id'] : $this->client_id;
-            $this->rest_secret_id = ( !empty($this->apifw_setting['secret']) && !empty($this->apifw_setting['secret']) ) ? $this->apifw_setting['secret'] : $this->secret;
-            $this->rest_paypal_email = ( !empty($this->apifw_setting['paypal_email']) && !empty($this->apifw_setting['paypal_email']) ) ? $this->apifw_setting['paypal_email'] : $this->paypal_email;
+            $this->rest_client_id = (!empty($this->apifw_setting['client_id']) && !empty($this->apifw_setting['client_id']) ) ? $this->apifw_setting['client_id'] : $this->client_id;
+            $this->rest_secret_id = (!empty($this->apifw_setting['secret']) && !empty($this->apifw_setting['secret']) ) ? $this->apifw_setting['secret'] : $this->secret;
+            $this->rest_paypal_email = (!empty($this->apifw_setting['paypal_email']) && !empty($this->apifw_setting['paypal_email']) ) ? $this->apifw_setting['paypal_email'] : $this->paypal_email;
         }
     }
 
@@ -158,13 +158,13 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'show_in_menu' => 'apifw_manage_invoces',
             'capability_type' => 'post',
             'map_meta_cap' => true,
-            'publicly_queryable' => false,
-            'exclude_from_search' => true,
+            'publicly_queryable' => true,
+            'exclude_from_search' => false,
             'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
-            'query_var' => false,
+            'query_var' => true,
             'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-for-wordpress-icon.png',
             'supports' => array('', ''),
-            'has_archive' => false,
+            'has_archive' => true,
             'show_in_nav_menus' => false
                         )
                 )
@@ -195,7 +195,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_add_bootstrap() {
         wp_enqueue_script($this->plugin_name . 'bootstrap');
         wp_enqueue_script($this->plugin_name);
-                $translation_array = array(
+        $translation_array = array(
             'tax_name' => $this->tax_name,
             'tax_rate' => $this->tax_rate
         );
@@ -305,7 +305,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         ?>
         <br>
         <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
-            <?php echo wp_kses_post(__('PayPal API credentials is not set up, <a href="?page=apifw_settings" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing')) . PHP_EOL; ?>
+            <?php echo wp_kses_post(sprintf(__('PayPal API credentials is not set up, <a href="%s" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing'), admin_url('admin.php?page=apifw_settings'))) . PHP_EOL; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -511,7 +511,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'recipient' => 'email',
             'status' => 'status',
             'amount' => 'total_amount_value',
-            'title' => 'ID'
+            'title' => 'ID',
+            'invoice_date' => 'wp_invoice_date'
         );
         return wp_parse_args($custom, $columns);
     }
@@ -522,17 +523,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $orderby = $query->get('orderby');
             if ('total_amount_value' == $orderby) {
                 $query->query_vars['orderby'] = 'meta_value_num';
+            } elseif ('invoice_date' == $orderby) {
+                $query->query_vars['orderby'] = 'meta_value_num date';
             } else {
                 $query->query_vars['orderby'] = 'meta_value';
             }
             $query->query_vars['meta_key'] = pifw_clean($_GET['orderby']);
-            if (isset($query->query_vars['s']) && empty($query->query_vars['s'])) {
-                $query->is_search = false;
-            }
         } else {
             if (is_admin() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
                 $query->query_vars['orderby'] = 'ID';
-                $query->query_vars['order'] = 'asc';
+                $query->query_vars['order'] = 'DESC';
             }
         }
     }
@@ -560,10 +560,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);
-            if (!empty($invoice_id) && $invoice_id != false) {
+            if (!empty($invoice_id) && !is_array($invoice_id)) {
                 $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                 $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_ID);
                 wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1028'));
+                exit();
+            } else {
+                if( !empty($invoice_id['message'])) {
+                    set_transient('angelleye_paypal_invoicing_error', $invoice_id['message']);
+                }
+                wp_delete_post($post_ID, true);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
                 exit();
             }
         } else {
@@ -586,6 +593,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1028') {
             echo "<div class='notice notice-success is-dismissible'><p>Your invoice is created.</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1029') {
+            $angelleye_paypal_invoicing_error = get_transient('angelleye_paypal_invoicing_error');
+            if($angelleye_paypal_invoicing_error == false) {
+                echo "<div class='notice notice-success is-dismissible'><p>". __('Invoice not created', 'angelleye-paypal-invoicing') . "</p></div>";
+            } else {
+                delete_transient(angelleye_paypal_invoicing_error);
+                echo "<div class='notice notice-error is-dismissible'><p>". $angelleye_paypal_invoicing_error . "</p></div>";
+            }
         }
     }
 
@@ -1031,6 +1047,34 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $invoice_post_id = pifw_clean($_POST['invoice_post_id']);
         $order_id = pifw_clean($_POST['order_id']);
         $this->angelleye_paypal_invoicing_wc_delete_paypal_invoice($order_id);
+    }
+
+    public function angelleye_paypal_invoicing_modify_wp_search($where) {
+        global $wpdb, $wp;
+        if (isset($_GET['s']) && !empty($_GET['s'])) {
+            if (is_search() && isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
+                $where = str_replace($wpdb->posts . ".post_title", $wpdb->postmeta . ".meta_value", $where);
+                add_filter('posts_join_request', array($this, 'angelleye_paypal_invoicing_modify_wp_search_join'));
+                add_filter('posts_distinct_request', array($this, 'angelleye_paypal_invoicing_modify_wp_search_distinct'));
+            }
+        }
+        return $where;
+    }
+
+    public function angelleye_paypal_invoicing_modify_wp_search_join($join) {
+        global $wpdb, $wp;
+        if (isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
+            return $join .= " LEFT JOIN $wpdb->postmeta ON ($wpdb->posts.ID = $wpdb->postmeta.post_id) ";
+        }
+        return $join;
+    }
+
+    public function angelleye_paypal_invoicing_modify_wp_search_distinct($distinct) {
+        global $wpdb, $wp;
+        if (isset($_GET['post_type']) && $_GET['post_type'] == 'paypal_invoices') {
+            return 'DISTINCT';
+        }
+        return $distinct;
     }
 
 }
