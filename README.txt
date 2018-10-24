@@ -58,6 +58,10 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Frequently Asked Questions ==
 
+= Do buyers need a PayPal account in order to pay a PayPal invoice?
+
+* No.  Your customers can choose to pay via debit or credit card, or via their PayPal account. They’ll love how easy and secure it is to pay.
+
 = How do I create sandbox accounts for testing? =
 
 * Login at http://developer.paypal.com.
@@ -66,11 +70,6 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Click the Create Account button to create a new sandbox account.
 * TIP: Create at least one "seller" account and one "buyer" account if you want to fully test Express Checkout or other PayPal wallet payments.
 * TUTORIAL: See our [step-by-step instructions with video guide](https://www.angelleye.com/create-paypal-sandbox-account/).
-
-= Where do I get my API credentials? =
-
-* Live credentials can be obtained by signing in to your live PayPal account here:  https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run
-* Sandbox credentials can be obtained by viewing the sandbox account profile within your PayPal developer account, or by signing in with a sandbox account here:  https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run
 
 = What other PayPal plugins do you have that might help me? =
 
