@@ -166,6 +166,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
             'currency' => isset($amount['currency']) ? $amount['currency'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => '',

@@ -156,6 +156,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('manage_edit-paypal_invoices_sortable_columns', $plugin_admin, 'angelleye_paypal_invoicing_paypal_invoices_sortable_columns');
         $this->loader->add_action('pre_get_posts', $plugin_admin, 'angelleye_paypal_invoicing_paypal_invoices_column_orderby');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save');
+        $this->loader->add_action('admin_print_scripts', $plugin_admin, 'angelleye_paypal_invoicing_disable_auto_save');
         $this->loader->add_action('save_post_paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_create_invoice_hook', 10, 3);
         $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_admin_notice');
         $this->loader->add_filter('post_row_actions', $plugin_admin, 'angelleye_paypal_invoicing_remove_actions_row', 10, 2);
@@ -171,6 +172,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice' , 10, 1 );
         $this->loader->add_action('woocommerce_admin_order_data_after_order_details', $plugin_admin, 'angelleye_paypal_invoicing_wc_display_paypal_invoice_status', 10, 1);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', 10);
+        $this->loader->add_action('posts_where_request', $plugin_admin, 'angelleye_paypal_invoicing_modify_wp_search');
     }
 
     /**
