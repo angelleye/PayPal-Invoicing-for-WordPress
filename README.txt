@@ -72,6 +72,20 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Live credentials can be obtained by signing in to your live PayPal account here:  https://www.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run
 * Sandbox credentials can be obtained by viewing the sandbox account profile within your PayPal developer account, or by signing in with a sandbox account here:  https://www.sandbox.paypal.com/us/cgi-bin/webscr?cmd=_login-api-run
 
+= What other PayPal plugins do you have that might help me? =
+
+* [PayPal for WooCommerce](https://www.angelleye.com/product/woocommerce-paypal-plugin/)
+* [PayPal Here for WooCommerce](https://www.angelleye.com/product/paypal-here-woocommerce-pos/)
+* [PayPal IPN for WordPress](https://www.angelleye.com/product/paypal-ipn-wordpress/)
+* [PayPal WP Button Manager](https://www.angelleye.com/product/wordpress-paypal-button-manager/)
+* [PayPal for Divi](https://www.angelleye.com/product/divi-paypal-module-plugin/)
+* [PayPal Security](https://www.angelleye.com/product/wordpress-paypal-security/)
+
+= What type of support should I expect? =
+
+* We offer free support for installation and configuration questions.  You may [submit a ticket here](https://www.angelleye.com/support) for that.
+* We offer [premium support](https://www.angelleye.com/product/paypal-help/) for things that fall outside the scope of installation and configuration.
+
 == Changelog ==
 
 = 1.0.0 =
