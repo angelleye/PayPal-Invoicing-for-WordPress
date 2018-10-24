@@ -560,10 +560,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             $this->angelleye_paypal_invoicing_load_rest_api();
             $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update);
-            if (!empty($invoice_id) && $invoice_id != false) {
+            if (!empty($invoice_id) && !is_array($invoice_id)) {
                 $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                 $this->request->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_ID);
                 wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1028'));
+                exit();
+            } else {
+                if( !empty($invoice_id['message'])) {
+                    set_transient('angelleye_paypal_invoicing_error', $invoice_id['message']);
+                }
+                wp_delete_post($post_ID, true);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
                 exit();
             }
         } else {
@@ -586,6 +593,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1028') {
             echo "<div class='notice notice-success is-dismissible'><p>Your invoice is created.</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1029') {
+            $angelleye_paypal_invoicing_error = get_transient('angelleye_paypal_invoicing_error');
+            if($angelleye_paypal_invoicing_error == false) {
+                echo "<div class='notice notice-success is-dismissible'><p>". __('Invoice not created', 'angelleye-paypal-invoicing') . "</p></div>";
+            } else {
+                delete_transient(angelleye_paypal_invoicing_error);
+                echo "<div class='notice notice-error is-dismissible'><p>". $angelleye_paypal_invoicing_error . "</p></div>";
+            }
         }
     }
 
