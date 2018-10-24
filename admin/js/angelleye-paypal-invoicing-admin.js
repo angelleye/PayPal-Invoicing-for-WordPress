@@ -43,7 +43,17 @@
             jQuery(this).closest('tbody').remove();
             count_sub_total();
         });
-        jQuery('#invoice_date, #dueDate').datepicker({dateFormat: 'dd/mm/yy'});
+        jQuery('#dueDate').datepicker({
+            dateFormat: 'dd/mm/yy'
+        });
+        jQuery("#dueDate").datepicker("option", "minDate", new Date());
+        jQuery('#invoice_date').datepicker({
+            dateFormat: 'dd/mm/yy',
+            onSelect: function (dateText, inst) {
+                jQuery("#dueDate").datepicker("option", "minDate",
+                        jQuery("#invoice_date").datepicker("getDate"));
+            }
+        });
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
             jQuery(".memoDetail").show();
@@ -79,6 +89,8 @@
         function count_sub_total() {
             var total = 0;
             var i = 0;
+            var tax_array = [];
+            var new_tax_array = [];
             jQuery('input[name="item_name[]"]').each(function () {
                 jQuery('#tax_tr_' + (i + 1)).html('');
                 var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
@@ -99,26 +111,70 @@
                 if (isNaN(amount)) {
                     amount = 0.00;
                 }
-
-                if (jQuery('#tax_tr_' + i).length) {
-                    if (tax > 0 && jQuery.isNumeric(temp_amount)) {
-                        jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
-                    } else {
-                        jQuery('#tax_tr_' + i).html('');
-                    }
-                } else {
-                    var next_id = 'tax_tr_' + i;
-                    jQuery('#tax_tr_' + (i - 1)).after('<tr class="dynamic_tax" id="' + next_id + '"></tr>');
-                    if (tax > 0 && jQuery.isNumeric(temp_amount)) {
-                        jQuery('#tax_tr_' + i).html('<td colspan="3"><b>Tax (' + tax + '%) </b>' + tax_name + '</td><td>$<span class="tax_to_add">' + parseFloat(temp_amount).toFixed(2) + '</span></td>');
-                    } else {
-                        jQuery('#tax_tr_' + i).html('');
-                    }
+                if (tax_name != '' && tax != '') {
+                    var tax_array_new = {
+                        tax_digit: tax,
+                        tax_name: tax_name,
+                        tax_amount: parseFloat(temp_amount)
+                    };
+                    tax_array.push(tax_array_new);
                 }
                 jQuery(this).parent().next().next().next().next().next().html('$' + amount.toFixed(2));
-                console.log("qty: " + qty + "  price: " + price + " tax: " + tax + " tax_name: " + tax_name);
                 total = total + amount;
                 i++;
+            });
+            jQuery.each(tax_array, function (index, tax_data) {
+                if (index === 0) {
+                    new_tax_array[tax_data.tax_name] = [];
+                    new_tax_array[index] = [];
+                    var tax_name = tax_data.tax_name;
+                    var tax_digit = tax_data.tax_digit;
+                    new_tax_array[index] = {tax_name, tax_digit};
+                    new_tax_array[tax_data.tax_name][tax_data.tax_digit] = {tax_digit: tax_data.tax_digit,
+                        tax_name: tax_data.tax_name,
+                        tax_amount: parseFloat(tax_data.tax_amount).toFixed(2)
+                    };
+                } else {
+                    if (typeof new_tax_array[tax_data.tax_name] === 'undefined') {
+                        new_tax_array[tax_data.tax_name] = [];
+                        new_tax_array[index] = [];
+                        var tax_name = tax_data.tax_name;
+                        var tax_digit = tax_data.tax_digit;
+                        new_tax_array[index] = {tax_name, tax_digit};
+                    }
+                    if (typeof new_tax_array[tax_data.tax_name][tax_data.tax_digit] !== 'undefined') {
+                        var old_tax_amount = new_tax_array[tax_data.tax_name][tax_data.tax_digit].tax_amount;
+                        var new_tax_amount = parseFloat(old_tax_amount) + parseFloat(tax_data.tax_amount);
+                        new_tax_array[tax_data.tax_name][tax_data.tax_digit] = {tax_digit: tax_data.tax_digit,
+                            tax_name: tax_data.tax_name,
+                            tax_amount: parseFloat(new_tax_amount).toFixed(2)
+                        };
+                    } else {
+                        var tax_name = tax_data.tax_name;
+                        var tax_digit = tax_data.tax_digit;
+                        new_tax_array[index] = {tax_name, tax_digit};
+                        new_tax_array[tax_data.tax_name][tax_data.tax_digit] = {tax_digit: tax_data.tax_digit,
+                            tax_name: tax_data.tax_name,
+                            tax_amount: parseFloat(tax_data.tax_amount).toFixed(2)
+                        };
+                    }
+                }
+            });
+            var i_tax_index = 0;
+            var new_unique_tax_array = [];
+            jQuery.each(new_tax_array, function (index, new_tax_array_first_loop) {
+                if (typeof new_tax_array_first_loop !== 'undefined') {
+                    console.log(new_tax_array[new_tax_array_first_loop.tax_name][new_tax_array_first_loop.tax_digit]);
+                    new_unique_tax_array = new_tax_array[new_tax_array_first_loop.tax_name][new_tax_array_first_loop.tax_digit];
+                    if (jQuery('#tax_tr_' + i_tax_index).length) {
+                        jQuery('#tax_tr_' + i_tax_index).html('<td colspan="3"><b>Tax (' + new_unique_tax_array.tax_digit + '%) </b>' + new_unique_tax_array.tax_name + '</td><td>$<span class="tax_to_add">' + new_unique_tax_array.tax_amount + '</span></td>');
+                    } else {
+                        var next_id = 'tax_tr_' + i_tax_index;
+                        jQuery('#tax_tr_' + (i_tax_index - 1)).after('<tr class="dynamic_tax" id="' + next_id + '"></tr>');
+                        jQuery('#tax_tr_' + i_tax_index).html('<td colspan="3"><b>Tax (' + new_unique_tax_array.tax_digit + '%) </b>' + new_unique_tax_array.tax_name + '</td><td>$<span class="tax_to_add">' + new_unique_tax_array.tax_amount + '</span></td>');
+                    }
+                    i_tax_index++;
+                }
             });
             jQuery('.itemSubTotal').text('$' + total.toFixed(2));
             countFinalTotal(jQuery('input[name="invDiscount"]').val());
@@ -162,11 +218,11 @@
                     var data = {
                         'action': 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax',
                         'invoice_post_id': angelleye_paypal_invoicing_js.invoice_post_id,
-                        'order_id' : angelleye_paypal_invoicing_js.order_id,
-                        'move_to_trace_url' : jQuery(this).attr("href")
+                        'order_id': angelleye_paypal_invoicing_js.order_id,
+                        'move_to_trace_url': jQuery(this).attr("href")
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-                        
+
                     });
                 }
             });

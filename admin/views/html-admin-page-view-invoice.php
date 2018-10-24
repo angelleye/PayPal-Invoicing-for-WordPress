@@ -221,13 +221,13 @@ $status = get_post_meta($post->ID, 'status', true);
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
-                                <?php if( !empty($invoice_total_array['sub_total']) ) : ?>
-                                <tr>
-                                    <td class="left">
-                                        <?php echo __('Subtotal', 'angelleye-paypal-invoicing'); ?>
-                                    </td>
-                                    <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
-                                </tr>
+                                <?php if (!empty($invoice_total_array['sub_total'])) : ?>
+                                    <tr>
+                                        <td class="left">
+                                            <?php echo __('Subtotal', 'angelleye-paypal-invoicing'); ?>
+                                        </td>
+                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
+                                    </tr>
                                 <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
                                     <tr>
@@ -239,13 +239,29 @@ $status = get_post_meta($post->ID, 'status', true);
                                 <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['tax'])) : ?>
                                     <?php
-                                    foreach ($invoice_total_array['tax'] as $tax_index => $tax_data) {
-                                        echo '<tr>';
-                                        echo '<td class="left">';
-                                        echo $tax_data['name'] . ' (' . $tax_data['percent'] . '%)';
-                                        echo '</td>';
-                                        echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency']) . number_format($tax_data['amount']['value'], 2) . '</td>';
-                                        echo '</tr>';
+                                    $new_tax_data = array();
+                                    foreach ($invoice_total_array['tax'] as $key_index => $value_data) {
+                                        if (!isset($new_tax_data[$value_data['name']][$value_data['percent']])) {
+                                            $new_tax_data[$value_data['name']][$value_data['percent']] = $value_data;
+                                        } else {
+                                            $new_amount_value = $new_tax_data[$value_data['name']][$value_data['percent']]['amount']['value'] + $value_data['amount']['value'];
+                                            $value_data['amount']['value'] = $new_amount_value;
+                                            $new_tax_data[$value_data['name']][$value_data['percent']] = $value_data;
+                                        }
+                                    }
+                                    if (!empty($new_tax_data)) {
+                                        foreach ($new_tax_data as $tax_index => $tax_data_value) {
+                                            if (!empty($tax_data_value)) {
+                                                foreach ($tax_data_value as $key => $tax_data) {
+                                                    echo '<tr>';
+                                                    echo '<td class="left">';
+                                                    echo $tax_data['name'] . ' (' . $tax_data['percent'] . '%)';
+                                                    echo '</td>';
+                                                    echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency']) . number_format($tax_data['amount']['value'], 2) . '</td>';
+                                                    echo '</tr>';
+                                                }
+                                            }
+                                        }
                                     }
                                     ?>
                                 <?php endif; ?>
@@ -291,15 +307,15 @@ $status = get_post_meta($post->ID, 'status', true);
                     </div> <!-- close terms col-xs -->
                 <?php endif; ?>
             </div>
-            <?php if(!empty($invoice['merchant_memo'])) : ?>
-            <div class="row">
-                <div class="col-xs-12 col-sm-12">
+            <?php if (!empty($invoice['merchant_memo'])) : ?>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12">
                         <div>
                             <h4 class="headline"><?php echo __('Memo', 'angelleye-paypal-invoicing'); ?></h4>
                             <p class="notes"><?php echo $invoice['merchant_memo']; ?></p>
                         </div>
                     </div><!-- close note col-xs -->
-            </div>
+                </div>
             <?php endif; ?>
             <?php
             $invoice_history = $this->get_invoice_notes($post->ID);
