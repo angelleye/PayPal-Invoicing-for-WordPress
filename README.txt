@@ -21,7 +21,12 @@ Easily create and manage PayPal Invoices from your WordPress / WooCommerce dashb
  * WooCommerce Compatibility!
 
 = WooCommerce Compatibility =
-Fully supports WooCommerce so that you can create and manage PayPal Invoices from the WooCommerce Order details screen.
+Create your orders using the WooCommerce Order manager.  You will then see options for PayPal Invoicing available within the WooCommerce Order Actions menu.
+
+ * Save Invoice Draft
+ * Send Invoice
+ * Send Invoice Reminder
+ * Cancel Invoice
 
 = Quality Control =
 Payment processing can't go wrong.  It's as simple as that.  Our certified PayPal engineers have developed and thoroughly tested this plugin on the PayPal sandbox (test) servers to ensure you will not have any problems sending and managing PayPal Invoices from WordPress.
