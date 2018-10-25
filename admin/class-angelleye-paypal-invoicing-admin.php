@@ -599,7 +599,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if($angelleye_paypal_invoicing_error == false) {
                 echo "<div class='notice notice-success is-dismissible'><p>". __('Invoice not created', 'angelleye-paypal-invoicing') . "</p></div>";
             } else {
-                delete_transient(angelleye_paypal_invoicing_error);
+                delete_transient('angelleye_paypal_invoicing_error');
                 echo "<div class='notice notice-error is-dismissible'><p>". $angelleye_paypal_invoicing_error . "</p></div>";
             }
         }
