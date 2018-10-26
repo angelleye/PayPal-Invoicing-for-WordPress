@@ -172,7 +172,9 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice' , 10, 1 );
         $this->loader->add_action('woocommerce_admin_order_data_after_order_details', $plugin_admin, 'angelleye_paypal_invoicing_wc_display_paypal_invoice_status', 10, 1);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', 10);
-        $this->loader->add_action('posts_where_request', $plugin_admin, 'angelleye_paypal_invoicing_modify_wp_search');
+        $this->loader->add_filter( 'query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var'  );
+        $this->loader->add_filter( 'get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label'  );
+        $this->loader->add_action( 'parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
     }
 
     /**
