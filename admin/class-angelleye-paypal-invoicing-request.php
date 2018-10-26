@@ -173,7 +173,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             'post_type' => 'paypal_invoices',
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['id'],
-            'post_author' => 0
+            'post_author' => 0,
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
         );
         $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_data_array['id']);
         if ($existing_post_id == false) {
