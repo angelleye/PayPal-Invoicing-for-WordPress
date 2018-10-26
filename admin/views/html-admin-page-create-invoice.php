@@ -127,7 +127,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                     <tr>
                         <td colspan="7">
                             <div class="add_new_item_box">
-                                <a href="#" id="add_new_item" tabindex="-1" pa-marked="1"><span></span><?php echo __('Add another line item', 'angelleye-paypal-invoicing'); ?></a>
+                                <a href="#" id="add_new_item" class="add_new_item"><span></span><?php echo __('Add another line item', 'angelleye-paypal-invoicing'); ?></a>
                             </div>
                         </td>
                     </tr>
@@ -212,14 +212,14 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
         <div class="col-sm-6">
         <div id="memo">
             <div class="memoHead" style="">
-                <span class="addIcon" tabindex="0" id="memoAddButton"></span>
+                <span class="addIcon" id="memoAddButton"></span>
                 <span><?php echo __('Add memo to self', 'angelleye-paypal-invoicing'); ?></span>
             </div>
             <div class="memoDetail" style="display: none;">
                 <label for="memo"><?php echo __('Memo', 'angelleye-paypal-invoicing'); ?></label>
                 <textarea style="color: #333" name="memodesc" id="memodesc" class="form-control" rows="5" placeholder="<?php echo __("Add memo to self (your recipient won't see this)", 'angelleye-paypal-invoicing'); ?>"></textarea>
                 <div class="memoAction">
-                    <p class="memo-p"><a id="memoHideLink" class="cnlAction pull-left" href="#" pa-marked="1"><?php echo __('Hide', 'angelleye-paypal-invoicing'); ?></a></p>
+                    <p class="memo-p"><a id="memoHideLink" class="cnlAction pull-left" href="#"><?php echo __('Hide', 'angelleye-paypal-invoicing'); ?></a></p>
                     <p class="memo-p disabled pull-right" id="chars">500</p>
                 </div>
             </div>
