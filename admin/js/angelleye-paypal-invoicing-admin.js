@@ -5,11 +5,15 @@
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret, #apifw_sandbox_paypal_email').closest('.row'),
                     production = jQuery('#apifw_client_id, #apifw_secret, #apifw_paypal_email').closest('.row');
             if (jQuery(this).is(':checked')) {
-                sandbox.show();
+               // sandbox.show();
                 production.hide();
+                jQuery('#angelleye_paypal_invoicing_sandbox_connect_box').show();
+                jQuery('#angelleye_paypal_invoicing_live_connect_box').hide();
             } else {
                 sandbox.hide();
-                production.show();
+               // production.show();
+               jQuery('#angelleye_paypal_invoicing_sandbox_connect_box').hide();
+               jQuery('#angelleye_paypal_invoicing_live_connect_box').show();
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
@@ -226,6 +230,26 @@
                     });
                 }
             });
+            var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret, #apifw_sandbox_paypal_email').closest('.row'),
+            production = jQuery('#apifw_client_id, #apifw_secret, #apifw_paypal_email').closest('.row');
+            sandbox.hide();
+            production.hide();
+            jQuery('.angelleye-invoice-toggle-settings').click(function(evt) {
+            evt.preventDefault();
+            
+            
+            if (jQuery('#apifw_enable_paypal_sandbox').is(':checked')) {
+               sandbox.toggle();
+               production.hide();
+            } else {
+                sandbox.hide();
+                production.toggle();
+            }
+            
+            
+
+            });
+            
         });
     });
 })(jQuery);

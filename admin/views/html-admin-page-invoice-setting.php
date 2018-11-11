@@ -36,6 +36,9 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : '';
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
 $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
+$paypal_sandbox_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
+$paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -50,6 +53,17 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                                 <input  type="checkbox" id="apifw_enable_paypal_sandbox" name="enable_paypal_sandbox" <?php checked($enable_paypal_sandbox, 'on', true); ?>>
                                 <?php echo __('Enable PayPal Sandbox', 'angelleye-paypal-invoicing'); ?>
                             </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-6" >
+                            <a id="angelleye_paypal_invoicing_sandbox_connect_box" href="https://www.aetesting.xyz/connect?mode=SANDBOX&rest_action=connect&return_url=<?php echo urlencode($paypal_sandbox_connect_url); ?>">
+                                <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
+                            </a> 
+                            <a id="angelleye_paypal_invoicing_live_connect_box" href="https://www.aetesting.xyz/connect?rest_action=connect&return_url=<?php echo urlencode($paypal_connect_url); ?>">
+                                <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
+                            </a>
+                            <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
                         </div>
                     </div>
                     <!-- SandBox -->

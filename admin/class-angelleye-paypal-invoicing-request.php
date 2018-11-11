@@ -21,6 +21,8 @@ use PayPal\Api\CancelNotification;
 use PayPal\Api\VerifyWebhookSignature;
 use PayPal\Api\WebhookEvent;
 use PayPal\Exception\PayPalConnectionException;
+use PayPal\Api\OpenIdTokeninfo;
+use PayPal\Api\OpenIdUserinfo;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -110,9 +112,41 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
-        $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
-        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
-        return $auth;
+        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+        if ($apifw_sandbox_refresh_token) {
+            if (false === ( $apifw_sandbox_access_token = get_transient('apifw_sandbox_access_token') )) {
+                $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
+                    'method' => 'POST',
+                    'timeout' => 45,
+                    'redirection' => 5,
+                    'httpversion' => '1.0',
+                    'blocking' => true,
+                    'headers' => array(),
+                    'body' => array('refresh_token' => $apifw_sandbox_refresh_token),
+                    'cookies' => array()
+                        )
+                );
+                if (is_wp_error($response)) {
+                    $error_message = $response->get_error_message();
+                } else {
+                    $json_data_string = wp_remote_retrieve_body($response);
+                    $data = json_decode($json_data_string, true);
+                    if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
+                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                        $apifw_sandbox_access_token = $data['access_token'];
+                    } else {
+                        
+                    }
+                }
+            }
+            $auth = new ApiContext("Bearer " . $apifw_sandbox_access_token);
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $apifw_sandbox_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            return $auth;
+        } else {
+            $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            return $auth;
+        }
     }
 
     public function angelleye_paypal_invoicing_get_all_invoice() {
@@ -322,7 +356,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 ->setTermType("DUE_ON_RECEIPT");
         try {
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            if($is_send == true) {
+            if ($is_send == true) {
                 $invoice->send($this->angelleye_paypal_invoicing_getAuth());
             }
             return $invoice->getId();
@@ -580,7 +614,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             //$invoice_date = $invoice_date_obj->format('Y-m-d e');
             $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
-            if($term_type == 'DUE_ON_DATE_SPECIFIED') {
+            if ($term_type == 'DUE_ON_DATE_SPECIFIED') {
                 $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
             } else {
                 $due_date = '';
@@ -675,7 +709,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice->setDiscount($cost);
             }
             if ($allow_tips == 'on') {
-               // $invoice->setAllowtip('true');
+                // $invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
                 //$invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
@@ -889,14 +923,26 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
                 }
                 break;
-            case 'BUSINESS_ERROR':  
-                    $message .= $error_object->message;
+            case 'BUSINESS_ERROR':
+                $message .= $error_object->message;
                 break;
         }
-        if( empty($message) ) {
+        if (empty($message)) {
             $message = $json_error;
         }
         return $message;
+    }
+    
+    public function angelleye_get_user_info_using_access_token($access_token) {
+        try {
+            $params = array('access_token' => $access_token);
+            $userInfo = OpenIdUserinfo::getUserinfo($params, $this->angelleye_paypal_invoicing_getAuth());
+            $result_data = array('result' => 'success', 'user_data' => $userInfo);
+        } catch (Exception $ex) {
+            $result_data = array('result' => 'error', 'error_msg' => $ex->getMessage());
+            
+        }
+        return $result_data;
     }
 
 }

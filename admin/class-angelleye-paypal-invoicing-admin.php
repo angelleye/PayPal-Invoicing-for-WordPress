@@ -841,6 +841,36 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 exit();
             }
         }
+        if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && $_GET['action'] == 'lipp_paypal_connect') {
+            update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
+            $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
+                'method' => 'POST',
+                'timeout' => 45,
+                'redirection' => 5,
+                'httpversion' => '1.0',
+                'blocking' => true,
+                'headers' => array(),
+                'body' => array('refresh_token' => $_GET['refresh_token']),
+                'cookies' => array()
+                    )
+            );
+            if (is_wp_error($response)) {
+                $error_message = $response->get_error_message();
+                echo "Something went wrong: $error_message";
+                exit();
+            } else {
+                $json_data_string = wp_remote_retrieve_body($response);
+                $data = json_decode($json_data_string, true);
+                if(isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
+                    set_transient( 'apifw_sandbox_access_token', $data['access_token'], 28200 );
+                    $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
+                    wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                    exit();
+                } else {
+                    
+                }
+            }
+        }
     }
 
     public function angelleye_paypal_invoicing_get_raw_data() {
@@ -1107,9 +1137,44 @@ class AngellEYE_PayPal_Invoicing_Admin {
 		WHERE 
                 pt.post_type = 'paypal_invoices' AND
                 pt.post_status = '%s' AND
-                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", pifw_clean($_GET['post_status']) , '%' . $wpdb->esc_like(wc_clean($s)) . '%'
+                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", pifw_clean($_GET['post_status']), '%' . $wpdb->esc_like(wc_clean($s)) . '%'
             ));
         }
         return $post_id;
     }
+    
+    
+    
+    public function angelleye_paypal_invoice_update_user_info($access_token) {
+        $this->angelleye_paypal_invoicing_load_rest_api();
+        $result_data = $this->request->angelleye_get_user_info_using_access_token($access_token);
+        if(isset($result_data['result']) && $result_data['result'] == 'success') {
+            $user_data = json_decode($result_data['user_data'], true);
+            $apifw_setting = get_option('apifw_setting', false);
+            if( $apifw_setting == false) {
+                $apifw_setting = array();
+            }
+            if(!empty($user_data['email'])) {
+                $apifw_setting['paypal_email'] = $user_data['email'];
+            }
+            if(!empty($user_data['name'])) {
+                $full_name = explode(" ", $user_data['name']);
+                $apifw_setting['first_name'] = isset($full_name[0]) ? $full_name[0] : '';
+                $apifw_setting['last_name'] = isset($full_name[1]) ? $full_name[1] : '';
+            }
+            if(!empty($user_data['phone_number'])) {
+                $apifw_setting['phone_number'] = $user_data['phone_number'];
+            }
+            if(!empty($user_data['address'])) {
+                $apifw_setting['address_line_1'] = isset($user_data['address']['street_address']) ? $user_data['address']['street_address'] : '';
+                $apifw_setting['city'] = isset($user_data['address']['locality']) ? $user_data['address']['locality'] : '';
+                $apifw_setting['state'] = isset($user_data['address']['region']) ? $user_data['address']['region'] : '';
+                $apifw_setting['post_code'] = isset($user_data['address']['postal_code']) ? $user_data['address']['postal_code'] : '';
+                $apifw_setting['country'] = isset($user_data['address']['country']) ? $user_data['address']['country'] : '';
+            }
+            update_option('apifw_setting', $apifw_setting);
+        }
+        
+    }
+
 }
