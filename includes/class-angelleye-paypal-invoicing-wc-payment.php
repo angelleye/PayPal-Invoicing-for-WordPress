@@ -23,7 +23,6 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->apifw_setting = get_option('apifw_setting');
         $apifw_setting = $this->apifw_setting;
         $this->enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
-        $this->sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
         $this->sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : '';
         $this->sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
         $this->client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
@@ -42,7 +41,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         if ($this->testmode == true) {
             $this->rest_client_id = $this->sandbox_client_id;
             $this->rest_secret_id = $this->sandbox_secret;
-            $this->rest_paypal_email = $this->sandbox_paypal_email;
+            $this->rest_paypal_email = $this->paypal_email;
         } else {
             $this->rest_client_id = $this->client_id;
             $this->rest_secret_id = $this->secret;
@@ -116,7 +115,8 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
     public function is_available() {
         if ($this->is_enabled == true) {
-            if (!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) {
+            $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+            if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || (!empty($apifw_sandbox_refresh_token) && $apifw_sandbox_refresh_token != false)) {
                 return true;
             } else {
                 return false;

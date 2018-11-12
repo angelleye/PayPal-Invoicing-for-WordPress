@@ -45,6 +45,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function __construct($plugin_name, $version) {
         $this->plugin_name = $plugin_name;
         $this->version = $version;
+        $this->apifw_setting = get_option('apifw_setting');
+        $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : '';
+        $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : '';
     }
 
     /**
@@ -270,7 +273,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'sandbox_paypal_email', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = pifw_clean($_POST[$value]);
@@ -795,8 +798,19 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 exit();
             }
         }
-        if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && $_GET['action'] == 'lipp_paypal_connect') {
-            update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
+        if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && ($_GET['action'] == 'lipp_paypal_sandbox_connect' || $_GET['action'] == 'lipp_paypal_live_connect')) {
+            $apifw_setting = get_option('apifw_setting', false);
+            if( $apifw_setting == false) {
+                $apifw_setting = array();
+            }
+            if( $_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
+                $apifw_setting['enable_paypal_sandbox'] = 'on';
+            } elseif($_GET['action'] == 'lipp_paypal_live_connect') {
+                update_option('apifw_live_refresh_token', $_GET['refresh_token']);
+                $apifw_setting['enable_paypal_sandbox'] = '';            
+            }
+            update_option('apifw_setting', $apifw_setting);
             $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
                 'method' => 'POST',
                 'timeout' => 45,
@@ -849,6 +863,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!is_array($actions)) {
             $actions = array();
         }
+        $this->angelleye_paypal_invoicing_load_rest_api();
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             if (empty($paypal_invoice_id)) {
                 $actions['angelleye_paypal_invoicing_wc_save_paypal_invoice'] = esc_html__('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing');
@@ -1014,6 +1029,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_wc_display_paypal_invoice_status($order) {
+        $this->angelleye_paypal_invoicing_load_rest_api();
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             if (!is_object($order)) {
                 $order = wc_get_order($order);

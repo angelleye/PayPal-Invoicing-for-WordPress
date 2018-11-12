@@ -11,7 +11,6 @@ if (!defined('ABSPATH')) {
 $apifw_setting = get_option('apifw_setting');
 $enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
 $sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
-$sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
 $sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : '';
 $client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
 $secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : '';
@@ -36,8 +35,8 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : '';
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
 $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
-$paypal_sandbox_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
-$paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$paypal_sandbox_connect_url = add_query_arg(array('action' => 'lipp_paypal_sandbox_connect', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
+$paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_live_connect', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
 
 ?>
 <div class="wrap">
@@ -60,19 +59,13 @@ $paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mo
                             <a id="angelleye_paypal_invoicing_sandbox_connect_box" href="https://www.aetesting.xyz/connect?mode=SANDBOX&rest_action=connect&return_url=<?php echo urlencode($paypal_sandbox_connect_url); ?>">
                                 <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                             </a> 
-                            <a id="angelleye_paypal_invoicing_live_connect_box" href="https://www.aetesting.xyz/connect?rest_action=connect&return_url=<?php echo urlencode($paypal_connect_url); ?>">
+                            <a id="angelleye_paypal_invoicing_live_connect_box" href="https://www.aetesting.xyz/connect?mode=LIVE&rest_action=connect&return_url=<?php echo urlencode($paypal_connect_url); ?>">
                                 <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                             </a>
                             <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
                         </div>
                     </div>
                     <!-- SandBox -->
-                    <div class="form-group row">
-                        <label for="apifw_sandbox_paypal_email" class="col-sm-2 col-form-label"><?php echo __('Sandbox PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('Sandbox PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>">
-                        </div>
-                    </div>
                     <div class="form-group row">
                         <label for="apifw_sandbox_client_id" class="col-sm-2 col-form-label"><?php echo __('Sandbox Client ID', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -86,12 +79,7 @@ $paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mo
                         </div>
                     </div>
                     <!-- Live -->
-                    <div class="form-group row">
-                        <label for="apifw_paypal_email" class="col-sm-2 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>">
-                        </div>
-                    </div>
+                    
                     <div class="form-group row">
                         <label for="apifw_client_id" class="col-sm-2 col-form-label"><?php echo __('Client ID', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -105,6 +93,12 @@ $paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_connect', 'mo
                         </div>
                     </div>
                     <h3><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h3>
+                    <div class="form-group row">
+                        <label for="apifw_paypal_email" class="col-sm-2 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>">
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label for="apifw_first_name" class="col-sm-2 col-form-label"><?php echo __('First Name', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
