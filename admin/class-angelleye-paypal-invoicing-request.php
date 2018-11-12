@@ -168,24 +168,26 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_sync_invoicing_with_wp() {
-        $page = 0;
-        $bool = true;
-        while ($bool) {
-            $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
-            $invoices_array_data = json_decode($invoices_data, true);
-            if (!empty($invoices_array_data)) {
-                if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
-                    foreach ($invoices_array_data['invoices'] as $key => $invoice) {
-                        $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $page = 0;
+            $bool = true;
+            while ($bool) {
+                $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                $invoices_array_data = json_decode($invoices_data, true);
+                if (!empty($invoices_array_data)) {
+                    if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
+                        foreach ($invoices_array_data['invoices'] as $key => $invoice) {
+                            $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                        }
+                    } else {
+                        $bool = false;
+                        break;
                     }
                 } else {
-                    $bool = false;
-                    break;
+                    
                 }
-            } else {
-                
+                $page = $page + 1000;
             }
-            $page = $page + 1000;
         }
     }
 
@@ -809,71 +811,73 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_create_web_hook_request() {
-        try {
-            $webhook = new \PayPal\Api\Webhook();
-            $website_url = site_url('?AngellEYE_PayPal_Invoicing&action=webhook_handler');
-            $webhook->setUrl($website_url);
-            $webhookEventTypes = array();
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            try {
+                $webhook = new \PayPal\Api\Webhook();
+                $website_url = site_url('?AngellEYE_PayPal_Invoicing&action=webhook_handler');
+                $webhook->setUrl($website_url);
+                $webhookEventTypes = array();
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.CANCELLED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.CREATED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.PAID"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.REFUNDED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.SCHEDULED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.UPDATED"
   }'
-            );
-            $webhook->setEventTypes($webhookEventTypes);
-            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
-            $webhook_id = $output->getId();
-            update_option('webhook_id', $webhook_id);
-        } catch (Exception $ex) {
-            if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
-                $data = $ex->getData();
-                if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
-                    $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
-                    if (!empty($list_webhooks)) {
-                        try {
-                            foreach ($list_webhooks->getWebhooks() as $webhook) {
-                                $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                );
+                $webhook->setEventTypes($webhookEventTypes);
+                $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                $webhook_id = $output->getId();
+                update_option('webhook_id', $webhook_id);
+            } catch (Exception $ex) {
+                if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
+                    $data = $ex->getData();
+                    if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
+                        $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
+                        if (!empty($list_webhooks)) {
+                            try {
+                                foreach ($list_webhooks->getWebhooks() as $webhook) {
+                                    $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                                }
+                            } catch (Exception $ex) {
+                                return false;
                             }
-                        } catch (Exception $ex) {
-                            return false;
+                            try {
+                                $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                                $webhook_id = $output->getId();
+                                update_option('webhook_id', $webhook_id);
+                            } catch (Exception $ex) {
+                                return false;
+                            }
                         }
-                        try {
-                            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
-                            $webhook_id = $output->getId();
-                            update_option('webhook_id', $webhook_id);
-                        } catch (Exception $ex) {
-                            return false;
-                        }
+                    } else {
+                        return false;
                     }
                 } else {
                     return false;
                 }
-            } else {
-                return false;
             }
         }
     }
@@ -932,7 +936,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
         return $message;
     }
-    
+
     public function angelleye_get_user_info_using_access_token($access_token) {
         try {
             $params = array('access_token' => $access_token);
@@ -940,9 +944,17 @@ class AngellEYE_PayPal_Invoicing_Request {
             $result_data = array('result' => 'success', 'user_data' => $userInfo);
         } catch (Exception $ex) {
             $result_data = array('result' => 'error', 'error_msg' => $ex->getMessage());
-            
         }
         return $result_data;
+    }
+
+    public function angelleye_paypal_invoicing_is_api_set() {
+        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+        if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) && (!empty($apifw_sandbox_refresh_token) && $apifw_sandbox_refresh_token != false)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
