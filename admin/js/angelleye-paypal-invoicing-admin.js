@@ -3,17 +3,26 @@
     $(function () {
         jQuery('#apifw_enable_paypal_sandbox').change(function () {
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
-            production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
+                    production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
             if (jQuery(this).is(':checked')) {
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').hide();
                 production.hide();
-                sandbox.show();
+                if (jQuery('#apifw_sandbox_client_id').val().length === 0 && jQuery('#apifw_sandbox_secret').val().length === 0) {
+                    sandbox.hide();
+                } else {
+                    sandbox.show();
+                }
             } else {
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').hide();
                 sandbox.hide();
-                production.show();
+                if (jQuery('#apifw_client_id').val().length === 0 && jQuery('#apifw_secret').val().length === 0) {
+                    production.hide();
+                } else {
+                    production.show();
+                }
+                
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
@@ -228,6 +237,18 @@
                     jQuery.post(ajaxurl, data, function (response) {
 
                     });
+                }
+            });
+            var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
+                    production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
+            jQuery('.angelleye-invoice-toggle-settings').click(function (evt) {
+                evt.preventDefault();
+                if (jQuery('#apifw_enable_paypal_sandbox').is(':checked')) {
+                    sandbox.toggle();
+                    production.hide();
+                } else {
+                    sandbox.hide();
+                    production.toggle();
                 }
             });
         });
