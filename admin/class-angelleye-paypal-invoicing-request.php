@@ -639,7 +639,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     ->setAddress(new Address());
             $invoice->getMerchantInfo()->getAddress()
                     ->setLine1($this->address_line_1)
-                    ->setLine1($this->address_line_2)
+                    ->setLine2($this->address_line_2)
                     ->setCity($this->city)
                     ->setState($this->state)
                     ->setPostalCode($this->post_code)
