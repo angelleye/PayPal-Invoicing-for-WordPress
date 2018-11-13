@@ -62,8 +62,8 @@ class RestHandler implements IPayPalHandler
             $credential = new OAuthTokenCredential($credValues['clientId'], $credValues['clientSecret']);
         }
 
-        if ($credential == null || !($credential instanceof OAuthTokenCredential)) {
-            throw new PayPalInvalidCredentialException("Invalid credentials passed");
+        if ($credential == null || ( !($credential instanceof OAuthTokenCredential) && !isset($config['http.headers.Authorization']))) {
+           throw new PayPalInvalidCredentialException("Invalid credentials passed");
         }
 
         $httpConfig->setUrl(
@@ -84,6 +84,8 @@ class RestHandler implements IPayPalHandler
 
         if (($httpConfig->getMethod() == 'POST' || $httpConfig->getMethod() == 'PUT') && !is_null($this->apiContext->getRequestId())) {
             $httpConfig->addHeader('PayPal-Request-Id', $this->apiContext->getRequestId());
+        } elseif(($httpConfig->getMethod() == 'POST' || $httpConfig->getMethod() == 'PUT')) {
+            $httpConfig->addHeader('PayPal-Request-Id', $this->apiContext->resetRequestId());
         }
         // Add any additional Headers that they may have provided
         $headers = $this->apiContext->getRequestHeaders();

@@ -23,7 +23,6 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->apifw_setting = get_option('apifw_setting');
         $apifw_setting = $this->apifw_setting;
         $this->enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
-        $this->sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
         $this->sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : '';
         $this->sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
         $this->client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
@@ -31,35 +30,25 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_email'] : '';
         $this->note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
         $this->terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
-
-        // Load the settings.
         $this->init_form_fields();
         $this->init_settings();
-
-        // Define user set variables.
         $this->title = $this->get_option('title');
         $this->description = $this->get_option('description');
         $this->instructions = $this->get_option('instructions');
         $this->is_enabled = 'yes' === $this->get_option('enabled', 'no');
-
-        $this->testmode = 'yes' === $this->get_option('testmode', ($this->enable_paypal_sandbox == 'on' ? 'yes' : 'no'));
+        $this->testmode = 'yes' === ($this->enable_paypal_sandbox == 'on' ? 'yes' : 'no');
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
         if ($this->testmode == true) {
-            $this->rest_client_id = $this->get_option('sandbox_client_id', $this->sandbox_client_id);
-            $this->rest_secret_id = $this->get_option('sandbox_secret', $this->sandbox_secret);
-            $this->rest_paypal_email = $this->get_option('sandbox_paypal_email', $this->sandbox_paypal_email);
+            $this->rest_client_id = $this->sandbox_client_id;
+            $this->rest_secret_id = $this->sandbox_secret;
+            $this->rest_paypal_email = $this->paypal_email;
         } else {
-            $this->rest_client_id = $this->get_option('client_id', $this->client_id);
-            $this->rest_secret_id = $this->get_option('secret', $this->secret);
-            $this->rest_paypal_email = $this->get_option('paypal_email', $this->paypal_email);
+            $this->rest_client_id = $this->client_id;
+            $this->rest_secret_id = $this->secret;
+            $this->rest_paypal_email = $this->paypal_email;
         }
-
-
-        // Actions.
         add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
         add_action('woocommerce_thankyou_pifw_paypal_invoice', array($this, 'thankyou_page'));
-
-        // Customer Emails.
         add_action('woocommerce_email_before_order_table', array($this, 'email_instructions'), 10, 3);
     }
 
@@ -96,83 +85,6 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
                 'default' => '',
                 'desc_tip' => true,
             ),
-            'enable_paypal_sandbox' => array(
-                'title' => __('PayPal sandbox', 'angelleye-paypal-invoicing'),
-                'type' => 'checkbox',
-                'label' => __('Enable PayPal sandbox', 'angelleye-paypal-invoicing'),
-                'default' => ($this->enable_paypal_sandbox == 'on') ? 'yes' : 'no',
-                'description' => '',
-            ),
-            'sandbox_paypal_email' => array(
-                'title' => __('Sandbox PayPal email', 'angelleye-paypal-invoicing'),
-                'type' => 'email',
-                'description' => __('', 'angelleye-paypal-invoicing'),
-                'default' => $this->sandbox_paypal_email,
-                'desc_tip' => true,
-                'placeholder' => 'you@youremail.com',
-            ),
-            'sandbox_client_id' => array(
-                'title' => __('Sandbox Client ID', 'angelleye-paypal-invoicing'),
-                'type' => 'password',
-                'description' => __('Get your Sandbox Client ID from PayPal.', 'angelleye-paypal-invoicing'),
-                'default' => $this->sandbox_client_id,
-                'desc_tip' => true,
-                'placeholder' => __('Sandbox Client ID', 'angelleye-paypal-invoicing'),
-            ),
-            'sandbox_secret' => array(
-                'title' => __('Sandbox Secret', 'angelleye-paypal-invoicing'),
-                'type' => 'password',
-                'description' => __('Get your Sandbox Secret from PayPal.', 'angelleye-paypal-invoicing'),
-                'default' => $this->sandbox_secret,
-                'desc_tip' => true,
-                'placeholder' => __('Sandbox Secret', 'angelleye-paypal-invoicing'),
-            ),
-            'paypal_email' => array(
-                'title' => __('PayPal email', 'angelleye-paypal-invoicing'),
-                'type' => 'email',
-                'description' => __('', 'angelleye-paypal-invoicing'),
-                'default' => $this->paypal_email,
-                'desc_tip' => true,
-                'placeholder' => 'you@youremail.com',
-            ),
-            'client_id' => array(
-                'title' => __('Client ID', 'angelleye-paypal-invoicing'),
-                'type' => 'password',
-                'description' => __('Get your Client ID from PayPal.', 'angelleye-paypal-invoicing'),
-                'default' => $this->client_id,
-                'desc_tip' => true,
-                'placeholder' => __('Client ID', 'angelleye-paypal-invoicing'),
-            ),
-            'secret' => array(
-                'title' => __('Secret', 'angelleye-paypal-invoicing'),
-                'type' => 'password',
-                'description' => __('Get your Secret from PayPal.', 'angelleye-paypal-invoicing'),
-                'default' => $this->secret,
-                'desc_tip' => true,
-                'placeholder' => __('Secret', 'angelleye-paypal-invoicing'),
-            ),
-            'api_details' => array(
-                'title' => __('Default Values', 'angelleye-paypal-invoicing'),
-                'type' => 'title',
-                /* translators: %s: URL */
-                'description' => '',
-            ),
-            'note_to_recipient' => array(
-                'title' => __('Note to Recipient', 'angelleye-paypal-invoicing'),
-                'type' => 'text',
-                'description' => __('', 'angelleye-paypal-invoicing'),
-                'default' => $this->note_to_recipient,
-                'desc_tip' => true,
-                'placeholder' => __('Note to Recipient', 'angelleye-paypal-invoicing'),
-            ),
-            'terms_and_condition' => array(
-                'title' => __('Terms and Conditions', 'angelleye-paypal-invoicing'),
-                'type' => 'text',
-                'description' => __('', 'angelleye-paypal-invoicing'),
-                'default' => $this->terms_and_condition,
-                'desc_tip' => true,
-                'placeholder' => __('Terms and Conditions', 'angelleye-paypal-invoicing'),
-            ),
         );
     }
 
@@ -203,7 +115,8 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
     public function is_available() {
         if ($this->is_enabled == true) {
-            if (!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) {
+            $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+            if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || (!empty($apifw_sandbox_refresh_token) && $apifw_sandbox_refresh_token != false)) {
                 return true;
             } else {
                 return false;

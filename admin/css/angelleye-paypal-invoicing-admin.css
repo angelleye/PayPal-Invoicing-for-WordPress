@@ -348,3 +348,8 @@ body {
 #invoice_view_table table#paypal_invoice_view_table_format tr td, #invoice_view_table table#paypal_invoice_view_table_format tr th {
     vertical-align: middle !important;
 }
+.paypal_invoice_setting_sepraer {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+}

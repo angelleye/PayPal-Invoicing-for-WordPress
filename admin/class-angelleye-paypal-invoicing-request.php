@@ -21,6 +21,8 @@ use PayPal\Api\CancelNotification;
 use PayPal\Api\VerifyWebhookSignature;
 use PayPal\Api\WebhookEvent;
 use PayPal\Exception\PayPalConnectionException;
+use PayPal\Api\OpenIdTokeninfo;
+use PayPal\Api\OpenIdUserinfo;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -60,43 +62,29 @@ class AngellEYE_PayPal_Invoicing_Request {
      * @param      string    $version    The version of this plugin.
      */
     public function __construct($plugin_name, $version) {
-
         $this->plugin_name = $plugin_name;
         $this->version = $version;
         $this->apifw_setting = get_option('apifw_setting');
-
-        $woocommerce_pifw_paypal_invoice_settings = get_option('woocommerce_pifw_paypal_invoice_settings');
-        $this->enable_paypal_sandbox = isset($woocommerce_pifw_paypal_invoice_settings['enable_paypal_sandbox']) ? $woocommerce_pifw_paypal_invoice_settings['enable_paypal_sandbox'] : '';
-        $this->sandbox_paypal_email = isset($woocommerce_pifw_paypal_invoice_settings['sandbox_paypal_email']) ? $woocommerce_pifw_paypal_invoice_settings['sandbox_paypal_email'] : '';
-        $this->sandbox_secret = isset($woocommerce_pifw_paypal_invoice_settings['sandbox_secret']) ? $woocommerce_pifw_paypal_invoice_settings['sandbox_secret'] : '';
-        $this->sandbox_client_id = isset($woocommerce_pifw_paypal_invoice_settings['sandbox_client_id']) ? $woocommerce_pifw_paypal_invoice_settings['sandbox_client_id'] : '';
-        $this->client_id = isset($woocommerce_pifw_paypal_invoice_settings['client_id']) ? $woocommerce_pifw_paypal_invoice_settings['client_id'] : '';
-        $this->secret = isset($woocommerce_pifw_paypal_invoice_settings['secret']) ? $woocommerce_pifw_paypal_invoice_settings['secret'] : '';
-        $this->paypal_email = isset($woocommerce_pifw_paypal_invoice_settings['paypal_email']) ? $woocommerce_pifw_paypal_invoice_settings['paypal_email'] : '';
-
         $this->testmode = ( isset($this->apifw_setting['enable_paypal_sandbox']) && $this->apifw_setting['enable_paypal_sandbox'] == 'on' ) ? true : false;
         if ($this->testmode == true) {
-            $this->rest_client_id = ( isset($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : $this->sandbox_client_id;
-            $this->rest_secret_id = ( isset($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : $this->sandbox_secret;
-            $this->rest_paypal_email = ( isset($this->apifw_setting['sandbox_paypal_email']) && !empty($this->apifw_setting['sandbox_paypal_email']) ) ? $this->apifw_setting['sandbox_paypal_email'] : $this->sandbox_paypal_email;
+            $this->rest_client_id = ( isset($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : '';
+            $this->rest_secret_id = ( isset($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : '';
+            $this->paypal_email = isset($this->apifw_setting['paypal_email']) ? $this->apifw_setting['paypal_email'] : '';
         } else {
-            $this->rest_client_id = ( isset($this->apifw_setting['client_id']) && !empty($this->apifw_setting['client_id']) ) ? $this->apifw_setting['client_id'] : $this->client_id;
-            $this->rest_secret_id = ( isset($this->apifw_setting['secret']) && !empty($this->apifw_setting['secret']) ) ? $this->apifw_setting['secret'] : $this->secret;
-            $this->rest_paypal_email = ( isset($this->apifw_setting['paypal_email']) && !empty($this->apifw_setting['paypal_email']) ) ? $this->apifw_setting['paypal_email'] : $this->paypal_email;
+            $this->rest_client_id = ( isset($this->apifw_setting['client_id']) && !empty($this->apifw_setting['client_id']) ) ? $this->apifw_setting['client_id'] : '';
+            $this->rest_secret_id = ( isset($this->apifw_setting['secret']) && !empty($this->apifw_setting['secret']) ) ? $this->apifw_setting['secret'] : '';
+            $this->paypal_email = isset($this->apifw_setting['paypal_email']) ? $this->apifw_setting['paypal_email'] : '';
         }
-
         $this->first_name = isset($this->apifw_setting['first_name']) ? $this->apifw_setting['first_name'] : '';
         $this->last_name = isset($this->apifw_setting['last_name']) ? $this->apifw_setting['last_name'] : '';
         $this->compnay_name = isset($this->apifw_setting['compnay_name']) ? $this->apifw_setting['compnay_name'] : '';
         $this->phone_number = isset($this->apifw_setting['phone_number']) ? $this->apifw_setting['phone_number'] : '';
-
         $this->address_line_1 = isset($this->apifw_setting['address_line_1']) ? $this->apifw_setting['address_line_1'] : '';
         $this->address_line_2 = isset($this->apifw_setting['address_line_2']) ? $this->apifw_setting['address_line_2'] : '';
         $this->city = isset($this->apifw_setting['city']) ? $this->apifw_setting['city'] : '';
         $this->post_code = isset($this->apifw_setting['post_code']) ? $this->apifw_setting['post_code'] : '';
         $this->state = isset($this->apifw_setting['state']) ? $this->apifw_setting['state'] : '';
         $this->country = isset($this->apifw_setting['country']) ? $this->apifw_setting['country'] : '';
-
         $this->shipping_rate = isset($this->apifw_setting['shipping_rate']) ? $this->apifw_setting['shipping_rate'] : '';
         $this->shipping_amount = isset($this->apifw_setting['shipping_amount']) ? $this->apifw_setting['shipping_amount'] : '';
         $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : '';
@@ -104,15 +92,46 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->note_to_recipient = isset($this->apifw_setting['note_to_recipient']) ? $this->apifw_setting['note_to_recipient'] : '';
         $this->terms_and_condition = isset($this->apifw_setting['terms_and_condition']) ? $this->apifw_setting['terms_and_condition'] : '';
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
-
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
-        $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
-        $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
-        return $auth;
+        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+        if ($apifw_sandbox_refresh_token) {
+            if (false === ( $apifw_sandbox_access_token = get_transient('apifw_sandbox_access_token') )) {
+                $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
+                    'method' => 'POST',
+                    'timeout' => 45,
+                    'redirection' => 5,
+                    'httpversion' => '1.0',
+                    'blocking' => true,
+                    'headers' => array(),
+                    'body' => array('refresh_token' => $apifw_sandbox_refresh_token),
+                    'cookies' => array()
+                        )
+                );
+                if (is_wp_error($response)) {
+                    $error_message = $response->get_error_message();
+                } else {
+                    $json_data_string = wp_remote_retrieve_body($response);
+                    $data = json_decode($json_data_string, true);
+                    if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
+                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                        $apifw_sandbox_access_token = $data['access_token'];
+                    } else {
+                        
+                    }
+                }
+            }
+            $auth = new ApiContext("Bearer " . $apifw_sandbox_access_token);
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $apifw_sandbox_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            return $auth;
+        } else {
+            $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            return $auth;
+        }
     }
 
     public function angelleye_paypal_invoicing_get_all_invoice() {
@@ -134,24 +153,26 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_sync_invoicing_with_wp() {
-        $page = 0;
-        $bool = true;
-        while ($bool) {
-            $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
-            $invoices_array_data = json_decode($invoices_data, true);
-            if (!empty($invoices_array_data)) {
-                if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
-                    foreach ($invoices_array_data['invoices'] as $key => $invoice) {
-                        $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            $page = 0;
+            $bool = true;
+            while ($bool) {
+                $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                $invoices_array_data = json_decode($invoices_data, true);
+                if (!empty($invoices_array_data)) {
+                    if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
+                        foreach ($invoices_array_data['invoices'] as $key => $invoice) {
+                            $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+                        }
+                    } else {
+                        $bool = false;
+                        break;
                     }
                 } else {
-                    $bool = false;
-                    break;
+                    
                 }
-            } else {
-                
+                $page = $page + 1000;
             }
-            $page = $page + 1000;
         }
     }
 
@@ -322,7 +343,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 ->setTermType("DUE_ON_RECEIPT");
         try {
             $invoice->create($this->angelleye_paypal_invoicing_getAuth());
-            if($is_send == true) {
+            if ($is_send == true) {
                 $invoice->send($this->angelleye_paypal_invoicing_getAuth());
             }
             return $invoice->getId();
@@ -580,7 +601,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             //$invoice_date = $invoice_date_obj->format('Y-m-d e');
             $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
-            if($term_type == 'DUE_ON_DATE_SPECIFIED') {
+            if ($term_type == 'DUE_ON_DATE_SPECIFIED') {
                 $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
             } else {
                 $due_date = '';
@@ -675,7 +696,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice->setDiscount($cost);
             }
             if ($allow_tips == 'on') {
-               // $invoice->setAllowtip('true');
+                // $invoice->setAllowtip('true');
             }
             if (!empty($due_date)) {
                 //$invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
@@ -775,71 +796,73 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_create_web_hook_request() {
-        try {
-            $webhook = new \PayPal\Api\Webhook();
-            $website_url = site_url('?AngellEYE_PayPal_Invoicing&action=webhook_handler');
-            $webhook->setUrl($website_url);
-            $webhookEventTypes = array();
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+        if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
+            try {
+                $webhook = new \PayPal\Api\Webhook();
+                $website_url = site_url('?AngellEYE_PayPal_Invoicing&action=webhook_handler');
+                $webhook->setUrl($website_url);
+                $webhookEventTypes = array();
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.CANCELLED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.CREATED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.PAID"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.REFUNDED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.SCHEDULED"
   }'
-            );
-            $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
-                    '{
+                );
+                $webhookEventTypes[] = new \PayPal\Api\WebhookEventType(
+                        '{
     "name":"INVOICING.INVOICE.UPDATED"
   }'
-            );
-            $webhook->setEventTypes($webhookEventTypes);
-            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
-            $webhook_id = $output->getId();
-            update_option('webhook_id', $webhook_id);
-        } catch (Exception $ex) {
-            if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
-                $data = $ex->getData();
-                if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
-                    $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
-                    if (!empty($list_webhooks)) {
-                        try {
-                            foreach ($list_webhooks->getWebhooks() as $webhook) {
-                                $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                );
+                $webhook->setEventTypes($webhookEventTypes);
+                $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                $webhook_id = $output->getId();
+                update_option('webhook_id', $webhook_id);
+            } catch (Exception $ex) {
+                if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
+                    $data = $ex->getData();
+                    if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
+                        $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
+                        if (!empty($list_webhooks)) {
+                            try {
+                                foreach ($list_webhooks->getWebhooks() as $webhook) {
+                                    $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                                }
+                            } catch (Exception $ex) {
+                                return false;
                             }
-                        } catch (Exception $ex) {
-                            return false;
+                            try {
+                                $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
+                                $webhook_id = $output->getId();
+                                update_option('webhook_id', $webhook_id);
+                            } catch (Exception $ex) {
+                                return false;
+                            }
                         }
-                        try {
-                            $output = $webhook->create($this->angelleye_paypal_invoicing_getAuth());
-                            $webhook_id = $output->getId();
-                            update_option('webhook_id', $webhook_id);
-                        } catch (Exception $ex) {
-                            return false;
-                        }
+                    } else {
+                        return false;
                     }
                 } else {
                     return false;
                 }
-            } else {
-                return false;
             }
         }
     }
@@ -889,14 +912,34 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
                 }
                 break;
-            case 'BUSINESS_ERROR':  
-                    $message .= $error_object->message;
+            case 'BUSINESS_ERROR':
+                $message .= $error_object->message;
                 break;
         }
-        if( empty($message) ) {
+        if (empty($message)) {
             $message = $json_error;
         }
         return $message;
+    }
+
+    public function angelleye_get_user_info_using_access_token($access_token) {
+        try {
+            $params = array('access_token' => $access_token);
+            $userInfo = OpenIdUserinfo::getUserinfo($params, $this->angelleye_paypal_invoicing_getAuth());
+            $result_data = array('result' => 'success', 'user_data' => $userInfo);
+        } catch (Exception $ex) {
+            $result_data = array('result' => 'error', 'error_msg' => $ex->getMessage());
+        }
+        return $result_data;
+    }
+
+    public function angelleye_paypal_invoicing_is_api_set() {
+        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+        if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || (!empty($apifw_sandbox_refresh_token) && $apifw_sandbox_refresh_token != false)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

@@ -11,7 +11,6 @@ if (!defined('ABSPATH')) {
 $apifw_setting = get_option('apifw_setting');
 $enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
 $sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
-$sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
 $sandbox_secret = isset($apifw_setting['sandbox_secret']) ? $apifw_setting['sandbox_secret'] : '';
 $client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
 $secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : '';
@@ -19,7 +18,7 @@ $paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_e
 
 $first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name'] : '';
 $last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : '';
-$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : '';
+$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : get_bloginfo('name');
 $phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : '';
 
 $address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : '';
@@ -36,6 +35,12 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : '';
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
 $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
+$paypal_sandbox_connect_url = add_query_arg(array('action' => 'lipp_paypal_sandbox_connect', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
+$paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_live_connect', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+$apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
+$delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
+$delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -53,12 +58,29 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                         </div>
                     </div>
                     <!-- SandBox -->
-                    <div class="form-group row">
-                        <label for="apifw_sandbox_paypal_email" class="col-sm-2 col-form-label"><?php echo __('Sandbox PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('Sandbox PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>">
-                        </div>
-                    </div>
+                    <?php
+                    if (empty($sandbox_client_id) || empty($sandbox_secret)) {
+                        if ($apifw_sandbox_refresh_token == false) {
+                            ?> 
+                            <div class="form-group row angelleye_paypal_invoicing_sandbox_connect_box">
+                                <div class="col-sm-6" >
+                                    <a  href="https://www.aetesting.xyz/connect?mode=SANDBOX&rest_action=connect&return_url=<?php echo urlencode($paypal_sandbox_connect_url); ?>">
+                                        <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
+                                    </a> 
+
+                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
+                                </div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="form-group row angelleye_paypal_invoicing_sandbox_connect_box">
+                                <div class="col-sm-5">
+                                    <a class="btn btn-danger" href="<?php echo $delete_paypal_sandbox_refresh_token; ?>" role="button">Disconnect PayPal</a>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                    }
+                    ?>
                     <div class="form-group row">
                         <label for="apifw_sandbox_client_id" class="col-sm-2 col-form-label"><?php echo __('Sandbox Client ID', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -72,12 +94,28 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                         </div>
                     </div>
                     <!-- Live -->
-                    <div class="form-group row">
-                        <label for="apifw_paypal_email" class="col-sm-2 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>">
-                        </div>
-                    </div>
+                    <?php
+                    if (empty($client_id) || empty($secret)) {
+                        if ($apifw_live_refresh_token == false) {
+                            ?> 
+                            <div class="form-group row angelleye_paypal_invoicing_live_connect_box">
+                                <div class="col-sm-6" >
+                                    <a  href="https://www.aetesting.xyz/connect?mode=LIVE&rest_action=connect&return_url=<?php echo urlencode($paypal_connect_url); ?>">
+                                        <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
+                                    </a>
+                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
+                                </div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="form-group row angelleye_paypal_invoicing_live_connect_box">
+                                <div class="col-sm-5">
+                                    <a class="btn btn-danger" href="<?php echo $delete_paypal_live_refresh_token; ?>" role="button">Disconnect PayPal</a>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                    }
+                    ?>
                     <div class="form-group row">
                         <label for="apifw_client_id" class="col-sm-2 col-form-label"><?php echo __('Client ID', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -91,6 +129,12 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                         </div>
                     </div>
                     <h3><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h3>
+                    <div class="form-group row">
+                        <label for="apifw_paypal_email" class="col-sm-2 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>">
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label for="apifw_first_name" class="col-sm-2 col-form-label"><?php echo __('First Name', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-5">
@@ -189,10 +233,10 @@ $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : 
                         <div class="col-sm-10">
                             <label  for="apifw_debug_log">
                                 <input  type="checkbox" id="apifw_debug_log" name="debug_log" <?php checked($debug_log, 'on', true); ?>>
-                                <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
+<?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
                             </label>
                             <small id="passwordHelpBlock" class="form-text text-muted">
-                                <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
+<?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
                             </small>
                         </div>
                     </div>
