@@ -800,15 +800,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && ($_GET['action'] == 'lipp_paypal_sandbox_connect' || $_GET['action'] == 'lipp_paypal_live_connect')) {
             $apifw_setting = get_option('apifw_setting', false);
-            if( $apifw_setting == false) {
+            if ($apifw_setting == false) {
                 $apifw_setting = array();
             }
-            if( $_GET['action'] == 'lipp_paypal_sandbox_connect') {
+            if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
                 update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
                 $apifw_setting['enable_paypal_sandbox'] = 'on';
-            } elseif($_GET['action'] == 'lipp_paypal_live_connect') {
+            } elseif ($_GET['action'] == 'lipp_paypal_live_connect') {
                 update_option('apifw_live_refresh_token', $_GET['refresh_token']);
-                $apifw_setting['enable_paypal_sandbox'] = '';            
+                $apifw_setting['enable_paypal_sandbox'] = '';
             }
             update_option('apifw_setting', $apifw_setting);
             $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
@@ -829,14 +829,25 @@ class AngellEYE_PayPal_Invoicing_Admin {
             } else {
                 $json_data_string = wp_remote_retrieve_body($response);
                 $data = json_decode($json_data_string, true);
-                if(isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
-                    set_transient( 'apifw_sandbox_access_token', $data['access_token'], 28200 );
+                if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
+                    set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
                     $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
                     wp_redirect(admin_url('admin.php?page=apifw_settings'));
                     exit();
                 } else {
                     
                 }
+            }
+        }
+        if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
+            if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
+                delete_option('apifw_sandbox_refresh_token');
+                wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                exit();
+            } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
+                delete_option('apifw_live_refresh_token');
+                wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                exit();
             }
         }
     }
@@ -1112,30 +1123,28 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         return $post_id;
     }
-    
-    
-    
+
     public function angelleye_paypal_invoice_update_user_info($access_token) {
         $this->angelleye_paypal_invoicing_load_rest_api();
         $result_data = $this->request->angelleye_get_user_info_using_access_token($access_token);
-        if(isset($result_data['result']) && $result_data['result'] == 'success') {
+        if (isset($result_data['result']) && $result_data['result'] == 'success') {
             $user_data = json_decode($result_data['user_data'], true);
             $apifw_setting = get_option('apifw_setting', false);
-            if( $apifw_setting == false) {
+            if ($apifw_setting == false) {
                 $apifw_setting = array();
             }
-            if(!empty($user_data['email'])) {
+            if (!empty($user_data['email'])) {
                 $apifw_setting['paypal_email'] = $user_data['email'];
             }
-            if(!empty($user_data['name'])) {
+            if (!empty($user_data['name'])) {
                 $full_name = explode(" ", $user_data['name']);
                 $apifw_setting['first_name'] = isset($full_name[0]) ? $full_name[0] : '';
                 $apifw_setting['last_name'] = isset($full_name[1]) ? $full_name[1] : '';
             }
-            if(!empty($user_data['phone_number'])) {
+            if (!empty($user_data['phone_number'])) {
                 $apifw_setting['phone_number'] = $user_data['phone_number'];
             }
-            if(!empty($user_data['address'])) {
+            if (!empty($user_data['address'])) {
                 $apifw_setting['address_line_1'] = isset($user_data['address']['street_address']) ? $user_data['address']['street_address'] : '';
                 $apifw_setting['city'] = isset($user_data['address']['locality']) ? $user_data['address']['locality'] : '';
                 $apifw_setting['state'] = isset($user_data['address']['region']) ? $user_data['address']['region'] : '';
@@ -1144,7 +1153,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
             }
             update_option('apifw_setting', $apifw_setting);
         }
-        
     }
 
 }

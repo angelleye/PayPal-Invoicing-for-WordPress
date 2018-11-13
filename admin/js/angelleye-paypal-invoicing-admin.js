@@ -3,17 +3,17 @@
     $(function () {
         jQuery('#apifw_enable_paypal_sandbox').change(function () {
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
-                    production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
+            production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
             if (jQuery(this).is(':checked')) {
-               // sandbox.show();
+                jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').show();
+                jQuery('.angelleye_paypal_invoicing_live_connect_box').hide();
                 production.hide();
-                jQuery('#angelleye_paypal_invoicing_sandbox_connect_box').show();
-                jQuery('#angelleye_paypal_invoicing_live_connect_box').hide();
+                sandbox.show();
             } else {
+                jQuery('.angelleye_paypal_invoicing_live_connect_box').show();
+                jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').hide();
                 sandbox.hide();
-               // production.show();
-               jQuery('#angelleye_paypal_invoicing_sandbox_connect_box').hide();
-               jQuery('#angelleye_paypal_invoicing_live_connect_box').show();
+                production.show();
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
@@ -230,26 +230,6 @@
                     });
                 }
             });
-            var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
-            production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
-            sandbox.hide();
-            production.hide();
-            jQuery('.angelleye-invoice-toggle-settings').click(function(evt) {
-            evt.preventDefault();
-            
-            
-            if (jQuery('#apifw_enable_paypal_sandbox').is(':checked')) {
-               sandbox.toggle();
-               production.hide();
-            } else {
-                sandbox.hide();
-                production.toggle();
-            }
-            
-            
-
-            });
-            
         });
     });
 })(jQuery);
