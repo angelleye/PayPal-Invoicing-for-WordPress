@@ -353,3 +353,6 @@ body {
     margin-right: 10px;
     font-weight: bold;
 }
+#angelleye-paypal-invoicing a:hover {
+    text-decoration: none;
+}
