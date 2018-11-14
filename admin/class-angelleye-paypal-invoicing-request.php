@@ -959,7 +959,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $message .= $error_object->message;
                 break;
         }
-        if (empty($message)) {
+        if (!empty($error_object->message)) {
+            $message = $error_object->message;
+        } else {
             $message = $json_error;
         }
         return $message;
