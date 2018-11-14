@@ -745,7 +745,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         try {
             $invoice = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoices_array_data = json_decode($invoice, true);
-            return array('return' => true, 'data' => $invoices_array_data);
+            return $invoices_array_data;
         } catch (PayPalConnectionException $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
