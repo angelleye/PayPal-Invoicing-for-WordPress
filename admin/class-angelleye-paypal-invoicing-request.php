@@ -139,7 +139,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoices = Invoice::getAll(array('page' => 120, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
             return json_decode($invoices, true);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -148,7 +150,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoices = Invoice::generateNumber($this->angelleye_paypal_invoicing_getAuth());
             return json_decode($invoices, true);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -237,7 +241,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $templates = Templates::getAll(array('page' => 0, 'page_size' => 20, 'fields' => "all"), $this->angelleye_paypal_invoicing_getAuth());
             return json_decode($templates, true);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -349,7 +355,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             return $invoice->getId();
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -715,7 +723,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
             return $invoice->getId();
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -735,9 +745,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         try {
             $invoice = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoices_array_data = json_decode($invoice, true);
-            return $invoices_array_data;
+            return array('return' => true, 'data' => $invoices_array_data);
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -777,7 +789,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                     ->setSendToMerchant(true);
             $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -788,7 +802,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
             $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -803,7 +819,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                     ->setSendToPayer(apply_filters('angelleye_paypal_invoice_send_to_payer', true));
             $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
-            return array('return' => false, 'message' => $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -812,7 +830,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
-            
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
@@ -893,7 +913,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $output = \PayPal\Api\Webhook::getAll($this->angelleye_paypal_invoicing_getAuth());
             return $output;
         } catch (Exception $ex) {
-            return '';
+            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+            exit();
         }
     }
 
