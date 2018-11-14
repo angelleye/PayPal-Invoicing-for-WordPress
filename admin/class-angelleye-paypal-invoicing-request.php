@@ -67,13 +67,19 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->apifw_setting = get_option('apifw_setting');
         $this->testmode = ( isset($this->apifw_setting['enable_paypal_sandbox']) && $this->apifw_setting['enable_paypal_sandbox'] == 'on' ) ? true : false;
         if ($this->testmode == true) {
+            $this->apifw_refresh_token = get_option('apifw_sandbox_refresh_token', false);
+            $this->apifw_access_token = get_transient('apifw_sandbox_access_token', false);
             $this->rest_client_id = ( isset($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : '';
             $this->rest_secret_id = ( isset($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : '';
             $this->paypal_email = isset($this->apifw_setting['paypal_email']) ? $this->apifw_setting['paypal_email'] : '';
+            $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL);
         } else {
+            $this->apifw_refresh_token = get_option('apifw_live_refresh_token', false);
+            $this->apifw_access_token = get_transient('apifw_live_access_token', false);
             $this->rest_client_id = ( isset($this->apifw_setting['client_id']) && !empty($this->apifw_setting['client_id']) ) ? $this->apifw_setting['client_id'] : '';
             $this->rest_secret_id = ( isset($this->apifw_setting['secret']) && !empty($this->apifw_setting['secret']) ) ? $this->apifw_setting['secret'] : '';
             $this->paypal_email = isset($this->apifw_setting['paypal_email']) ? $this->apifw_setting['paypal_email'] : '';
+            $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL);
         }
         $this->first_name = isset($this->apifw_setting['first_name']) ? $this->apifw_setting['first_name'] : '';
         $this->last_name = isset($this->apifw_setting['last_name']) ? $this->apifw_setting['last_name'] : '';
@@ -93,21 +99,21 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->terms_and_condition = isset($this->apifw_setting['terms_and_condition']) ? $this->apifw_setting['terms_and_condition'] : '';
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
+
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
-        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
-        if ($apifw_sandbox_refresh_token) {
-            if (false === ( $apifw_sandbox_access_token = get_transient('apifw_sandbox_access_token') )) {
-                $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
+        if ($this->apifw_refresh_token) {
+            if (false === $this->apifw_access_token) {
+                $response = wp_remote_post($this->get_access_token_url, array(
                     'method' => 'POST',
                     'timeout' => 45,
                     'redirection' => 5,
                     'httpversion' => '1.0',
                     'blocking' => true,
                     'headers' => array(),
-                    'body' => array('refresh_token' => $apifw_sandbox_refresh_token),
+                    'body' => array('refresh_token' => $this->apifw_refresh_token),
                     'cookies' => array()
                         )
                 );
@@ -117,15 +123,19 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $json_data_string = wp_remote_retrieve_body($response);
                     $data = json_decode($json_data_string, true);
                     if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
-                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
-                        $apifw_sandbox_access_token = $data['access_token'];
+                        if ($this->mode == 'LIVE') {
+                            set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                        } else {
+                            set_transient('apifw_live_access_token', $data['access_token'], 28200);
+                        }
+                        $this->apifw_access_token = $data['access_token'];
                     } else {
                         
                     }
                 }
             }
-            $auth = new ApiContext("Bearer " . $apifw_sandbox_access_token);
-            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $apifw_sandbox_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            $auth = new ApiContext("Bearer " . $this->apifw_access_token);
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $this->apifw_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => true, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
             return $auth;
         } else {
             $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
@@ -961,6 +971,8 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
         if (!empty($error_object->message)) {
             $message = $error_object->message;
+        } else if (!empty($error_object->error_description)) {
+            $message = $error_object->error_description;
         } else {
             $message = $json_error;
         }
@@ -979,8 +991,7 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_is_api_set() {
-        $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
-        if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || (!empty($apifw_sandbox_refresh_token) && $apifw_sandbox_refresh_token != false)) {
+        if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || $this->apifw_refresh_token) {
             return true;
         } else {
             return false;
