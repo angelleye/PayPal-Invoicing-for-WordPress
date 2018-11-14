@@ -1095,7 +1095,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'email',
             'number',
             'invoice_date',
-            'status'
+            'status',
+            'total_amount_value',
+            'currency'
         );
         if (empty($_GET['post_status']) || 'all' == $_GET['post_status']) {
             $post_id = $wpdb->get_col(
@@ -1106,7 +1108,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 INNER JOIN {$wpdb->postmeta} pmt ON pt.ID = pmt.post_id
 		WHERE 
                 pt.post_type = 'paypal_invoices' AND
-                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", '%' . $wpdb->esc_like(wc_clean($s)) . '%'
+                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", '%' . $wpdb->esc_like(pifw_clean($s)) . '%'
             ));
         } else {
             $post_id = $wpdb->get_col(
@@ -1118,7 +1120,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
 		WHERE 
                 pt.post_type = 'paypal_invoices' AND
                 pt.post_status = '%s' AND
-                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", pifw_clean($_GET['post_status']), '%' . $wpdb->esc_like(wc_clean($s)) . '%'
+                pmt.meta_value LIKE %s AND pmt.meta_key IN ('" . implode("','", array_map('esc_sql', $search_fields)) . "')", pifw_clean($_GET['post_status']), '%' . $wpdb->esc_like(pifw_clean($s)) . '%'
             ));
         }
         return $post_id;

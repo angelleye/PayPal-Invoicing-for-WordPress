@@ -161,6 +161,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoices_array_data = json_decode($invoices_data, true);
                 if (!empty($invoices_array_data)) {
                     if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
+                        krsort ($invoices_array_data['invoices'], SORT_NUMERIC  );
                         foreach ($invoices_array_data['invoices'] as $key => $invoice) {
                             $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                         }
@@ -639,7 +640,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     ->setAddress(new Address());
             $invoice->getMerchantInfo()->getAddress()
                     ->setLine1($this->address_line_1)
-                    ->setLine1($this->address_line_2)
+                    ->setLine2($this->address_line_2)
                     ->setCity($this->city)
                     ->setState($this->state)
                     ->setPostalCode($this->post_code)
