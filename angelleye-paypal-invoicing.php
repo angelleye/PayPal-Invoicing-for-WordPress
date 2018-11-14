@@ -40,10 +40,10 @@ if (!defined('PAYPAL_INVOICE_PLUGIN_BASENAME')) {
 }
 
 if (!defined('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL')) {
-    define('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL', 'https://www.angelleye.com/ppiwp-return/');
+    define('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL', 'https://www.angelleye.com/web-services/ppiwp-return/');
 }
 if (!defined('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL')) {
-    define('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL', 'https://sandbox.angelleye.com/ppiwp-return/');
+    define('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL', 'https://sandbox.angelleye.com/web-services/ppiwp-return/');
 }
 
 
