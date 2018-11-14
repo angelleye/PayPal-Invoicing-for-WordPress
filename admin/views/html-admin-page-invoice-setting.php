@@ -37,10 +37,13 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
 $paypal_sandbox_connect_url = add_query_arg(array('action' => 'lipp_paypal_sandbox_connect', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $paypal_connect_url = add_query_arg(array('action' => 'lipp_paypal_live_connect', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$paypal_sandbox_remote_connect_url = add_query_arg( array('rest_action' => 'connect', 'mode' => 'SANDBOX', 'return_url' => urlencode($paypal_sandbox_connect_url)) , PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL );
+$paypal_live_remote_connect_url = add_query_arg( array('rest_action' => 'connect', 'mode' => 'LIVE', 'return_url' => urlencode($paypal_connect_url)) , PAYPAL_INVOICE_PLUGIN_LIVE_API_URL );
 $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
 $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect your PayPal account to the Angell EYE PayPal Invoicing plugin.  Alternatively, you may enter your own API / App credentials if you prefer.', 'angelleye-paypal-invoicing');
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -63,11 +66,15 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                         if ($apifw_sandbox_refresh_token == false) {
                             ?> 
                             <div class="form-group row angelleye_paypal_invoicing_sandbox_connect_box">
+                                <div class="col-sm-12">
+                                    <p>
+                                        <?php echo $instruction_tool_tip; ?>
+                                    </p>
+                                </div>
                                 <div class="col-sm-6" >
-                                    <a  href="https://www.aetesting.xyz/connect?mode=SANDBOX&rest_action=connect&return_url=<?php echo urlencode($paypal_sandbox_connect_url); ?>">
+                                    <a  href="<?php echo $paypal_sandbox_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                                     </a> 
-
                                     <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
                                 </div>
                             </div>
@@ -99,8 +106,13 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                         if ($apifw_live_refresh_token == false) {
                             ?> 
                             <div class="form-group row angelleye_paypal_invoicing_live_connect_box">
+                                <div class="col-sm-12">
+                                    <p>
+                                        <?php echo $instruction_tool_tip; ?>
+                                    </p>
+                                </div>
                                 <div class="col-sm-6" >
-                                    <a  href="https://www.aetesting.xyz/connect?mode=LIVE&rest_action=connect&return_url=<?php echo urlencode($paypal_connect_url); ?>">
+                                    <a  href="<?php echo $paypal_live_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                                     </a>
                                     <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>

@@ -39,6 +39,13 @@ if (!defined('PAYPAL_INVOICE_PLUGIN_BASENAME')) {
     define('PAYPAL_INVOICE_PLUGIN_BASENAME', plugin_basename(__FILE__));
 }
 
+if (!defined('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL')) {
+    define('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL', 'https://www.angelleye.com/ppiwp-return/');
+}
+if (!defined('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL')) {
+    define('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL', 'https://sandbox.angelleye.com/ppiwp-return/');
+}
+
 
 if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
     $upload_dir = wp_upload_dir( null, false );
