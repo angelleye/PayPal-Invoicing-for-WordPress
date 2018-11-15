@@ -129,7 +129,7 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                             <input type="password" class="form-control" id="apifw_secret" placeholder="<?php echo __('Secret', 'angelleye-paypal-invoicing'); ?>" name="secret" value="<?php echo esc_attr($secret); ?>">
                         </div>
                     </div>
-                    <h3><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h3>
+                    <h3><?php echo __('My Business Info', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -160,7 +160,6 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                             <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" name="phone_number" value="<?php echo esc_attr($phone_number); ?>">
                         </div>
                     </div>
-                    <h3><?php echo __('Merchant / Business Address', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <label for="apifw_address_line_1" class="col-sm-3 col-form-label"><?php echo __('Address line 1', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
