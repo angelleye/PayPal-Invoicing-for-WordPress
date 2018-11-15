@@ -83,14 +83,14 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                     }
                     ?>
                     <div class="form-group row">
-                        <label for="apifw_sandbox_client_id" class="col-sm-3 col-form-label"><?php echo __('Sandbox Client ID', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-10">
+                        <label for="apifw_sandbox_client_id" class="col-sm-12 col-form-label"><?php echo __('Sandbox Client ID', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-12">
                             <input type="password" class="form-control" id="apifw_sandbox_client_id" placeholder="<?php echo __('Sandbox Client ID', 'angelleye-paypal-invoicing'); ?>" name="sandbox_client_id" value="<?php echo esc_attr($sandbox_client_id); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_sandbox_secret" class="col-sm-3 col-form-label"><?php echo __('Sandbox Secret', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_sandbox_secret" class="col-sm-12 col-form-label"><?php echo __('Sandbox Secret', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-12">
                             <input type="password" class="form-control" id="apifw_sandbox_secret" placeholder="<?php echo __('Sandbox Secret', 'angelleye-paypal-invoicing'); ?>" name="sandbox_secret" value="<?php echo esc_attr($sandbox_secret); ?>">
                         </div>
                     </div>
@@ -118,14 +118,14 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                     }
                     ?>
                     <div class="form-group row">
-                        <label for="apifw_client_id" class="col-sm-3 col-form-label"><?php echo __('Client ID', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_client_id" class="col-sm-12 col-form-label"><?php echo __('Client ID', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-12">
                             <input type="password" class="form-control" id="apifw_client_id" placeholder="<?php echo __('Client ID', 'angelleye-paypal-invoicing'); ?>" name="client_id" value="<?php echo esc_attr($client_id); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_secret" class="col-sm-3 col-form-label"><?php echo __('Secret', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_secret" class="col-sm-12 col-form-label"><?php echo __('Secret', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-12">
                             <input type="password" class="form-control" id="apifw_secret" placeholder="<?php echo __('Secret', 'angelleye-paypal-invoicing'); ?>" name="secret" value="<?php echo esc_attr($secret); ?>">
                         </div>
                     </div>
