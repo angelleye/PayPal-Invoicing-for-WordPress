@@ -143,7 +143,7 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                     <h3><?php echo __('Merchant / Business Information', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-2 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>">
                         </div>
                     </div>
