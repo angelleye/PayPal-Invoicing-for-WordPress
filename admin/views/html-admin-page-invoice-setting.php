@@ -111,7 +111,7 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                                         <?php echo $instruction_tool_tip; ?>
                                     </p>
                                 </div>
-                                <div class="col-sm-6" >
+                                <div class="col-sm-12" >
                                     <a  href="<?php echo $paypal_live_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                                     </a>
