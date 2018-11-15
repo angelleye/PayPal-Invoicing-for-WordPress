@@ -43,7 +43,6 @@ $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
 $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
-$instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect your PayPal account to the Angell EYE PayPal Invoicing plugin.  Alternatively, you may enter your own API / App credentials if you prefer.', 'angelleye-paypal-invoicing');
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -66,11 +65,6 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                         if ($apifw_sandbox_refresh_token == false) {
                             ?> 
                             <div class="form-group row angelleye_paypal_invoicing_sandbox_connect_box">
-                                <div class="col-sm-12">
-                                    <p>
-                                        <?php echo $instruction_tool_tip; ?>
-                                    </p>
-                                </div>
                                 <div class="col-sm-12" >
                                     <a  href="<?php echo $paypal_sandbox_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
@@ -106,11 +100,6 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                         if ($apifw_live_refresh_token == false) {
                             ?> 
                             <div class="form-group row angelleye_paypal_invoicing_live_connect_box">
-                                <div class="col-sm-12">
-                                    <p>
-                                        <?php echo $instruction_tool_tip; ?>
-                                    </p>
-                                </div>
                                 <div class="col-sm-12" >
                                     <a  href="<?php echo $paypal_live_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
@@ -267,14 +256,15 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
             </div>
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <div class="card border-light" >
-                    <div class="card-header"><h4><?php echo __('How to Connect PayPal Account', 'angelleye-paypal-invoicing'); ?></h4></div>
+                    <div class="card-header"><h4><?php echo __('Instructions', 'angelleye-paypal-invoicing'); ?></h4></div>
                     <div class="card-body">
                         <ol>
-                            <li><?php echo __('Click the Connect with PayPal button to begin the process.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Login to your PayPal account, or create an account if necessary.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Review the authorization details and click the "Yes I Authorize It" button.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Click the button to "Go back to {My Website Name}".', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Verify that your PayPal Account ID is listed and click to Save Settings.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Check the box to Enable PayPal Sandbox if you are going to configure the plugin with a test account.  Otherwise, leave it unchecked.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Click the Log In with PayPal button to quickly and easily connect your PayPal account to the Invoicing plugin.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Enter details for Address and Default values to use on new invoices.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Save Changes.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Click the PayPal Invoicing item in the WordPress admin menu bar.', 'angelleye-paypal-invoicing'); ?></li>
+                            <li><?php echo __('Click Add Invoice to create your first PayPal invoice!', 'angelleye-paypal-invoicing'); ?></li>
                         </ol>
                     </div>
                 </div>
