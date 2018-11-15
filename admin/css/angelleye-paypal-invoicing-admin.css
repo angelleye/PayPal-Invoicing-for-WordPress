@@ -359,3 +359,7 @@ body {
 #angelleye-paypal-invoicing a:focus {
     box-shadow:none;
 }
+#angelleye-paypal-invoicing .card {
+    padding: 0px 0px 0px !important;
+    margin-top: 13px !important;
+}

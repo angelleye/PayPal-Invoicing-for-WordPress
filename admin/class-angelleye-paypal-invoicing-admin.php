@@ -34,6 +34,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public $invoices;
     public $invoice;
     public $paypal_invoice_post_status_list;
+    public $get_access_token_url;
 
     /**
      * Initialize the class and set its properties.
@@ -48,6 +49,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->apifw_setting = get_option('apifw_setting');
         $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : '';
         $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : '';
+        $this->get_access_token_url = '';
     }
 
     /**
@@ -804,14 +806,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $apifw_setting = array();
             }
             if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                $this->get_access_token_url = add_query_arg( array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL );
                 update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
                 $apifw_setting['enable_paypal_sandbox'] = 'on';
             } elseif ($_GET['action'] == 'lipp_paypal_live_connect') {
+                $this->get_access_token_url = add_query_arg( array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL );
                 update_option('apifw_live_refresh_token', $_GET['refresh_token']);
                 $apifw_setting['enable_paypal_sandbox'] = '';
             }
             update_option('apifw_setting', $apifw_setting);
-            $response = wp_remote_post('https://www.aetesting.xyz/connect/GenerateAccessTokenFromRefreshToken.php', array(
+            $response = wp_remote_post($this->get_access_token_url, array(
                 'method' => 'POST',
                 'timeout' => 45,
                 'redirection' => 5,
@@ -830,7 +834,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $json_data_string = wp_remote_retrieve_body($response);
                 $data = json_decode($json_data_string, true);
                 if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
-                    set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                    if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                    } else {
+                        set_transient('apifw_live_access_token', $data['access_token'], 28200);
+                    }
                     $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
                     wp_redirect(admin_url('admin.php?page=apifw_settings'));
                     exit();
