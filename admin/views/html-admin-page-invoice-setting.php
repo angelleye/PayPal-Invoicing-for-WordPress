@@ -260,7 +260,7 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                         <ol>
                             <li><?php echo __('Check the box to Enable PayPal Sandbox if you are going to configure the plugin with a test account.  Otherwise, leave it unchecked.', 'angelleye-paypal-invoicing'); ?></li>
                             <li><?php echo __('Click the Log In with PayPal button to quickly and easily connect your PayPal account to the Invoicing plugin.', 'angelleye-paypal-invoicing'); ?></li>
-                            <ol type="a">
+                            <ol style="list-style-type:lower-alpha">
                                 <li><?php echo __('If you have your own app configured with PayPal and would prefer to use that, click the link to “add my own app credentials”.', 'angelleye-paypal-invoicing'); ?></li>
                             </ol>
                             <li><?php echo __('Enter details for Address and Default values to use on new invoices.', 'angelleye-paypal-invoicing'); ?></li>
@@ -277,7 +277,7 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                         <ol>
                             <li><?php echo __('Create an order in WooCommerce.', 'angelleye-paypal-invoicing'); ?></li>
                             <li><?php echo __('From the Order Actions menu, choose to:', 'angelleye-paypal-invoicing'); ?></li>
-                            <ol type="a">
+                            <ol style="list-style-type:lower-alpha">
                                 <li><?php echo __('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing'); ?></li>
                                 <li><?php echo __('Send PayPal Invoice', 'angelleye-paypal-invoicing'); ?></li>
                             </ol>
