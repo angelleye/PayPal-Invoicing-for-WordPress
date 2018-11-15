@@ -75,7 +75,7 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                                     <a  href="<?php echo $paypal_sandbox_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                                     </a> 
-                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
+                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings">Add my own app credentials</a>
                                 </div>
                             </div>
                         <?php } else { ?>
@@ -115,7 +115,7 @@ $instruction_tool_tip = __('Use the Log In with PayPal button to quickly connect
                                     <a  href="<?php echo $paypal_live_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
                                     </a>
-                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings"> click here to toggle manual API credential input</a>
+                                    <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings">Add my own app credentials</a>
                                 </div>
                             </div>
                         <?php } else { ?>
