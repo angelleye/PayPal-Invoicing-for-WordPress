@@ -850,10 +850,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
                 delete_option('apifw_sandbox_refresh_token');
+                delete_transient('apifw_sandbox_access_token');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
                 delete_option('apifw_live_refresh_token');
+                delete_transient('apifw_live_access_token');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             }
