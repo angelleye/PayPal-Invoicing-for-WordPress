@@ -1179,7 +1179,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 } else if ($invoice['status'] = 'CANCELLED') {
                     $order->update_status('cancelled');
                 } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
-                    $order->update_status('cancelled');
+                    $order->update_status('refunded');
                 }
             } catch (Exception $ex) {
                 
