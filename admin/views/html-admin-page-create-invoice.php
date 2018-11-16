@@ -47,7 +47,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
             <div class="form-group row">
                 <label for="reference" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Reference', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="reference" placeholder="<?php echo __('Such as PO#', 'angelleye-paypal-invoicing'); ?>" name="reference" required>
+                    <input type="text" class="form-control" id="reference" placeholder="<?php echo __('Such as PO#', 'angelleye-paypal-invoicing'); ?>" name="reference">
                 </div>
             </div>
             <div class="form-group row" >
