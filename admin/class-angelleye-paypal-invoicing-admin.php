@@ -806,11 +806,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $apifw_setting = array();
             }
             if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
-                $this->get_access_token_url = add_query_arg( array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL );
+                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL);
                 update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
                 $apifw_setting['enable_paypal_sandbox'] = 'on';
             } elseif ($_GET['action'] == 'lipp_paypal_live_connect') {
-                $this->get_access_token_url = add_query_arg( array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL );
+                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL);
                 update_option('apifw_live_refresh_token', $_GET['refresh_token']);
                 $apifw_setting['enable_paypal_sandbox'] = '';
             }
@@ -850,10 +850,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
                 delete_option('apifw_sandbox_refresh_token');
+                delete_transient('apifw_sandbox_access_token');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
                 delete_option('apifw_live_refresh_token');
+                delete_transient('apifw_live_access_token');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             }
@@ -1164,6 +1166,24 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $apifw_setting['country'] = isset($user_data['address']['country']) ? $user_data['address']['country'] : '';
             }
             update_option('apifw_setting', $apifw_setting);
+        }
+    }
+
+    public function angelleye_update_order_status($post_id, $invoice) {
+        $order_id = get_post_meta($post_id, '_order_id', true);
+        if (!empty($order_id)) {
+            try {
+                $order = wc_get_order($order_id);
+                if ($invoice['status'] = 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
+                    $order->update_status('completed');
+                } else if ($invoice['status'] = 'CANCELLED') {
+                    $order->update_status('cancelled');
+                } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
+                    $order->update_status('cancelled');
+                }
+            } catch (Exception $ex) {
+                
+            }
         }
     }
 
