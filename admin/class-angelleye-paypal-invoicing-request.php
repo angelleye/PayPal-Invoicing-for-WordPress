@@ -947,6 +947,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 if ($request_array['resource_type'] == 'invoices' || 'invoice' == $request_array['resource_type']) {
                     if (!empty($request_array['resource']['invoice'])) {
                         $post_id = $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($request_array['resource']['invoice']);
+                        do_action('angelleye_update_order_status', $post_id, $request_array['resource']['invoice']);
                         return $post_id;
                     }
                 }
@@ -997,5 +998,4 @@ class AngellEYE_PayPal_Invoicing_Request {
             return false;
         }
     }
-
 }
