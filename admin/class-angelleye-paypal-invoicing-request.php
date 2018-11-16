@@ -947,6 +947,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 if ($request_array['resource_type'] == 'invoices' || 'invoice' == $request_array['resource_type']) {
                     if (!empty($request_array['resource']['invoice'])) {
                         $post_id = $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($request_array['resource']['invoice']);
+                        $this->angelleye_update_order_status($post_id, $request_array['resource']['invoice']);
                         return $post_id;
                     }
                 }
@@ -996,6 +997,25 @@ class AngellEYE_PayPal_Invoicing_Request {
         } else {
             return false;
         }
+    }
+    
+    public function angelleye_update_order_status($post_id, $invoice) {
+        $order_id = get_post_meta($post_id, '_order_id', true);
+        if( !empty($order_id) ) {
+            try {
+                $order = wc_get_order($order_id);
+                if($invoice['status'] = 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
+                    $order->update_status('completed');
+                } else if($invoice['status'] = 'CANCELLED') {
+                    $order->update_status('cancelled');
+                } else if('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
+                    $order->update_status('cancelled');
+                }
+            } catch (Exception $ex) {
+
+            }
+        }
+        
     }
 
 }

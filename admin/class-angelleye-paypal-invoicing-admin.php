@@ -927,6 +927,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                     $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                     update_post_meta($order_id, '_paypal_invoice_wp_post_id', $paypal_invoice_wp_post_id);
+                    update_post_meta($paypal_invoice_wp_post_id, '_order_id', $order_id);
                     if ($order->get_total() > 0) {
                         $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
                     } else {
@@ -969,6 +970,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
                         $paypal_invoice_wp_post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                         update_post_meta($order_id, '_paypal_invoice_wp_post_id', $paypal_invoice_wp_post_id);
+                        update_post_meta($paypal_invoice_wp_post_id, '_order_id', $order_id);
                         if ($order->get_total() > 0) {
                             $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
                         } else {
