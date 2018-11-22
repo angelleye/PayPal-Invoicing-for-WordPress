@@ -43,6 +43,12 @@ $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
 $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setting['apifw_company_logo'] : '';
+if (is_ssl()) {
+    $require_ssl = '';
+} else {
+    $require_ssl = __('This image requires an SSL host.  Please upload your image to <a target="_blank" href="https://httpsimage.com">www.httpsimage.com</a> and enter the image URL here.', 'paypal-for-woocommerce');
+}
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -196,41 +202,55 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                             <input type="text" maxlength="2" class="form-control" id="apifw_country" placeholder="<?php echo __('', 'angelleye-paypal-invoicing'); ?>" name="country" value="<?php echo esc_attr($country); ?>">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="apifw_company_logo" class="col-sm-3 col-form-label"><?php echo __('Company Logo', 'angelleye-paypal-invoicing'); ?></label> 
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="apifw_company_logo" placeholder="" name="apifw_company_logo" value="<?php echo $apifw_company_logo; ?>">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                <?php echo __('The logo must not be larger than 250 pixels wide by 90 pixels high. The logo must be stored on a secure server.', 'angelleye-paypal-invoicing'); ?>
+                                <?php if( !empty($require_ssl)) {
+                                    echo '<br/>' . $require_ssl;
+                                }
+                                ?>
+                            </small>
+                        </div>
+                    </div> 
                     <h3><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
-                        <label for="apifw_shipping_amount" class="col-sm-3 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_shipping_amount" class="col-sm-4 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_shipping_amount" placeholder="<?php echo __('0.00', 'angelleye-paypal-invoicing'); ?>" name="shipping_amount" value="<?php echo esc_attr($shipping_amount); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_tax_name" class="col-sm-3 col-form-label"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_tax_name" class="col-sm-4 col-form-label"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_tax_name" placeholder="" name="tax_name" value="<?php echo esc_attr($tax_name); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_tax_rate" class="col-sm-3 col-form-label"><?php echo __('Tax Rate %', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_tax_rate" class="col-sm-4 col-form-label"><?php echo __('Tax Rate %', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_tax_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" name="tax_rate" value="<?php echo esc_attr($tax_rate); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_note_to_recipient" class="col-sm-3 col-form-label"><?php echo __('Note to Recipient', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_note_to_recipient" class="col-sm-4 col-form-label"><?php echo __('Note to Recipient', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_note_to_recipient" placeholder="<?php echo __('Note to Recipient', 'angelleye-paypal-invoicing'); ?>" name="note_to_recipient" value="<?php echo esc_attr($note_to_recipient); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_terms_and_condition" class="col-sm-3 col-form-label"><?php echo __('Terms and Conditions', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_terms_and_condition" class="col-sm-4 col-form-label"><?php echo __('Terms and Conditions', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_terms_and_condition" placeholder="<?php echo __('Terms and Conditions', 'angelleye-paypal-invoicing'); ?>" name="terms_and_condition" value="<?php echo $terms_and_condition; ?>">
                         </div>
                     </div>
+
                     <h3><?php echo __('Log Event', 'angelleye-paypal-invoicing'); ?></h3>
                     <div class="form-group row">
-                        <div class="col-sm-3"><?php echo __('Debug Log', 'angelleye-paypal-invoicing'); ?> </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-4"><?php echo __('Debug Log', 'angelleye-paypal-invoicing'); ?> </div>
+                        <div class="col-sm-8">
                             <label  for="apifw_debug_log">
                                 <input  type="checkbox" id="apifw_debug_log" name="debug_log" <?php checked($debug_log, 'on', true); ?>>
                                 <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
@@ -241,8 +261,8 @@ $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_delete_logs" class="col-sm-3 col-form-label"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></label>
-                        <div class="col-sm-9">
+                        <label for="apifw_delete_logs" class="col-sm-4 col-form-label"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
                             <button name="apifw_delete_logs" type="submit" value="Delete Logs" class="btn btn-danger"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></button>
                         </div>
                     </div>

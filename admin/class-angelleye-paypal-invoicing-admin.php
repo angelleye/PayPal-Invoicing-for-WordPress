@@ -164,7 +164,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         wp_enqueue_script($this->plugin_name);
         $translation_array = array(
             'tax_name' => $this->tax_name,
-            'tax_rate' => $this->tax_rate
+            'tax_rate' => $this->tax_rate,
+            'is_ssl' => is_ssl() ? 'yes' : 'no',
+            'choose_image' => __('Choose Image', 'paypal-for-woocommerce'),
         );
         wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
         wp_enqueue_style($this->plugin_name . 'bootstrap');
@@ -275,7 +277,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'apifw_company_logo');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = pifw_clean($_POST[$value]);
