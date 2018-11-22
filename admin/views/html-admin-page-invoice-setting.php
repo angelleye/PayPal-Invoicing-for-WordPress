@@ -47,7 +47,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
 if (is_ssl()) {
     $require_ssl = '';
 } else {
-    $require_ssl = __('This image requires an SSL host.  Please upload your image to <a target="_blank" href="https://httpsimage.com">www.httpsimage.com</a> and enter the image URL here.', 'paypal-for-woocommerce');
+    $require_ssl = __('This image requires an SSL host.  Please upload your image to <a target="_blank" href="https://imgbb.com/">www.imgbb.com</a> and enter the image URL here.', 'paypal-for-woocommerce');
 }
 ?>
 <div class="wrap">
