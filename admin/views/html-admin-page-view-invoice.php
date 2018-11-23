@@ -10,15 +10,36 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
             <br>
             <div class="row">
                 <div class="col-sm-6">
+                    <?php if( !empty($apifw_company_logo)) { ?>
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+            <?php } ?>
                 </div>
                 <div class="col-sm-6" style="text-align: right;"><div class="pageCurl"><?php echo __('INVOICE', 'angelleye-paypal-invoicing'); ?></div></div>
             </div>
             <br>
             <div class="row">
                 <div class="col-sm-8">
-                    <?php if( !empty($apifw_company_logo)) { ?>
-            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
-            <?php } ?>
+                    <h4 class="mb-3"><?php echo __('Merchant Info:', 'angelleye-paypal-invoicing'); ?></h4>
+                    <div>
+                        <?php echo isset($invoice['merchant_info']['address']['first_name']) ? $invoice['merchant_info']['address']['first_name'] : ''; ?>
+                        <?php echo isset($invoice['merchant_info']['address']['last_name']) ? $invoice['merchant_info']['address']['last_name'] : ''; ?>
+                    </div>
+                    <?php echo isset($invoice['merchant_info']['address']['line1']) ? '<div>' . $invoice['merchant_info']['address']['line1'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['merchant_info']['address']['line2']) ? '<div>' . $invoice['merchant_info']['address']['line2'] . '</div>' : ''; ?>
+                    <div>
+                        <?php echo isset($invoice['merchant_info']['address']['city']) ? $invoice['merchant_info']['address']['city'] : ''; ?>
+                        <?php echo isset($invoice['merchant_info']['address']['state']) ? $invoice['merchant_info']['address']['state'] : ''; ?>
+                        <?php echo isset($invoice['merchant_info']['address']['postal_code']) ? $invoice['merchant_info']['address']['postal_code'] : ''; ?>
+                    </div>
+                    <div>
+                        <?php echo isset($invoice['merchant_info']['address']['country_code']) ? $invoice['merchant_info']['address']['country_code'] : ''; ?>
+                    </div>
+                    <?php echo isset($invoice['merchant_info']['email']) ? '<div>' . $invoice['merchant_info']['email'] . '</div>' : ''; ?>
+                    <?php
+                    if (!empty($invoice['merchant_info']['phone'])) {
+                        echo '<div>+' . $invoice['merchant_info']['phone']['country_code'] . '  ' . $invoice['merchant_info']['phone']['national_number'] . '</div>';
+                    }
+                    ?>
                 </div>
                 <div class="col-sm-4 invoice-view-info">
                     <?php
@@ -88,30 +109,7 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
             <div class="sectionBottom"></div>
             <br>
             <div class="row mb-4">
-                <div class="col-sm-4">
-                    <h4 class="mb-3"><?php echo __('Merchant Info:', 'angelleye-paypal-invoicing'); ?></h4>
-                    <div>
-                        <?php echo isset($invoice['merchant_info']['address']['first_name']) ? $invoice['merchant_info']['address']['first_name'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['last_name']) ? $invoice['merchant_info']['address']['last_name'] : ''; ?>
-                    </div>
-                    <?php echo isset($invoice['merchant_info']['address']['line1']) ? '<div>' . $invoice['merchant_info']['address']['line1'] . '</div>' : ''; ?>
-                    <?php echo isset($invoice['merchant_info']['address']['line2']) ? '<div>' . $invoice['merchant_info']['address']['line2'] . '</div>' : ''; ?>
-                    <div>
-                        <?php echo isset($invoice['merchant_info']['address']['city']) ? $invoice['merchant_info']['address']['city'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['state']) ? $invoice['merchant_info']['address']['state'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['postal_code']) ? $invoice['merchant_info']['address']['postal_code'] : ''; ?>
-                    </div>
-                    <div>
-                        <?php echo isset($invoice['merchant_info']['address']['country_code']) ? $invoice['merchant_info']['address']['country_code'] : ''; ?>
-                    </div>
-                    <?php echo isset($invoice['merchant_info']['email']) ? '<div>' . $invoice['merchant_info']['email'] . '</div>' : ''; ?>
-                    <?php
-                    if (!empty($invoice['merchant_info']['phone'])) {
-                        echo '<div>+' . $invoice['merchant_info']['phone']['country_code'] . '  ' . $invoice['merchant_info']['phone']['national_number'] . '</div>';
-                    }
-                    ?>
-                </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <?php
                     if (!empty($invoice['billing_info'][0]['email'])) {
                         echo '<h4 class="mb-3">Bill To:</h4>';
@@ -134,12 +132,12 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                     </div>
                     <?php echo isset($invoice['billing_info'][0]['email']) ? '<div>' . $invoice['billing_info'][0]['email'] . '</div>' : ''; ?>
                     <?php
-                    if (!empty($invoice['billing_info'][0]['phone'])) {
-                        echo '<div>+' . $invoice['billing_info'][0]['phone']['country_code'] . '  ' . $invoice['billing_info'][0]['phone']['national_number'] . '</div>';
+                    if (!empty($invoice['billing_info'][0]['address']['phone']['country_code'])) {
+                        echo '<div>' . $invoice['billing_info'][0]['address']['phone']['country_code'] . '  ' . $invoice['billing_info'][0]['address']['phone']['national_number'] . '</div>';
                     }
                     ?>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
                     <?php
                     if (!empty($invoice['shipping_info']['first_name'])) {
                         echo '<h4 class="mb-3">Ship To:</h4>';
