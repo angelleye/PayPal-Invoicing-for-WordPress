@@ -275,7 +275,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'sandbox_paypal_email');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = pifw_clean($_POST[$value]);
@@ -1148,7 +1148,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $apifw_setting = array();
             }
             if (!empty($user_data['email'])) {
-                $apifw_setting['paypal_email'] = $user_data['email'];
+                if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                    $apifw_setting['sandbox_paypal_email'] = $user_data['email'];
+                } else {
+                    $apifw_setting['paypal_email'] = $user_data['email'];
+                }
+                
             }
             if (!empty($user_data['name'])) {
                 $full_name = explode(" ", $user_data['name']);
