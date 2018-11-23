@@ -44,6 +44,8 @@ $apifw_sandbox_refresh_token = get_option('apifw_sandbox_refresh_token', false);
 $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
+$sandbox_email_read_only = '';
+$live_email_read_only = '';
 if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
     $sandbox_email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
 } elseif (empty ($enable_paypal_sandbox)) {
