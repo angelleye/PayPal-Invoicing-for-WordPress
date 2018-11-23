@@ -45,9 +45,9 @@ $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
 if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
-    $email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
+    $sandbox_email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
 } elseif (empty ($enable_paypal_sandbox)) {
-    $email_read_only = !empty($apifw_live_refresh_token) ? 'readonly' : '';
+    $live_email_read_only = !empty($apifw_live_refresh_token) ? 'readonly' : '';
 }
 
 ?>
@@ -140,13 +140,13 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $live_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="apifw_sandbox_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $sandbox_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
