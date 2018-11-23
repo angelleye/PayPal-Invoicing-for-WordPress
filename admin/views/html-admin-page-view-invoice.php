@@ -9,17 +9,11 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
         <div class="card-body">
             <br>
             <div class="row">
-                <div class="col-sm-6">
-                    <?php if( !empty($apifw_company_logo)) { ?>
-            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
-            <?php } ?>
-                </div>
-                <div class="col-sm-6" style="text-align: right;"><div class="pageCurl"><?php echo __('INVOICE', 'angelleye-paypal-invoicing'); ?></div></div>
-            </div>
-            <br>
-            <div class="row">
                 <div class="col-sm-8">
-                    <h4 class="mb-3"><?php echo __('Merchant Info:', 'angelleye-paypal-invoicing'); ?></h4>
+                    <?php if (!empty($apifw_company_logo)) { ?>
+                        <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+                    <?php } ?>
+                    <h4 class="mb-3" style="clear: both;"><br><?php echo __('Merchant Info:', 'angelleye-paypal-invoicing'); ?></h4>
                     <div>
                         <?php echo isset($invoice['merchant_info']['address']['first_name']) ? $invoice['merchant_info']['address']['first_name'] : ''; ?>
                         <?php echo isset($invoice['merchant_info']['address']['last_name']) ? $invoice['merchant_info']['address']['last_name'] : ''; ?>
@@ -41,44 +35,46 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                     }
                     ?>
                 </div>
-                <div class="col-sm-4 invoice-view-info">
+                <div class="col-sm-4" style="text-align: right;">
+                    <div class="pageCurl" ><?php echo __('INVOICE', 'angelleye-paypal-invoicing'); ?></div>
                     <?php
                     $invoice_status_array = pifw_get_invoice_status_name_and_class($invoice['status']);
                     if (!empty($invoice_status_array)) :
                         ?>
-                        <div class="row" style="margin-bottom: 20px;">
-                            <span class="col-sm-6 text-right"></span>
-                            <span class="invoiceStatus <?php echo isset($invoice_status_array['class']) ? $invoice_status_array['class'] : 'isDraft'; ?>"><?php echo $invoice_status_array['lable']; ?></span>
+                        <div class="row">
+                            <span class="col-sm-6"></span>
+                            <span style="text-align: right;" class="invoiceStatus <?php echo isset($invoice_status_array['class']) ? $invoice_status_array['class'] : 'isDraft'; ?>">
+                                <?php echo $invoice_status_array['lable']; ?>
+                            </span>
+                            <br>
                         </div>
                     <?php endif; ?>
                     <div class="row">
-                        <div class="col-sm-6 text-right"></div>
-                        <div class="col-sm-6 text-left">
-                            <div class="btn-group">
-                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <?php echo __('Action', 'angelleye-paypal-invoicing'); ?>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <?php
-                                    if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
-                                        echo '<a class="dropdown-item" target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                    }
-                                    if ($status == 'DRAFT') {
-                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                    }
-                                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
-                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                    }
-                                    if ($status == 'SENT') {
-                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                    }
-                                    ?>
-                                </div>
-                            </div>
+                        <span class="col-sm-6"></span>
+                        <div class="btn-group invoice-action-group">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <?php echo __('Action', 'angelleye-paypal-invoicing'); ?>
+                        </button>
+                        <div class="dropdown-menu">
+                            <?php
+                            if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
+                                echo '<a class="dropdown-item" target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                            }
+                            if ($status == 'DRAFT') {
+                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                            }
+                            if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
+                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                            }
+                            if ($status == 'SENT') {
+                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                            }
+                            ?>
                         </div>
                     </div>
-                    <br>
+                    </div>
+                    
                     <?php if (!empty($invoice['number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', 'angelleye-paypal-invoicing'); ?></span>
@@ -341,9 +337,9 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                                 </table>
                             </div>
                         </div>
-                    </div>           
+                    </div>
                 </div>
-            <?php endif; ?>  
+            <?php endif; ?>
         </div>
     </div>
 </div>
