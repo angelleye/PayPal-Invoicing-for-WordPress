@@ -90,8 +90,8 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
     public function admin_options() {
         ?>
-        <h3><?php _e('PayPal Invoice', 'paypal-for-woocommerce'); ?></h3>
-        <p><?php _e($this->method_description, 'paypal-for-woocommerce'); ?></p>
+        <h3><?php _e('PayPal Invoice', 'angelleye-paypal-invoicing'); ?></h3>
+        <p><?php _e($this->method_description, 'angelleye-paypal-invoicing'); ?></p>
         <table class="form-table">
             <?php
             $this->generate_settings_html();
