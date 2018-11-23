@@ -50,6 +50,8 @@ if (is_ssl()) {
 } else {
     $require_ssl = __('This image requires an SSL host.  Please upload your image to <a target="_blank" href="https://imgbb.com/">www.imgbb.com</a> and enter the image URL here.', 'paypal-for-woocommerce');
 }
+$sandbox_email_read_only = '';
+$live_email_read_only = '';
 if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
     $sandbox_email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
 } elseif (empty ($enable_paypal_sandbox)) {
