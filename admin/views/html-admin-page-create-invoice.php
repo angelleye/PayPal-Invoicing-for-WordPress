@@ -10,7 +10,7 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
-
+$apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setting['apifw_company_logo'] : '';
 //echo print_r(_get_cron_array(), true);
 ?>
 
@@ -24,7 +24,11 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
         </div>
     </div>
     <div class="row">
-        <div class="col-12 mt30-invoice col-sm-8"></div>
+        <div class="col-12 mt30-invoice col-sm-8">
+            <?php if( !empty($apifw_company_logo)) { ?>
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+            <?php } ?>
+        </div>
         <div class="col-12 mt30-invoice col-sm-4">
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', 'angelleye-paypal-invoicing'); ?> </label>
@@ -45,14 +49,14 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                 </div>
             </div>
             <div class="form-group row">
-                <label for="reference" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Reference', 'angelleye-paypal-invoicing'); ?></label>
-                <div class="col-sm-7">
+                <label for="reference" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Reference', 'angelleye-paypal-invoicing'); ?></label>
+                <div class="col-sm-6 col-11">
                     <input type="text" class="form-control" id="reference" placeholder="<?php echo __('Such as PO#', 'angelleye-paypal-invoicing'); ?>" name="reference">
                 </div>
             </div>
             <div class="form-group row" >
                 <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', 'angelleye-paypal-invoicing'); ?></label>
-                <div class="col-sm-7">
+                <div class="col-sm-6 col-11">
                     <select id="invoiceTerms" class="form-control" name="invoiceTerms" required>
                         <option value="NO_DUE_DATE"><?php echo __('No due date', 'angelleye-paypal-invoicing'); ?></option>
                         <option value="DUE_ON_RECEIPT"><?php echo __('Due on receipt', 'angelleye-paypal-invoicing'); ?></option>
@@ -109,16 +113,16 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                 </thead>
                 <tbody class="first_tbody">
                     <tr class="invoice-item-data">
-                        <td><input name="item_name[]" value="" id="item_name" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_qty[]" value="" id="item_qty" type="text" placeholder="<?php echo __('0'); ?>" required></td>
-                        <td><input name="item_amt[]" value="" id="item_amt" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
-                        <td><input name="item_txt_name[]" id="item_txt_name" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_txt_rate[]" id="item_txt_rate" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_name[]" value="" id="item_name" class="form-control" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_qty[]" value="" id="item_qty" class="form-control" type="text" placeholder="<?php echo __('0'); ?>" required></td>
+                        <td><input name="item_amt[]" value="" id="item_amt" class="form-control" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
+                        <td><input name="item_txt_name[]" id="item_txt_name" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_txt_rate[]" id="item_txt_rate" class="form-control" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
                         <td rowspan="2" class="amount">0.00</td>
-                        <td></td>
+                        <td class="no-border"></td>
                     </tr>
                     <tr class="invoice-detailed">
-                        <td colspan="5"><input type="text" aria-label="" name="item_description[]" placeholder="<?php echo __('Enter detailed description (optional)', 'angelleye-paypal-invoicing'); ?>"></td>
+                        <td colspan="5"><input type="text" aria-label="" class="form-control" name="item_description[]" placeholder="<?php echo __('Enter detailed description (optional)', 'angelleye-paypal-invoicing'); ?>"></td>
                         <td><div class="deleteItem" style="width:23px;">&nbsp;</div></td>
                     </tr>
                     <tr class="invoice-end-row"><td colspan="5"></td></tr>
@@ -172,10 +176,12 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                             <tr>
                                 <th><?php echo __('Discount', 'angelleye-paypal-invoicing'); ?></th>
                                 <td>
-                                    <input name="invDiscount" id="invDiscount" class="text short-field" value="0.00" type="text">
+                                    
+                                        <input name="invDiscount" id="invDiscount" class="text form-control" value="0.00" type="text">
+                                    
                                 </td>
                                 <td>
-                                    <select name="invoiceDiscType" id="invoiceDiscType" class="select">
+                                    <select name="invoiceDiscType" id="invoiceDiscType" class="select form-control">
                                         <option value="percentage">%</option>
                                         <option value="dollar">$</option>
                                     </select>
@@ -185,7 +191,9 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                             <tr>
                                 <th><?php echo __('Shipping', 'angelleye-paypal-invoicing'); ?></th>
                                 <td colspan="2">
-                                    <input name="shippingAmount" id="shippingAmount" class="text short-field" value="<?php echo esc_attr($shipping_amount); ?>" type="text">
+                                    
+                                        <input name="shippingAmount" id="shippingAmount" class="text form-control" value="<?php echo esc_attr($shipping_amount); ?>" type="text">
+                                    
                                 </td>
                                 <td class="grey-bg shippingAmountTd"><?php echo esc_attr($shipping_amount); ?></td>
                             </tr>
