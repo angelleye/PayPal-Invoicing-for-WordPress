@@ -898,7 +898,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 return false;
             } else {
                 if (!empty($invoice_id) && $invoice_id != false) {
-                    update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                     update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
                     $order->add_order_note(__("Your invoice is created.", 'angelleye-paypal-invoicing'));
                     update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
@@ -941,7 +940,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     return false;
                 } else {
                     if (!empty($invoice_id) && $invoice_id != false) {
-                        update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                         update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
                         $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
                         update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
