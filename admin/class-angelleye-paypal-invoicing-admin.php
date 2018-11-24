@@ -771,7 +771,21 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
                 $posted = json_decode($posted_raw, true);
                 if ($post_id != false && !empty($posted['summary'])) {
-                    $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
+                    if ($posted['event_type'] == 'INVOICING.INVOICE.CANCELLED') {
+                        $invoice = $posted['resource']['invoice'];
+                        $amount = $invoice['total_amount'];
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
+                    } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
+                        
+                    } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
+                        
+                    } elseif ($posted['event_type'] == 'INVOICING.INVOICE.REFUNDED') {
+                        
+                    } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
+                        
+                    } else {
+                        $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
+                    }
                 }
                 @ob_clean();
                 header('HTTP/1.1 200 OK');
