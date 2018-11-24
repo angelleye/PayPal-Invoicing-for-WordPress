@@ -409,13 +409,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_paypal_invoicing_add_paypal_invoices_columns($columns) {
         unset($columns['date']);
-        $columns['title'] = __('Invoice ID', 'angelleye-paypal-invoicing');
+        $columns['title'] = __('Invoice #', 'angelleye-paypal-invoicing');
         $columns['invoice_date'] = _x('Date', 'angelleye-paypal-invoicing');
-        $columns['invoice'] = __('Invoice #', 'angelleye-paypal-invoicing');
         $columns['recipient'] = _x('Recipient', 'angelleye-paypal-invoicing');
         $columns['status'] = __('Status', 'angelleye-paypal-invoicing');
         $columns['amount'] = __('Amount', 'angelleye-paypal-invoicing');
-        //$columns['action'] = __('Action', 'angelleye-paypal-invoicing');
         return $columns;
     }
 
@@ -426,15 +424,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $invoice = get_post_meta($post->ID, 'invoice_date', true);
                 echo date_i18n(get_option('date_format'), strtotime($invoice));
                 break;
-            case 'invoice' :
-                $invoice_number = esc_attr(get_post_meta($post->ID, 'number', true));
-                $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
-                if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
-                    echo sprintf('<a href="%1$s">%2$s</a>', $payer_view_url, $invoice_number);
-                } else {
-                    echo $invoice_number;
-                }
-                break;
             case 'recipient' :
                 echo esc_attr(get_post_meta($post->ID, 'email', true));
                 break;
@@ -443,19 +432,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if (!empty($status)) {
                     $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
                     echo isset($invoice_status_array['lable']) ? $invoice_status_array['lable'] : '';
-                }
-                break;
-            case 'action' :
-                $status = get_post_meta($post->ID, 'status', true);
-                if (!empty($status)) {
-                    $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
-                    if (!empty($invoice_status_array['action'])) {
-                        foreach ($invoice_status_array['action'] as $key => $value) {
-                            ?><select name="pifw_action">
-                                <option value="<?php echo $key; ?>"><?php echo esc_attr($value); ?></option>
-                            </select> <?php
-                        }
-                    }
                 }
                 break;
             case 'amount' :
@@ -924,7 +900,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 return false;
             } else {
                 if (!empty($invoice_id) && $invoice_id != false) {
-                    update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                     update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
                     $order->add_order_note(__("Your invoice is created.", 'angelleye-paypal-invoicing'));
                     update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
@@ -967,7 +942,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     return false;
                 } else {
                     if (!empty($invoice_id) && $invoice_id != false) {
-                        update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
                         update_post_meta($order_id, '_payment_method', 'pifw_paypal_invoice');
                         $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
                         update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
