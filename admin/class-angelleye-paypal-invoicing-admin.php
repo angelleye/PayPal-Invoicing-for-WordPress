@@ -770,21 +770,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $posted = json_decode($posted_raw, true);
                 if ($post_id != false && !empty($posted['summary'])) {
                     if ($posted['event_type'] == 'INVOICING.INVOICE.CANCELLED') {
-                        $invoice = $posted['resource']['invoice'];
-                        $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
                         $invoice = $posted['resource']['invoice'];
                         $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
-                        $invoice = $posted['resource']['invoice'];
-                        $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.REFUNDED') {
-                        $invoice = $posted['resource']['invoice'];
-                        $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     } else {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     }
