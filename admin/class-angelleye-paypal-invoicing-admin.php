@@ -774,13 +774,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $amount = $invoice['total_amount'];
                         $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
-                        
+                        $invoice = $posted['resource']['invoice'];
+                        $amount = $invoice['total_amount'];
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
-                        
+                        $invoice = $posted['resource']['invoice'];
+                        $amount = $invoice['total_amount'];
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.REFUNDED') {
-                        
-                    } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
-                        
+                        $invoice = $posted['resource']['invoice'];
+                        $amount = $invoice['total_amount'];
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $currency), $is_customer_note = 1);
                     } else {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     }
