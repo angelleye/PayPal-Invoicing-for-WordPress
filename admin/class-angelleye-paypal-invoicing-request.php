@@ -209,11 +209,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             'ID' => '',
             'post_type' => 'paypal_invoices',
             'post_status' => $paypal_invoice_data_array['status'],
-            'post_title' => $paypal_invoice_data_array['id'],
+            'post_title' => $paypal_invoice_data_array['number'],
             'post_author' => 0,
             'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
         );
-        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_data_array['id']);
+        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_data_array['number']);
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
@@ -786,7 +786,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'ID' => $post_id,
             'post_type' => 'paypal_invoices',
             'post_status' => $paypal_invoice_data_array['status'],
-            'post_title' => $paypal_invoice_data_array['id'],
+            'post_title' => $paypal_invoice_data_array['number'],
             'post_author' => 0
         );
         wp_update_post($insert_invoice_array);
