@@ -783,7 +783,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $amount = $invoice['total_amount'];
                         $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
                         if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
-                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment.', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
+                            if( $this->request->testmode == true ) {
+                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                            } else {
+                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                            }
+                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
                         } else {
                             $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                         }
