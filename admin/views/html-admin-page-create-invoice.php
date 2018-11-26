@@ -77,7 +77,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="bill_to" class="col-sm-2 col-form-label pifw_lable_left"><b>Bill to:</b></label>
+                <label for="bill_to" class="col-sm-2 col-form-label pifw_lable_left"><b><?php echo __('Bill to:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
                     <input type="text" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
                 </div>
@@ -87,7 +87,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="cc_to" class="col-sm-2 col-form-label pifw_lable_left"><b>Cc:</b></label>
+                <label for="cc_to" class="col-sm-2 col-form-label pifw_lable_left"><b><?php echo __('Cc:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
                     <input type="text" name="cc_to" class="form-control" id="cc_to" placeholder="">
                 </div>
@@ -95,7 +95,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
         </div>
     </div>
     <div class="row mt30-invoice">
-        <div class="table-responsive">
+        <div class="table-responsive-sm">
             <table class="table invoice-table">
                 <thead>
                     <tr>
@@ -172,7 +172,7 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
                             <tr>
                                 <th><?php echo __('Discount', 'angelleye-paypal-invoicing'); ?></th>
                                 <td>
-                                    <input name="invDiscount" id="invDiscount" class="text short-field" value="0.00" type="text">
+                                    <input name="invDiscount" id="invDiscount" class="text short-field" placeholder="0.00" type="text">
                                 </td>
                                 <td>
                                     <select name="invoiceDiscType" id="invoiceDiscType" class="select">
