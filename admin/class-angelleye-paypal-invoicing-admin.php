@@ -1181,7 +1181,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($order_id)) {
             try {
                 $order = wc_get_order($order_id);
-                if ($invoice['status'] = 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
+                if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
                     $order->update_status('completed');
                     if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
                         update_post_meta($post_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
@@ -1197,7 +1197,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         }
                         $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                     }
-                } else if ($invoice['status'] = 'CANCELLED') {
+                } else if ($invoice['status'] == 'CANCELLED') {
                     $order->update_status('cancelled');
                 } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
                     $order->update_status('refunded');
