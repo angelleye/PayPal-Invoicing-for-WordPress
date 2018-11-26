@@ -1195,7 +1195,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         } else {
                             $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
                         }
-                        $order->add_order_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
+                        $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                     }
                 } else if ($invoice['status'] = 'CANCELLED') {
                     $order->update_status('cancelled');
