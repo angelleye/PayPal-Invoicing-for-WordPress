@@ -779,12 +779,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
                         $invoice = $posted['resource']['invoice'];
+                        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                         $amount = $invoice['total_amount'];
+                        $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
                         if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
-                            //jignesh kaila (kcppdevelopers@gmail.com) made a $381.20 USD payment. 
-                            $this->request->testmode;
-                            $log->add('paypal_invoice_log', print_r($this->request->testmode, true));
-                            $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment.', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
                         } else {
                             $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                         }
