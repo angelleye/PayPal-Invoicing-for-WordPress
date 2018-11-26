@@ -23,6 +23,7 @@ use PayPal\Api\WebhookEvent;
 use PayPal\Exception\PayPalConnectionException;
 use PayPal\Api\OpenIdTokeninfo;
 use PayPal\Api\OpenIdUserinfo;
+use PayPal\Api\Payment;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -996,6 +997,15 @@ class AngellEYE_PayPal_Invoicing_Request {
             return true;
         } else {
             return false;
+        }
+    }
+    
+    public function angelleye_paypal_invoice_get_payment($transaction_id) {
+        try {
+            $payment = Payment::get($transaction_id, $this->angelleye_paypal_invoicing_getAuth());
+            return $payment;
+        } catch (Exception $ex) {
+
         }
     }
 }
