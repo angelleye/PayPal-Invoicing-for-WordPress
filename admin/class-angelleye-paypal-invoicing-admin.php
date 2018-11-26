@@ -1176,12 +1176,27 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_update_order_status($post_id, $invoice) {
+        $this->angelleye_paypal_invoicing_load_rest_api();
         $order_id = get_post_meta($post_id, '_order_id', true);
         if (!empty($order_id)) {
             try {
                 $order = wc_get_order($order_id);
                 if ($invoice['status'] = 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
                     $order->update_status('completed');
+                    if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
+                        update_post_meta($post_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
+                    }
+                    $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
+                    $amount = $invoice['total_amount'];
+                    $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
+                    if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
+                        if( $this->request->testmode == true ) {
+                            $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                        } else {
+                            $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                        }
+                        $order->add_order_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
+                    }
                 } else if ($invoice['status'] = 'CANCELLED') {
                     $order->update_status('cancelled');
                 } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
