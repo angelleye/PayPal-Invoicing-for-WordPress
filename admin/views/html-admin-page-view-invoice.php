@@ -108,7 +108,7 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                 <div class="col-sm-6">
                     <?php
                     if (!empty($invoice['billing_info'][0]['email'])) {
-                        echo '<h4 class="mb-3">Bill To:</h4>';
+                        echo '<h4 class="mb-3">Bill To</h4>';
                     }
                     ?>
                     <?php echo isset($invoice['billing_info'][0]['business_name']) ? '<div>' . $invoice['billing_info'][0]['business_name'] . '</div>' : ''; ?>
@@ -136,7 +136,7 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                 <div class="col-sm-6">
                     <?php
                     if (!empty($invoice['shipping_info']['first_name'])) {
-                        echo '<h4 class="mb-3">Ship To:</h4>';
+                        echo '<h4 class="mb-3">Ship To</h4>';
                     }
                     ?>
                     <?php echo isset($invoice['shipping_info']['business_name']) ? '<div>' . $invoice['shipping_info']['business_name'] . '</div>' : ''; ?>
