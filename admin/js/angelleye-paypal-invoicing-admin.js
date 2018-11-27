@@ -7,6 +7,8 @@
             if (jQuery(this).is(':checked')) {
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').hide();
+                jQuery('#apifw_sandbox_paypal_email').closest('.row').show();
+                jQuery('#apifw_paypal_email').closest('.row').hide();
                 production.hide();
                 if (jQuery('#apifw_sandbox_client_id').val().length === 0 && jQuery('#apifw_sandbox_secret').val().length === 0) {
                     sandbox.hide();
@@ -16,6 +18,8 @@
             } else {
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').hide();
+                jQuery('#apifw_sandbox_paypal_email').closest('.row').hide();
+                jQuery('#apifw_paypal_email').closest('.row').show();
                 sandbox.hide();
                 if (jQuery('#apifw_client_id').val().length === 0 && jQuery('#apifw_secret').val().length === 0) {
                     production.hide();
