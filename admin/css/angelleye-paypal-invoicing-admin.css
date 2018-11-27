@@ -130,7 +130,6 @@
 }
 #angelleye_paypal_invoicing_meta_box .invoice-table tbody {
     border-collapse: collapse;
-    border-top: 1px solid #dee2e6;
 }
 #angelleye_paypal_invoicing_meta_box .invoice-table .amount {
     text-align: center;
@@ -368,4 +367,11 @@ body {
     margin-top: 15px;
     text-align: right;
     margin-bottom: 15px;
+}
+.invoice-table .form-control {
+    border-radius: unset !important;
+}
+#invoiceDiscType, #invoiceTerms {
+    padding: .375rem .75rem !important;
+    height: inherit;
 }
