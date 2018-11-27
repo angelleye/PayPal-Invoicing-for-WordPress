@@ -199,15 +199,15 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_post_code" class="col-sm-3 col-form-label"><?php echo __('Postcode / ZIP', 'angelleye-paypal-invoicing'); ?></label>
+                        <label for="apifw_post_code" class="col-sm-3 col-form-label"><?php echo __('Postal Code', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_post_code" placeholder="<?php echo __('Postcode / ZIP', 'angelleye-paypal-invoicing'); ?>" name="post_code" value="<?php echo esc_attr($post_code); ?>">
+                            <input type="text" class="form-control" id="apifw_post_code" placeholder="<?php echo __('Postal Code', 'angelleye-paypal-invoicing'); ?>" name="post_code" value="<?php echo esc_attr($post_code); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_state" class="col-sm-3 col-form-label"><?php echo __('State / County', 'angelleye-paypal-invoicing'); ?></label>
+                        <label for="apifw_state" class="col-sm-3 col-form-label"><?php echo __('State / Province', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_state" placeholder="<?php echo __('State / County', 'angelleye-paypal-invoicing'); ?>" name="state" value="<?php echo esc_attr($state); ?>">
+                            <input type="text" class="form-control" id="apifw_state" placeholder="<?php echo __('State / Province', 'angelleye-paypal-invoicing'); ?>" name="state" value="<?php echo esc_attr($state); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
