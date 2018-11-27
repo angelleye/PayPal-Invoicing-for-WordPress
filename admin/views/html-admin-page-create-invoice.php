@@ -26,7 +26,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
     <div class="row">
         <div class="col-12 mt30-invoice col-sm-8">
             <?php if( !empty($apifw_company_logo)) { ?>
-            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left company_logo">
             <?php } ?>
         </div>
         <div class="col-12 mt30-invoice col-sm-4">
