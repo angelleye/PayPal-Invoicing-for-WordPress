@@ -569,7 +569,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $actions['paypal_invoice_delete'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
-                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Remind Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
             }
             if ($status == 'SENT') {
                 $actions['paypal_invoice_remind'] = '<a href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
@@ -581,7 +581,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_bulk_actions($actions) {
         unset($actions);
         $actions['send'] = __('Send Invoice', 'angelleye-paypal-invoicing');
-        $actions['remind'] = __('Remind Invoice', 'angelleye-paypal-invoicing');
+        $actions['remind'] = __('Send Invoice Reminder', 'angelleye-paypal-invoicing');
         $actions['cancel'] = __('Cancel Invoice', 'angelleye-paypal-invoicing');
         $actions['delete'] = __('Delete Invoice', 'angelleye-paypal-invoicing');
         return $actions;

@@ -152,7 +152,7 @@ msgstr ""
 #: admin/class-angelleye-paypal-invoicing-admin.php:614
 #: admin/class-angelleye-paypal-invoicing-admin.php:626
 #: admin/views/html-admin-page-view-invoice.php:46
-msgid "Remind Invoice"
+msgid "Send Invoice Reminder"
 msgstr ""
 
 #: admin/class-angelleye-paypal-invoicing-admin.php:617
