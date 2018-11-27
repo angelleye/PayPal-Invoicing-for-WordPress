@@ -10,7 +10,7 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
-
+$apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setting['apifw_company_logo'] : '';
 //echo print_r(_get_cron_array(), true);
 ?>
 
@@ -24,7 +24,11 @@ $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $th
         </div>
     </div>
     <div class="row">
-        <div class="col-12 mt30-invoice col-sm-8"></div>
+        <div class="col-12 mt30-invoice col-sm-8">
+            <?php if( !empty($apifw_company_logo)) { ?>
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+            <?php } ?>
+        </div>
         <div class="col-12 mt30-invoice col-sm-4">
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', 'angelleye-paypal-invoicing'); ?> </label>

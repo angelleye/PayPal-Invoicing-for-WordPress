@@ -98,6 +98,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->note_to_recipient = isset($this->apifw_setting['note_to_recipient']) ? $this->apifw_setting['note_to_recipient'] : '';
         $this->terms_and_condition = isset($this->apifw_setting['terms_and_condition']) ? $this->apifw_setting['terms_and_condition'] : '';
         $this->debug_log = isset($this->apifw_setting['debug_log']) ? $this->apifw_setting['debug_log'] : '';
+        $this->apifw_company_logo = isset($this->apifw_setting['apifw_company_logo']) ? $this->apifw_setting['apifw_company_logo'] : '';
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
 
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
@@ -354,6 +355,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                         ->setValue($order_items['unitPrice']);
                 $i = $i + 1;
             }
+        }
+        if( !empty($this->apifw_company_logo)) {
+            $invoice->setLogoUrl($this->apifw_company_logo);
         }
         $invoice->setItems($items);
         $invoice->getPaymentTerm()
@@ -722,6 +726,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                 //$invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
                 $invoice_due_date = pifw_get_paypal_invoice_date_format($due_date);
                 $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
+            }
+            if( !empty($this->apifw_company_logo)) {
+                $invoice->setLogoUrl($this->apifw_company_logo);
             }
             $invoice->setItems($items);
             $invoice->getPaymentTerm()

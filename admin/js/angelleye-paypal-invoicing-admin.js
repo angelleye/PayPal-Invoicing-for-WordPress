@@ -26,7 +26,7 @@
                 } else {
                     production.show();
                 }
-                
+
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
@@ -255,6 +255,35 @@
                     production.toggle();
                 }
             });
+            if (angelleye_paypal_invoicing_js.is_ssl == "yes") {
+                jQuery("#apifw_company_logo").after('<a href="#" id="checkout_logo" class="button_upload button">Upload</a>');
+            }
+            var custom_uploader;
+            $('.button_upload').click(function (e) {
+                var BTthis = jQuery(this);
+                e.preventDefault();
+                custom_uploader = wp.media.frames.file_frame = wp.media({
+                    title: angelleye_paypal_invoicing_js.choose_image,
+                    button: {
+                        text: angelleye_paypal_invoicing_js.choose_image
+                    },
+                    multiple: false
+                });
+                custom_uploader.on('select', function () {
+                    var attachment = custom_uploader.state().get('selection').first().toJSON();
+                    var pre_input = BTthis.prev();
+                    var url = attachment.url;
+                    if (BTthis.attr('id') != 'upload') {
+                        if (attachment.url.indexOf('http:') > -1) {
+                            url = url.replace('http', 'https');
+                        }
+                    }
+                    pre_input.val(url);
+                });
+                //Open the uploader dialog
+                custom_uploader.open();
+            });
+
         });
     });
 })(jQuery);
