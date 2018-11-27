@@ -381,3 +381,7 @@ body {
 .company_logo {
     margin-left: 18px;
 }
+.clearboth {
+    clear: both;
+    padding-top: 40px;
+}
