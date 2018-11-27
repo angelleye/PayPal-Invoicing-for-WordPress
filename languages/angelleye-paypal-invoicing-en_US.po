@@ -669,8 +669,8 @@ msgid "Due date:"
 msgstr "Due date:"
 
 #: admin/views/html-admin-page-view-invoice.php:88
-msgid "Merchant Info:"
-msgstr "Merchant Info:"
+msgid "Merchant Info"
+msgstr "Merchant Info"
 
 #: admin/views/html-admin-page-view-invoice.php:280
 msgid "Notes"

@@ -28,6 +28,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
         $this->secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : '';
         $this->paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_email'] : '';
+        $this->sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
         $this->note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
         $this->terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
         $this->init_form_fields();
@@ -41,7 +42,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         if ($this->testmode == true) {
             $this->rest_client_id = $this->sandbox_client_id;
             $this->rest_secret_id = $this->sandbox_secret;
-            $this->rest_paypal_email = $this->paypal_email;
+            $this->rest_paypal_email = $this->sandbox_paypal_email;
         } else {
             $this->rest_client_id = $this->client_id;
             $this->rest_secret_id = $this->secret;
@@ -90,26 +91,13 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
 
     public function admin_options() {
         ?>
-        <h3><?php _e('PayPal Invoice', 'paypal-for-woocommerce'); ?></h3>
-        <p><?php _e($this->method_description, 'paypal-for-woocommerce'); ?></p>
+        <h3><?php _e('PayPal Invoice', 'angelleye-paypal-invoicing'); ?></h3>
+        <p><?php _e($this->method_description, 'angelleye-paypal-invoicing'); ?></p>
         <table class="form-table">
             <?php
             $this->generate_settings_html();
             ?>
         </table> 
-        <script type="text/javascript">
-            jQuery('#woocommerce_pifw_paypal_invoice_enable_paypal_sandbox').change(function () {
-                var sandbox = jQuery('#woocommerce_pifw_paypal_invoice_sandbox_client_id, #woocommerce_pifw_paypal_invoice_sandbox_secret, #woocommerce_pifw_paypal_invoice_sandbox_paypal_email').closest('tr'),
-                        production = jQuery('#woocommerce_pifw_paypal_invoice_client_id, #woocommerce_pifw_paypal_invoice_secret, #woocommerce_pifw_paypal_invoice_paypal_email').closest('tr');
-                if (jQuery(this).is(':checked')) {
-                    sandbox.show();
-                    production.hide();
-                } else {
-                    sandbox.hide();
-                    production.show();
-                }
-            }).change();
-        </script>
         <?php
     }
 
@@ -161,7 +149,12 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->request = new AngellEYE_PayPal_Invoicing_Request(null, null);
         $invoice_id = $this->request->angelleye_paypal_invoicing_create_invoice_for_wc_order($order, true);
         if (!empty($invoice_id) && $invoice_id != false) {
-            update_post_meta($order_id, '_transaction_id', pifw_clean($invoice_id));
+            $invoice = $this->request->angelleye_paypal_invoicing_get_invoice_details($invoice_id);
+            $post_id = $this->request->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
+            update_post_meta($order_id, '_paypal_invoice_id', $invoice_id);
+            update_post_meta($order_id, '_paypal_invoice_wp_post_id', $post_id);
+            update_post_meta($post_id, '_order_id', $order_id);
+            $order->add_order_note(__("We've sent your invoice.", 'angelleye-paypal-invoicing'));
             if ($order->get_total() > 0) {
                 $order->update_status('on-hold', _x('Awaiting payment', 'PayPal Invoice', 'angelleye-paypal-invoicing'));
             } else {
