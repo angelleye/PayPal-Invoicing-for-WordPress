@@ -28,6 +28,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         $this->client_id = isset($apifw_setting['client_id']) ? $apifw_setting['client_id'] : '';
         $this->secret = isset($apifw_setting['secret']) ? $apifw_setting['secret'] : '';
         $this->paypal_email = isset($apifw_setting['paypal_email']) ? $apifw_setting['paypal_email'] : '';
+        $this->sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_setting['sandbox_paypal_email'] : '';
         $this->note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
         $this->terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
         $this->init_form_fields();
@@ -41,7 +42,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
         if ($this->testmode == true) {
             $this->rest_client_id = $this->sandbox_client_id;
             $this->rest_secret_id = $this->sandbox_secret;
-            $this->rest_paypal_email = $this->paypal_email;
+            $this->rest_paypal_email = $this->sandbox_paypal_email;
         } else {
             $this->rest_client_id = $this->client_id;
             $this->rest_secret_id = $this->secret;
@@ -97,19 +98,6 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
             $this->generate_settings_html();
             ?>
         </table> 
-        <script type="text/javascript">
-            jQuery('#woocommerce_pifw_paypal_invoice_enable_paypal_sandbox').change(function () {
-                var sandbox = jQuery('#woocommerce_pifw_paypal_invoice_sandbox_client_id, #woocommerce_pifw_paypal_invoice_sandbox_secret, #woocommerce_pifw_paypal_invoice_sandbox_paypal_email').closest('tr'),
-                        production = jQuery('#woocommerce_pifw_paypal_invoice_client_id, #woocommerce_pifw_paypal_invoice_secret, #woocommerce_pifw_paypal_invoice_paypal_email').closest('tr');
-                if (jQuery(this).is(':checked')) {
-                    sandbox.show();
-                    production.hide();
-                } else {
-                    sandbox.hide();
-                    production.show();
-                }
-            }).change();
-        </script>
         <?php
     }
 

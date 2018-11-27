@@ -71,7 +71,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $this->apifw_access_token = get_transient('apifw_sandbox_access_token', false);
             $this->rest_client_id = ( isset($this->apifw_setting['sandbox_client_id']) && !empty($this->apifw_setting['sandbox_client_id']) ) ? $this->apifw_setting['sandbox_client_id'] : '';
             $this->rest_secret_id = ( isset($this->apifw_setting['sandbox_secret']) && !empty($this->apifw_setting['sandbox_secret']) ) ? $this->apifw_setting['sandbox_secret'] : '';
-            $this->rest_paypal_email = isset($this->apifw_setting['paypal_email']) ? $this->apifw_setting['paypal_email'] : '';
+            $this->rest_paypal_email = isset($this->apifw_setting['sandbox_paypal_email']) ? $this->apifw_setting['sandbox_paypal_email'] : '';
             $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL);
         } else {
             $this->apifw_refresh_token = get_option('apifw_live_refresh_token', false);
