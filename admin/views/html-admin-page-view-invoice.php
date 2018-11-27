@@ -11,10 +11,10 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
             <div class="row">
                 <div class="col-sm-8">
                     <?php if (!empty($apifw_company_logo)) { ?>
-                        <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+                        <img src="<?php echo $apifw_company_logo; ?>" class="rounded img-fluid float-left">
                     <?php } ?>
-                    <h4 class="mb-3" style="clear: both;"><br><?php echo __('Merchant Info', 'angelleye-paypal-invoicing'); ?></h4>
-                    <div>
+                    <br>
+                    <div class="mt30-invoice clearboth">
                         <?php echo isset($invoice['merchant_info']['address']['first_name']) ? $invoice['merchant_info']['address']['first_name'] : ''; ?>
                         <?php echo isset($invoice['merchant_info']['address']['last_name']) ? $invoice['merchant_info']['address']['last_name'] : ''; ?>
                     </div>
