@@ -2,6 +2,9 @@
     .pifw_lable_left {
         text-align: left !important;
     }
+    .company_logo {
+        margin-left: 0px !important;
+    }
 }
 
 .mt30-invoice {
@@ -374,4 +377,7 @@ body {
 #invoiceDiscType, #invoiceTerms {
     padding: .375rem .75rem !important;
     height: inherit;
+}
+.company_logo {
+    margin-left: 18px;
 }
