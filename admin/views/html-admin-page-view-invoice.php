@@ -1,6 +1,7 @@
 <?php
 $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
 $status = get_post_meta($post->ID, 'status', true);
+$apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url']) ) ? $invoice['logo_url'] : '';
 ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
@@ -15,6 +16,9 @@ $status = get_post_meta($post->ID, 'status', true);
             <br>
             <div class="row">
                 <div class="col-sm-8">
+                    <?php if( !empty($apifw_company_logo)) { ?>
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left">
+            <?php } ?>
                 </div>
                 <div class="col-sm-4 invoice-view-info">
                     <?php
