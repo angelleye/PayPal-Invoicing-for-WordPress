@@ -7,6 +7,8 @@
             if (jQuery(this).is(':checked')) {
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').hide();
+                jQuery('#apifw_sandbox_paypal_email').closest('.row').show();
+                jQuery('#apifw_paypal_email').closest('.row').hide();
                 production.hide();
                 if (jQuery('#apifw_sandbox_client_id').val().length === 0 && jQuery('#apifw_sandbox_secret').val().length === 0) {
                     sandbox.hide();
@@ -16,13 +18,15 @@
             } else {
                 jQuery('.angelleye_paypal_invoicing_live_connect_box').show();
                 jQuery('.angelleye_paypal_invoicing_sandbox_connect_box').hide();
+                jQuery('#apifw_sandbox_paypal_email').closest('.row').hide();
+                jQuery('#apifw_paypal_email').closest('.row').show();
                 sandbox.hide();
                 if (jQuery('#apifw_client_id').val().length === 0 && jQuery('#apifw_secret').val().length === 0) {
                     production.hide();
                 } else {
                     production.show();
                 }
-                
+
             }
         }).change();
         jQuery('#invoiceTerms').change(function () {
@@ -251,6 +255,35 @@
                     production.toggle();
                 }
             });
+            if (angelleye_paypal_invoicing_js.is_ssl == "yes") {
+                jQuery("#apifw_company_logo").after('<a href="#" id="checkout_logo" class="button_upload button">Upload</a>');
+            }
+            var custom_uploader;
+            $('.button_upload').click(function (e) {
+                var BTthis = jQuery(this);
+                e.preventDefault();
+                custom_uploader = wp.media.frames.file_frame = wp.media({
+                    title: angelleye_paypal_invoicing_js.choose_image,
+                    button: {
+                        text: angelleye_paypal_invoicing_js.choose_image
+                    },
+                    multiple: false
+                });
+                custom_uploader.on('select', function () {
+                    var attachment = custom_uploader.state().get('selection').first().toJSON();
+                    var pre_input = BTthis.prev();
+                    var url = attachment.url;
+                    if (BTthis.attr('id') != 'upload') {
+                        if (attachment.url.indexOf('http:') > -1) {
+                            url = url.replace('http', 'https');
+                        }
+                    }
+                    pre_input.val(url);
+                });
+                //Open the uploader dialog
+                custom_uploader.open();
+            });
+
         });
     });
 })(jQuery);
