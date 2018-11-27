@@ -176,7 +176,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                             <tr>
                                 <th><?php echo __('Discount', 'angelleye-paypal-invoicing'); ?></th>
                                 <td>
-                                    <input name="invDiscount" id="invDiscount" class="text short-field" placeholder="0.00" type="text">
+                                        <input name="invDiscount" id="invDiscount" class="text form-control" placeholder="0.00" type="text">
                                 </td>
                                 <td>
                                     <select name="invoiceDiscType" id="invoiceDiscType" class="select form-control">
