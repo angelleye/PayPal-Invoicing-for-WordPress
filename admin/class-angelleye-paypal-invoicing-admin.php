@@ -107,7 +107,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 'name' => __('Manage Invoices', 'angelleye-paypal-invoicing'),
                 'singular_name' => __('PayPal Invoice', 'angelleye-paypal-invoicing'),
                 'all_items' => __('Manage Invoices', 'angelleye-paypal-invoicing'),
-                'menu_name' => _x('PayPal Invoice', 'Admin menu name', 'angelleye-paypal-invoicing'),
+                'menu_name' => _x('PayPal Invoicing', 'Admin menu name', 'angelleye-paypal-invoicing'),
                 'add_new' => __('Create Invoice', 'angelleye-paypal-invoicing'),
                 'add_new_item' => __('Add New Invoice', 'angelleye-paypal-invoicing'),
                 'edit' => __('Edit', 'angelleye-paypal-invoicing'),
