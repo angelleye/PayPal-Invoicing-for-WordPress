@@ -121,18 +121,18 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 'parent' => __('Parent PayPal Invoice', 'angelleye-paypal-invoicing')
             ),
             'description' => __('This is where you can add new PayPal Invoice to your store.', 'angelleye-paypal-invoicing'),
-            'public' => true,
+            'public' => false,
             'show_ui' => true,
             'show_in_menu' => true,
             'capability_type' => 'post',
             'map_meta_cap' => true,
-            'publicly_queryable' => true,
-            'exclude_from_search' => false,
+            'publicly_queryable' => false,
+            'exclude_from_search' => true,
             'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
-            'query_var' => true,
+            'query_var' => false,
             'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png',
             'supports' => array('', ''),
-            'has_archive' => true,
+            'has_archive' => false,
             'show_in_nav_menus' => true
                         )
                 )
@@ -1206,6 +1206,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 
             }
         }
+    }
+    
+    public function angelleye_log_errors() {
+        $GLOBALS['wpdb']->query( 'COMMIT;' );
     }
 
 }
