@@ -198,6 +198,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                             }
                             update_option('angelleye_paypal_invoice_last_page_synce_number', $page);
                         } else {
+                            delete_option('angelleye_paypal_invoice_last_page_synce_number');
                             $wpdb->query( 'COMMIT;' );
                             wp_defer_term_counting( false );
                             wp_defer_comment_counting( false );
