@@ -196,23 +196,25 @@ class AngellEYE_PayPal_Invoicing_Request {
                             foreach ($invoices_array_data['invoices'] as $key => $invoice) {
                                 $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                             }
-                            update_option('angelleye_paypal_invoice_last_page_synce_number', $page);
                         } else {
-                            delete_option('angelleye_paypal_invoice_last_page_synce_number');
-                            $wpdb->query( 'COMMIT;' );
-                            wp_defer_term_counting( false );
-                            wp_defer_comment_counting( false );
                             $bool = false;
                             break;
                         }
                     } else {
 
                     }
+                    update_option('angelleye_paypal_invoice_last_page_synce_number', $page);
                     $page = $page + 1000;
                 }
+                delete_option('angelleye_paypal_invoice_last_page_synce_number');
+                $wpdb->query( 'COMMIT;' );
+                wp_defer_term_counting( false );
+                wp_defer_comment_counting( false );
             }
         } catch (Exception $ex) {
-
+            $wpdb->query( 'COMMIT;' );
+            wp_defer_term_counting( false );
+            wp_defer_comment_counting( false );
         }
         
     }
@@ -242,9 +244,9 @@ class AngellEYE_PayPal_Invoicing_Request {
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
-                update_post_meta($post_id, $key, pifw_clean($value));
+                add_post_meta($post_id, $key, pifw_clean($value));
             }
-            update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
+            add_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
             return $post_id;
         } else {
             $insert_invoice_array['ID'] = $existing_post_id;
