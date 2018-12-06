@@ -238,9 +238,10 @@ class AngellEYE_PayPal_Invoicing_Request {
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['number'],
             'post_author' => 0,
-            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date'])),
+            'post_name' => sanitize_title($invoice['id'])
         );
-        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_data_array['number']);
+        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_name(sanitize_title($invoice['id']));
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
@@ -259,11 +260,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         return $existing_post_id;
     }
 
-    public function angelleye_paypal_invoicing_exist_post_by_title($paypal_invoice_txn_id) {
+    public function angelleye_paypal_invoicing_exist_post_by_name($paypal_invoice_txn_id) {
 
         global $wpdb;
 
-        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_title = %s AND post_type = %s ", $paypal_invoice_txn_id, 'paypal_invoices'));
+        $post_data = $wpdb->get_col($wpdb->prepare("SELECT ID FROM {$wpdb->posts} WHERE post_name = %s AND post_type = %s ", $paypal_invoice_txn_id, 'paypal_invoices'));
 
         if (empty($post_data)) {
 
