@@ -176,6 +176,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter( 'get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label'  );
         $this->loader->add_action( 'parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
         $this->loader->add_action( 'angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        register_shutdown_function( array( $plugin_admin, 'angelleye_log_errors' ) );
     }
 
     /**
