@@ -106,8 +106,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'labels' => array(
                 'name' => __('Manage Invoices', 'angelleye-paypal-invoicing'),
                 'singular_name' => __('PayPal Invoice', 'angelleye-paypal-invoicing'),
-                'menu_name' => _x('Manage Invoices', 'Manage Invoices', 'angelleye-paypal-invoicing'),
-                'add_new' => __('Add Invoice', 'angelleye-paypal-invoicing'),
+                'all_items' => __('Manage Invoices', 'angelleye-paypal-invoicing'),
+                'menu_name' => _x('PayPal Invoicing', 'Admin menu name', 'angelleye-paypal-invoicing'),
+                'add_new' => __('Create Invoice', 'angelleye-paypal-invoicing'),
                 'add_new_item' => __('Add New Invoice', 'angelleye-paypal-invoicing'),
                 'edit' => __('Edit', 'angelleye-paypal-invoicing'),
                 'edit_item' => __('Invoice Details', 'angelleye-paypal-invoicing'),
@@ -122,17 +123,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'description' => __('This is where you can add new PayPal Invoice to your store.', 'angelleye-paypal-invoicing'),
             'public' => true,
             'show_ui' => true,
-            'show_in_menu' => 'apifw_manage_invoces',
+            'show_in_menu' => true,
             'capability_type' => 'post',
             'map_meta_cap' => true,
             'publicly_queryable' => true,
             'exclude_from_search' => false,
             'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
             'query_var' => true,
-            'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-for-wordpress-icon.png',
+            'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png',
             'supports' => array('', ''),
             'has_archive' => true,
-            'show_in_nav_menus' => false
+            'show_in_nav_menus' => true
                         )
                 )
         );
@@ -148,11 +149,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
         remove_meta_box('revisionsdiv', 'paypal_invoices', 'normal');
         remove_meta_box('authordiv', 'paypal_invoices', 'normal');
         remove_meta_box('sqpt-meta-tags', 'paypal_invoices', 'normal');
-        add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
+        //add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
         // add_submenu_page('apifw_manage_invoces', 'Manage Invoces', 'Manage Invoces', 'manage_options', 'apifw_manage_invoces', array($this, 'angelleye_paypal_invoicing_manage_invoicing_content'));
-        // add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'apifw_create_invoces', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
+         //add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'post-new.php?post_type=paypal_invoices', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
         //add_submenu_page('apifw_manage_invoces', 'Manage Items', 'Manage Items', 'manage_options', 'apifw_manage_items', array($this, 'angelleye_paypal_invoicing_manage_items_content'));
-        add_submenu_page('apifw_manage_invoces', 'Settings', 'Settings', 'manage_options', 'apifw_settings', array($this, 'angelleye_paypal_invoicing_settings_content'));
+         add_submenu_page('edit.php?post_type=paypal_invoices', 'Settings', 'Settings', 'manage_options', 'apifw_settings', array($this, 'angelleye_paypal_invoicing_settings_content'));
         //add_submenu_page('apifw_manage_invoces', 'Address Book', 'Address Book', 'manage_options', 'apifw_address_book', array($this, 'angelleye_paypal_invoicing_address_book_content'));
         //add_submenu_page('apifw_manage_invoces', 'Business Information Settings', 'Business Information', 'manage_options', 'apifw_business_information', array($this, 'angelleye_paypal_invoicing_business_information_content'));
         //add_submenu_page('apifw_manage_invoces', 'Tax Settings', 'Tax Information', 'manage_options', 'apifw_tax_settings', array($this, 'angelleye_paypal_invoicing_tax_information_content'));
@@ -266,7 +267,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         ?>
         <br>
         <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
-            <?php echo wp_kses_post(sprintf(__('PayPal API credentials is not set up, <a href="%s" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing'), admin_url('admin.php?page=apifw_settings'))) . PHP_EOL; ?>
+        <?php echo wp_kses_post(sprintf(__('PayPal API credentials is not set up, <a href="%s" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing'), admin_url('admin.php?page=apifw_settings'))) . PHP_EOL; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -782,11 +783,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                         $amount = $invoice['total_amount'];
                         $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
-                        if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
-                            if( $this->request->testmode == true ) {
-                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                            if ($this->request->testmode == true) {
+                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                             } else {
-                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                             }
                             $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
                         } else {
@@ -1154,7 +1155,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 } else {
                     $apifw_setting['paypal_email'] = $user_data['email'];
                 }
-                
             }
             if (!empty($user_data['name'])) {
                 $full_name = explode(" ", $user_data['name']);
@@ -1183,17 +1183,17 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $order = wc_get_order($order_id);
                 if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
                     $order->update_status('completed');
-                    if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
+                    if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
                         update_post_meta($post_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
                     }
                     $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                     $amount = $invoice['total_amount'];
                     $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
-                    if( isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id']) ) {
-                        if( $this->request->testmode == true ) {
-                            $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                    if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                        if ($this->request->testmode == true) {
+                            $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                         } else {
-                            $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=".$invoice['payments'][0]['transaction_id'];
+                            $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                         }
                         $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                     }
