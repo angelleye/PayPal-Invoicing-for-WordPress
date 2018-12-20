@@ -168,6 +168,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'tax_rate' => $this->tax_rate,
             'is_ssl' => is_ssl() ? 'yes' : 'no',
             'choose_image' => __('Choose Image', 'angelleye-paypal-invoicing'),
+            'dateFormat' => angelleye_date_format_php_to_js(get_option( 'date_format' ))
         );
         wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
         wp_enqueue_style($this->plugin_name . 'bootstrap');

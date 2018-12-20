@@ -61,11 +61,11 @@
             count_sub_total();
         });
         jQuery('#dueDate').datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
         });
         jQuery("#dueDate").datepicker("option", "minDate", new Date());
         jQuery('#invoice_date').datepicker({
-            dateFormat: 'dd/mm/yy',
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat,
             onSelect: function (dateText, inst) {
                 jQuery("#dueDate").datepicker("option", "minDate",
                         jQuery("#invoice_date").datepicker("getDate"));
