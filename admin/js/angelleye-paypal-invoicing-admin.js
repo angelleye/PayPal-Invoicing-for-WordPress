@@ -119,7 +119,12 @@
                     tax = 0.00;
                 }
                 var tax_name = jQuery(this).parent().next().next().next().children('input[type="text"]').val();
-                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children('input[type="text"]').val());
+                if (tax_name != '') {
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", true);
+                } else {
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", false);
+                }
+                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').val());
                 if (isNaN(tax)) {
                     tax = 0.00;
                 }
