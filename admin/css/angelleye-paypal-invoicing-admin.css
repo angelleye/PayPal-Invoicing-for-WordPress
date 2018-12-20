@@ -56,13 +56,16 @@
     width: 500px !important;
 }
 .pifw-item-qty {
-    width: 100px !important;
+    width: 90px !important;
 }
 .pifw-item-price {
     width: 90px !important;
 }
 .pifw-item-tax {
-    width: 200px !important;
+    width: 120px !important;
+}
+.pifw-item-tax-rate {
+    width: 128px !important;
 }
 .pifw-item-action {
     width: 50px !important;
