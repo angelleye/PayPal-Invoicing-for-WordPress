@@ -2,6 +2,9 @@
     .pifw_lable_left {
         text-align: left !important;
     }
+    .company_logo {
+        margin-left: 0px !important;
+    }
 }
 
 .mt30-invoice {
@@ -378,4 +381,7 @@ body {
 .clearboth {
     clear: both;
     padding-top: 40px;
+}
+.company_logo {
+    margin-left: 18px;
 }
