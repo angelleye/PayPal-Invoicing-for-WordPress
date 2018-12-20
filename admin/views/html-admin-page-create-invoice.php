@@ -106,8 +106,9 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                         <th scope="col" class="pifw-item-name"><?php echo __('Description', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-qty"><?php echo __('Quantity', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-price"><?php echo __('Price', 'angelleye-paypal-invoicing'); ?></th>
-                        <th colspan="2" scope="col" class="pifw-item-tax" style="text-align: center;"><?php echo __('Tax', 'angelleye-paypal-invoicing'); ?></th>
-                        <th  scope="col" class="pifw-item-amount"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-tax"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-tax-rate"><?php echo __('Tax Rate', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-amount"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-action"></th>
                     </tr>
                 </thead>
@@ -117,7 +118,15 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                         <td><input name="item_qty[]" value="" id="item_qty" class="form-control" type="text" placeholder="<?php echo __('0'); ?>" required></td>
                         <td><input name="item_amt[]" value="" id="item_amt" class="form-control" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
                         <td><input name="item_txt_name[]" id="item_txt_name" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_txt_rate[]" id="item_txt_rate" class="form-control" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td>
+                            <div class="input-group">
+                                <input name="item_txt_rate[]" id="item_txt_rate" class="form-control" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" required>
+                                <div class="input-group-prepend">
+                                <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                              </div>
+                            </div>
+                            
+                        </td>
                         <td rowspan="2" class="amount">0.00</td>
                         <td class="no-border"></td>
                     </tr>
