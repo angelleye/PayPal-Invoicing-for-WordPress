@@ -648,7 +648,7 @@ class AngellEYE_PayPal_Invoicing_Request {
     public function angelleye_paypal_invoicing_create_invoice($post_ID, $post, $update) {
         try {
             $post_data = pifw_clean($_REQUEST);
-            $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date("d/m/Y");
+            $invoice_date = (isset($post_data['invoice_date'])) ? $post_data['invoice_date'] : date_i18n(get_option('date_format'), strtotime(date("d/m/Y")));
             //$invoice_date_obj = DateTime::createFromFormat('d/m/Y', $invoice_date);
             //$invoice_date = $invoice_date_obj->format('Y-m-d e');
             $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
