@@ -252,7 +252,7 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                     <div class="form-group row">
                         <label for="apifw_item_quantity" class="col-sm-4 col-form-label"><?php echo __('Item Quantity', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="apifw_tax_name" placeholder="" name="item_quantity" value="<?php echo esc_attr($item_quantity); ?>">
+                            <input type="text" class="form-control" id="apifw_item_quantity" placeholder="" name="item_quantity" value="<?php echo esc_attr($item_quantity); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
