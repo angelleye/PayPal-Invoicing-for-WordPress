@@ -53,6 +53,7 @@
             $first_row.find('.amount').html('');
             $first_row.find("#item_txt_name").val(angelleye_paypal_invoicing_js.tax_name);
             $first_row.find("#item_txt_rate").val(angelleye_paypal_invoicing_js.tax_rate);
+            $first_row.find("#item_qty").val(angelleye_paypal_invoicing_js.item_qty);
             $table.append($first_row);
         });
         jQuery(document).on('click', '.deleteItem', function (event) {
