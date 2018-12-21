@@ -108,6 +108,7 @@
             var i = 0;
             var tax_array = [];
             var new_tax_array = [];
+            jQuery('#tax_tr_0').html('');
             jQuery('input[name="item_name[]"]').each(function () {
                 jQuery('#tax_tr_' + (i + 1)).html('');
                 var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
@@ -123,6 +124,7 @@
                     jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", true);
                 } else {
                     jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", false);
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').trigger("change");
                 }
                 var tax = parseFloat(jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').val());
                 if (isNaN(tax)) {
