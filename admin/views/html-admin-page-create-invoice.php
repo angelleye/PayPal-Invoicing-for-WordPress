@@ -121,7 +121,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                         <td><input name="item_txt_name[]" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>"></td>
                         <td>
                             <div class="input-group">
-                                <input name="item_txt_rate[]" class="form-control" type="text" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')">
+                                <input name="item_txt_rate[]" class="form-control" type="text" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
                               </div>
