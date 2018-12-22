@@ -378,6 +378,10 @@ body {
     padding: .375rem .75rem !important;
     height: inherit;
 }
+.clearboth {
+    clear: both;
+    padding-top: 40px;
+}
 .company_logo {
     margin-left: 18px;
 }
