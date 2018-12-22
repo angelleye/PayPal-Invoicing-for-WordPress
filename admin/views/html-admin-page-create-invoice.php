@@ -42,7 +42,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-6 col-11">
-                    <input type="text" class="form-control" value="<?php echo date("d/m/Y"); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
+                    <input type="text" class="form-control" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("You can select any invoice date. This invoice will be sent today or on a future date you choose.", 'angelleye-paypal-invoicing'); ?>"></span>
@@ -73,7 +73,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row" id="dueDate_box">
                 <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="dueDate" placeholder="<?php echo __('d/m/Y', 'angelleye-paypal-invoicing'); ?>" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date("d/m/Y"); ?>">
+                    <input type="text" class="form-control" id="dueDate" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>">
                 </div>
             </div>
         </div>
