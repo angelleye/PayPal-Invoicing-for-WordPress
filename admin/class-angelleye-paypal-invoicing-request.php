@@ -685,10 +685,11 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $items[$key]->getUnitPrice()
                             ->setCurrency('USD')
                             ->setValue($post_data['item_amt'][$key]);
-
-                    $tax = new \PayPal\Api\Tax();
-                    $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
-                    $items[$key]->setTax($tax);
+                    if(!empty($post_data['item_txt_rate'][$key])) {
+                        $tax = new \PayPal\Api\Tax();
+                        $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
+                        $items[$key]->setTax($tax);
+                    }
                 }
             }
 
