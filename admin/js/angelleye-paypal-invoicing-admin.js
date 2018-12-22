@@ -53,6 +53,7 @@
             $first_row.find('.amount').html('');
             $first_row.find("#item_txt_name").val(angelleye_paypal_invoicing_js.tax_name);
             $first_row.find("#item_txt_rate").val(angelleye_paypal_invoicing_js.tax_rate);
+            $first_row.find("#item_qty").val(angelleye_paypal_invoicing_js.item_qty);
             $table.append($first_row);
         });
         jQuery(document).on('click', '.deleteItem', function (event) {
@@ -61,11 +62,11 @@
             count_sub_total();
         });
         jQuery('#dueDate').datepicker({
-            dateFormat: 'dd/mm/yy'
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
         });
         jQuery("#dueDate").datepicker("option", "minDate", new Date());
         jQuery('#invoice_date').datepicker({
-            dateFormat: 'dd/mm/yy',
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat,
             onSelect: function (dateText, inst) {
                 jQuery("#dueDate").datepicker("option", "minDate",
                         jQuery("#invoice_date").datepicker("getDate"));
@@ -108,6 +109,7 @@
             var i = 0;
             var tax_array = [];
             var new_tax_array = [];
+            jQuery('#tax_tr_0').html('');
             jQuery('input[name="item_name[]"]').each(function () {
                 jQuery('#tax_tr_' + (i + 1)).html('');
                 var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
@@ -119,7 +121,13 @@
                     tax = 0.00;
                 }
                 var tax_name = jQuery(this).parent().next().next().next().children('input[type="text"]').val();
-                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children('input[type="text"]').val());
+                if (tax_name != '') {
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", true);
+                } else {
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", false);
+                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').trigger("change");
+                }
+                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').val());
                 if (isNaN(tax)) {
                     tax = 0.00;
                 }
