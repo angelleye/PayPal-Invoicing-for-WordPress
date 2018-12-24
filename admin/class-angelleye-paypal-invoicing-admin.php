@@ -49,6 +49,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->apifw_setting = get_option('apifw_setting');
         $this->tax_rate = isset($this->apifw_setting['tax_rate']) ? $this->apifw_setting['tax_rate'] : '';
         $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : '';
+        $this->item_quantity = isset($this->apifw_setting['item_quantity']) ? $this->apifw_setting['item_quantity'] : '1';
         $this->get_access_token_url = '';
     }
 
@@ -168,6 +169,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'tax_rate' => $this->tax_rate,
             'is_ssl' => is_ssl() ? 'yes' : 'no',
             'choose_image' => __('Choose Image', 'angelleye-paypal-invoicing'),
+            'item_qty' => $this->item_quantity,
             'dateFormat' => angelleye_date_format_php_to_js(get_option( 'date_format' ))
         );
         wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
@@ -279,7 +281,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'apifw_company_logo', 'sandbox_paypal_email');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'apifw_company_logo', 'sandbox_paypal_email', 'item_quantity');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = pifw_clean($_POST[$value]);

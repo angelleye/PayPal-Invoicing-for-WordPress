@@ -33,6 +33,7 @@ $shipping_rate = isset($apifw_setting['shipping_rate']) ? $apifw_setting['shippi
 $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : '';
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : '';
+$item_quantity = isset($apifw_setting['item_quantity']) ? $apifw_setting['item_quantity'] : '1';
 $note_to_recipient = isset($apifw_setting['note_to_recipient']) ? $apifw_setting['note_to_recipient'] : '';
 $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_setting['terms_and_condition'] : '';
 $debug_log = isset($apifw_setting['debug_log']) ? $apifw_setting['debug_log'] : '';
@@ -246,6 +247,12 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                         <label for="apifw_tax_rate" class="col-sm-4 col-form-label"><?php echo __('Tax Rate %', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="apifw_tax_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" name="tax_rate" value="<?php echo esc_attr($tax_rate); ?>">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="apifw_item_quantity" class="col-sm-4 col-form-label"><?php echo __('Item Quantity', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="apifw_item_quantity" placeholder="" name="item_quantity" value="<?php echo esc_attr($item_quantity); ?>">
                         </div>
                     </div>
                     <div class="form-group row">

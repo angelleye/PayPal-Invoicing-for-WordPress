@@ -10,6 +10,7 @@ $terms_and_condition = isset($apifw_setting['terms_and_condition']) ? $apifw_set
 $shipping_amount = isset($apifw_setting['shipping_amount']) ? $apifw_setting['shipping_amount'] : '';
 $tax_rate = isset($apifw_setting['tax_rate']) ? $apifw_setting['tax_rate'] : $this->tax_rate;
 $tax_name = isset($apifw_setting['tax_name']) ? $apifw_setting['tax_name'] : $this->tax_name;
+$item_quantity = isset($apifw_setting['item_quantity']) ? $apifw_setting['item_quantity'] : '1';
 $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setting['apifw_company_logo'] : '';
 //echo print_r(_get_cron_array(), true);
 ?>
