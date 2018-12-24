@@ -200,7 +200,8 @@ function pifw_clean($var) {
     }
 }
 
-function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d T', $input_date_format = 'd/m/Y') {
+function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d T') {
+    $input_date_format  = get_option('date_format');
     $string = preg_replace('/[(]+[^*]+/', '', $date);
     $current_offset = get_option('gmt_offset');
     $tzstring = get_option('timezone_string');
@@ -227,4 +228,22 @@ function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d
     }
     $dt = DateTime::createFromFormat($input_date_format, $string);
     return $dt->format($output_date_format);
+}
+
+function angelleye_date_format_php_to_js( $sFormat ) {
+    switch( $sFormat ) {
+        //Predefined WP date formats
+        case 'F j, Y':
+            return( 'MM dd, yy' );
+            break;
+        case 'Y/m/d':
+            return( 'yy/mm/dd' );
+            break;
+        case 'm/d/Y':
+            return( 'mm/dd/yy' );
+            break;
+        case 'd/m/Y':
+            return( 'dd/mm/yy' );
+            break;
+     }
 }

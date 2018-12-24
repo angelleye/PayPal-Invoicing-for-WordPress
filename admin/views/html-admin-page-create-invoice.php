@@ -43,7 +43,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-6 col-11">
-                    <input type="text" class="form-control" value="<?php echo date("d/m/Y"); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
+                    <input type="text" class="form-control" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("You can select any invoice date. This invoice will be sent today or on a future date you choose.", 'angelleye-paypal-invoicing'); ?>"></span>
@@ -74,7 +74,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row" id="dueDate_box">
                 <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
                 <div class="col-sm-7">
-                    <input type="text" class="form-control" id="dueDate" placeholder="<?php echo __('d/m/Y', 'angelleye-paypal-invoicing'); ?>" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date("d/m/Y"); ?>">
+                    <input type="text" class="form-control" id="dueDate" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>">
                 </div>
             </div>
         </div>
@@ -107,18 +107,27 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                         <th scope="col" class="pifw-item-name"><?php echo __('Description', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-qty"><?php echo __('Quantity', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-price"><?php echo __('Price', 'angelleye-paypal-invoicing'); ?></th>
-                        <th colspan="2" scope="col" class="pifw-item-tax" style="text-align: center;"><?php echo __('Tax', 'angelleye-paypal-invoicing'); ?></th>
-                        <th  scope="col" class="pifw-item-amount"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-tax"><?php echo __('Tax Name', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-tax-rate"><?php echo __('Tax Rate', 'angelleye-paypal-invoicing'); ?></th>
+                        <th scope="col" class="pifw-item-amount"><?php echo __('Amount', 'angelleye-paypal-invoicing'); ?></th>
                         <th scope="col" class="pifw-item-action"></th>
                     </tr>
                 </thead>
                 <tbody class="first_tbody">
                     <tr class="invoice-item-data">
-                        <td><input name="item_name[]" value="" id="item_name" class="form-control" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_qty[]" id="item_qty" class="form-control" type="text" placeholder="" required value="<?php echo $item_quantity; ?>"></td>
-                        <td><input name="item_amt[]" value="" id="item_amt" class="form-control" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
-                        <td><input name="item_txt_name[]" id="item_txt_name" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_txt_rate[]" id="item_txt_rate" class="form-control" type="text" value="<?php echo $tax_rate; ?>" placeholder="<?php echo __('Amount', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_name[]" class="form-control" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
+                        <td><input name="item_qty[]" class="form-control" type="text" placeholder="<?php echo __('0'); ?>" required></td>
+                        <td><input name="item_amt[]"  class="form-control" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
+                        <td><input name="item_txt_name[]" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>"></td>
+                        <td>
+                            <div class="input-group">
+                                <input name="item_txt_rate[]" class="form-control" type="text" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                              </div>
+                            </div>
+                            
+                        </td>
                         <td rowspan="2" class="amount">0.00</td>
                         <td class="no-border"></td>
                     </tr>
