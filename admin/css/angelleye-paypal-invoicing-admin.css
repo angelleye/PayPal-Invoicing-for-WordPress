@@ -388,3 +388,6 @@ body {
 .company_logo {
     margin-left: 18px;
 }
+.updated.fade {
+    opacity: 50;
+}
