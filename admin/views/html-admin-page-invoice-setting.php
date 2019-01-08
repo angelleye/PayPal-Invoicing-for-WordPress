@@ -46,6 +46,7 @@ $apifw_live_refresh_token = get_option('apifw_live_refresh_token', false);
 $delete_paypal_sandbox_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'SANDBOX'), admin_url('admin.php?page=apifw_settings'));
 $delete_paypal_live_refresh_token = add_query_arg(array('action' => 'disconnect_paypal', 'mode' => 'LIVE'), admin_url('admin.php?page=apifw_settings'));
 $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setting['apifw_company_logo'] : '';
+$enable_sync_paypal_invoice_history = isset($apifw_setting['enable_sync_paypal_invoice_history']) ? $apifw_setting['enable_sync_paypal_invoice_history'] : '';
 if (is_ssl()) {
     $require_ssl = '';
 } else {
@@ -285,6 +286,37 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                         <label for="apifw_delete_logs" class="col-sm-4 col-form-label"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
                             <button name="apifw_delete_logs" type="submit" value="Delete Logs" class="btn btn-danger"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></button>
+                        </div>
+                    </div>
+                    <h3><?php echo __('Advanced Options', 'angelleye-paypal-invoicing'); ?></h3>
+                    <div class="form-group row">
+                        <div class="col-sm-4"><?php echo __('Sync PayPal Invoice History', 'angelleye-paypal-invoicing'); ?> </div>
+                        <div class="col-sm-8">
+                            <label  for="apifw_enable_sync_paypal_invoice_history">
+                                <input  type="checkbox" id="apifw_enable_sync_paypal_invoice_history" name="enable_sync_paypal_invoice_history" <?php checked($enable_sync_paypal_invoice_history, 'on', true); ?>>
+                                <?php echo __('Enable Sync PayPal Invoice History', 'angelleye-paypal-invoicing'); ?>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sync_paypal_invoice_history_interval" class="col-sm-4 col-form-label"><?php echo __('Sync PayPal Invoice History Interval', 'angelleye-paypal-invoicing'); ?></label>
+                        <div class="col-sm-8">
+                            <select id="sync_paypal_invoice_history_interval" name="sync_paypal_invoice_history_interval" class="widefat" name="schedule">
+                                <option value="every_minute">Every minute</option>
+                                <option value="every_five_minute">Every 5 minutes</option>
+                                <option value="every_ten_minutes">Every 10 Minutes</option>
+                                <option value="every_fifteen_minutes">Every 15 Minutes</option>
+                                <option value="every_twenty_minutes">Every 20 Minutes</option>
+                                <option value="every_twentyfive_minutes">Every 20 Minutes</option>
+                                <option value="every_thirdty_minutes">Every 30 Minutes</option>
+                                <option value="every_thirtyfive_minutes">Every 35 Minutes</option>
+                                <option value="every_forty_minutes">Every 40 Minutes</option>
+                                <option value="every_fortyfive_minutes">Every 45 Minutes</option>
+                                <option value="every_fifty_minutes">Every 50 Minutes</option>
+                                <option value="every_fiftyfive_minutes">Every 55 Minutes</option>
+                                <option value="hourly">Once Hourly</option>
+                                <option value="daily">Once Daily</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group row">
