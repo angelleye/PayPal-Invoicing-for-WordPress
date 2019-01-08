@@ -59,6 +59,22 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
 } elseif (empty ($enable_paypal_sandbox)) {
     $live_email_read_only = !empty($apifw_live_refresh_token) ? 'readonly' : '';
 }
+$sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
+$sync_paypal_invoice_history_interval_array = array(
+    'every_five_minute' => __('Every 5 minutes', 'angelleye-paypal-invoicing'),
+    'every_ten_minutes' => __('Every 10 Minutes', 'angelleye-paypal-invoicing'),
+    'every_fifteen_minutes' => __('Every 15 Minutes', 'angelleye-paypal-invoicing'),
+    'every_twenty_minutes' => __('Every 20 Minutes', 'angelleye-paypal-invoicing'),
+    'every_twentyfive_minutes' => __('Every 25 Minutes', 'angelleye-paypal-invoicing'),
+    'every_thirdty_minutes' => __('Every 30 Minutes', 'angelleye-paypal-invoicing'),
+    'every_thirtyfive_minutes' => __('Every 35 Minutes', 'angelleye-paypal-invoicing'),
+    'every_forty_minutes' => __('Every 40 Minutes', 'angelleye-paypal-invoicing'),
+    'every_fortyfive_minutes' => __('Every 45 Minutes', 'angelleye-paypal-invoicing'),
+    'every_fifty_minutes' => __('Every 50 Minutes', 'angelleye-paypal-invoicing'),
+    'every_fiftyfive_minutes' => __('Every 55 Minutes', 'angelleye-paypal-invoicing'),
+    'hourly' => __('Once Hourly', 'angelleye-paypal-invoicing'),
+    'daily' => __('Once Daily', 'angelleye-paypal-invoicing')
+);
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
@@ -302,20 +318,15 @@ if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
                         <label for="sync_paypal_invoice_history_interval" class="col-sm-4 col-form-label"><?php echo __('Sync PayPal Invoice History Interval', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
                             <select id="sync_paypal_invoice_history_interval" name="sync_paypal_invoice_history_interval" class="widefat" name="schedule">
-                                <option value="every_minute">Every minute</option>
-                                <option value="every_five_minute">Every 5 minutes</option>
-                                <option value="every_ten_minutes">Every 10 Minutes</option>
-                                <option value="every_fifteen_minutes">Every 15 Minutes</option>
-                                <option value="every_twenty_minutes">Every 20 Minutes</option>
-                                <option value="every_twentyfive_minutes">Every 20 Minutes</option>
-                                <option value="every_thirdty_minutes">Every 30 Minutes</option>
-                                <option value="every_thirtyfive_minutes">Every 35 Minutes</option>
-                                <option value="every_forty_minutes">Every 40 Minutes</option>
-                                <option value="every_fortyfive_minutes">Every 45 Minutes</option>
-                                <option value="every_fifty_minutes">Every 50 Minutes</option>
-                                <option value="every_fiftyfive_minutes">Every 55 Minutes</option>
-                                <option value="hourly">Once Hourly</option>
-                                <option value="daily">Once Daily</option>
+                                <?php 
+                                    foreach ($sync_paypal_invoice_history_interval_array as $key => $value) {
+                                        if($key  == $sync_paypal_invoice_history_interval) {
+                                            echo "<option value='$key' selected>$value</option>";      
+                                        } else {
+                                            echo "<option value='$key'>$value</option>";                                
+                                        }
+                                  }  
+                                  ?>
                             </select>
                         </div>
                     </div>

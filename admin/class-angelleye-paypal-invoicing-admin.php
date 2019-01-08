@@ -284,13 +284,14 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_save_setting() {
         $api_setting_field = array();
         if (!empty($_POST['apifw_setting_submit']) && 'save' == $_POST['apifw_setting_submit']) {
-            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'apifw_company_logo', 'sandbox_paypal_email', 'item_quantity');
+            $setting_field_keys = array('sandbox_client_id', 'sandbox_secret', 'client_id', 'secret', 'enable_paypal_sandbox', 'paypal_email', 'first_name', 'last_name', 'compnay_name', 'phone_number', 'address_line_1', 'address_line_2', 'city', 'post_code', 'state', 'country', 'shipping_rate', 'shipping_amount', 'tax_rate', 'tax_name', 'note_to_recipient', 'terms_and_condition', 'debug_log', 'apifw_company_logo', 'sandbox_paypal_email', 'item_quantity', 'enable_sync_paypal_invoice_history', 'sync_paypal_invoice_history_interval');
             foreach ($setting_field_keys as $key => $value) {
                 if (!empty($_POST[$value])) {
                     $api_setting_field[$value] = pifw_clean($_POST[$value]);
                 }
             }
             update_option('apifw_setting', $api_setting_field);
+            AngellEYE_PayPal_Invoicing_Activator::activate();
             echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Your settings have been saved.', 'angelleye-paypal-invoicing') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
