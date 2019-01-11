@@ -29,6 +29,13 @@
 
             }
         }).change();
+        jQuery('#apifw_enable_sync_paypal_invoice_history').change(function () {
+            if (jQuery(this).is(':checked')) {
+                jQuery('#sync_paypal_invoice_history_interval').parent().parent().show();
+            } else {
+                jQuery('#sync_paypal_invoice_history_interval').parent().parent().hide();
+            }
+        }).change();
         jQuery('#invoiceTerms').change(function () {
             if (jQuery(this).val() === 'DUE_ON_DATE_SPECIFIED') {
                 jQuery('#dueDate_box').show();
