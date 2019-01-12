@@ -108,7 +108,7 @@
                 jQuery('#apifw_shipping_amount').val(newVal);
             }
         });
-        jQuery(document).on('change blur keyup', '#angelleye-paypal-invoicing input, #angelleye-paypal-invoicing select', function (event) {
+        jQuery(document).on('input paste keyup', '#angelleye-paypal-invoicing input, #angelleye-paypal-invoicing select', function (event) {
             count_sub_total();
         });
         function count_sub_total() {
@@ -196,7 +196,6 @@
             var new_unique_tax_array = [];
             jQuery.each(new_tax_array, function (index, new_tax_array_first_loop) {
                 if (typeof new_tax_array_first_loop !== 'undefined') {
-                    console.log(new_tax_array[new_tax_array_first_loop.tax_name][new_tax_array_first_loop.tax_digit]);
                     new_unique_tax_array = new_tax_array[new_tax_array_first_loop.tax_name][new_tax_array_first_loop.tax_digit];
                     if (jQuery('#tax_tr_' + i_tax_index).length) {
                         jQuery('#tax_tr_' + i_tax_index).html('<td colspan="3"><b>Tax (' + new_unique_tax_array.tax_digit + '%) </b>' + new_unique_tax_array.tax_name + '</td><td>$<span class="tax_to_add">' + new_unique_tax_array.tax_amount + '</span></td>');
