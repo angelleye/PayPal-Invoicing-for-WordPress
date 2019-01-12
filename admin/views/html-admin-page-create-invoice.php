@@ -32,7 +32,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
         </div>
         <div class="col-12 mt30-invoice col-sm-4">
             <div class="form-group row">
-                <label for="invoice_number" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Invoice number', 'angelleye-paypal-invoicing'); ?> </label>
+                <label for="invoice_number" class="col-sm-5 col-form-label pifw_label_left col-12"><?php echo __('Invoice number', 'angelleye-paypal-invoicing'); ?> </label>
                 <div class="col-sm-6 col-11 ">
                     <input type="text" class="form-control" value="<?php echo isset($this->response['number']) ? esc_attr($this->response['number']) : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
                 </div>
@@ -41,7 +41,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 </div>
             </div>
             <div class="form-group row">
-                <label for="invoice_date" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Invoice date', 'angelleye-paypal-invoicing'); ?></label>
+                <label for="invoice_date" class="col-sm-5 col-form-label pifw_label_left"><?php echo __('Invoice date', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-6 col-11">
                     <input type="text" class="form-control" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>" id="invoice_date" placeholder="" name="invoice_date" required>
                 </div>
@@ -50,13 +50,13 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 </div>
             </div>
             <div class="form-group row">
-                <label for="reference" class="col-sm-5 col-form-label pifw_lable_left col-12"><?php echo __('Reference', 'angelleye-paypal-invoicing'); ?></label>
+                <label for="reference" class="col-sm-5 col-form-label pifw_label_left col-12"><?php echo __('Reference', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-6 col-11">
                     <input type="text" class="form-control" id="reference" placeholder="<?php echo __('Such as PO#', 'angelleye-paypal-invoicing'); ?>" name="reference">
                 </div>
             </div>
             <div class="form-group row" >
-                <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_lable_left"><?php echo __('Due date', 'angelleye-paypal-invoicing'); ?></label>
+                <label for="invoiceTerms" class="col-sm-5 col-form-label pifw_label_left"><?php echo __('Due date', 'angelleye-paypal-invoicing'); ?></label>
                 <div class="col-sm-6 col-11">
                     <select id="invoiceTerms" class="form-control" name="invoiceTerms" required>
                         <option value="NO_DUE_DATE"><?php echo __('No due date', 'angelleye-paypal-invoicing'); ?></option>
@@ -72,7 +72,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 </div>
             </div>
             <div class="form-group row" id="dueDate_box">
-                <label for="dueDate" class="col-sm-5 col-form-label pifw_lable_left"></label>
+                <label for="dueDate" class="col-sm-5 col-form-label pifw_label_left"></label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" id="dueDate" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date_i18n(get_option('date_format'), strtotime(date("d/m/Y"))); ?>">
                 </div>
@@ -82,7 +82,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="bill_to" class="col-sm-2 col-form-label pifw_lable_left"><b><?php echo __('Bill to:', 'angelleye-paypal-invoicing'); ?></b></label>
+                <label for="bill_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Bill to:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
                     <input type="text" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
                 </div>
@@ -92,7 +92,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
     <div class="row">
         <div class="col-6 mt30-invoice">
             <div class="form-group row">
-                <label for="cc_to" class="col-sm-2 col-form-label pifw_lable_left"><b><?php echo __('Cc:', 'angelleye-paypal-invoicing'); ?></b></label>
+                <label for="cc_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Cc:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
                     <input type="text" name="cc_to" class="form-control" id="cc_to" placeholder="">
                 </div>
