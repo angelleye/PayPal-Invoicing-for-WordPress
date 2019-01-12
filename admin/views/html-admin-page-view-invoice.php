@@ -44,7 +44,7 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                         <div class="row">
                             <span class="col-sm-6"></span>
                             <span style="text-align: right;" class="invoiceStatus <?php echo isset($invoice_status_array['class']) ? $invoice_status_array['class'] : 'isDraft'; ?>">
-                                <?php echo $invoice_status_array['lable']; ?>
+                                <?php echo $invoice_status_array['label']; ?>
                             </span>
                             <br>
                         </div>

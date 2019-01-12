@@ -174,18 +174,18 @@ function pifw_get_currency_symbol($currency = '') {
 
 function pifw_get_invoice_status_name_and_class($status) {
     $invoice_status = array(
-        "UNPAID" => array('lable' => 'Unpaid', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
-        "SENT" => array('lable' => 'Unpaid (Sent)', 'class' => 'isDraft', 'action' => array('remind' => 'Remind')),
-        'SCHEDULED' => array('lable' => 'Scheduled', 'class' => 'isDraft'),
-        "DRAFT" => array('lable' => 'Draft', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
-        "PAID" => array('lable' => 'Paid', 'class' => 'isPaid'),
-        "MARKED_AS_PAID" => array('lable' => 'Mark as paid', 'class' => 'isPaid'),
-        "CANCELLED" => array('lable' => 'Cancelled', 'class' => 'isCancelled'),
-        "REFUNDED" => array('lable' => 'Refunded', 'class' => 'isDraft'),
-        "PARTIALLY_REFUNDED" => array('lable' => 'Partially refunded', 'class' => 'isDraft'),
-        "MARKED_AS_REFUNDED" => array('lable' => 'Mark as refunded', 'class' => 'isDraft'),
-        "PAYMENT_PENDING" => array('lable' => 'Payment pending', 'class' => 'isDraft'),
-        "PARTIALLY_PAID" => array('lable' => 'Partially paid', 'class' => 'isPartiallyPaid', 'action' => array('remind' => 'Remind')),
+        "UNPAID" => array('label' => 'Unpaid', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
+        "SENT" => array('label' => 'Unpaid (Sent)', 'class' => 'isDraft', 'action' => array('remind' => 'Remind')),
+        'SCHEDULED' => array('label' => 'Scheduled', 'class' => 'isDraft'),
+        "DRAFT" => array('label' => 'Draft', 'class' => 'isDraft', 'action' => array('send' => 'Send')),
+        "PAID" => array('label' => 'Paid', 'class' => 'isPaid'),
+        "MARKED_AS_PAID" => array('label' => 'Mark as paid', 'class' => 'isPaid'),
+        "CANCELLED" => array('label' => 'Cancelled', 'class' => 'isCancelled'),
+        "REFUNDED" => array('label' => 'Refunded', 'class' => 'isDraft'),
+        "PARTIALLY_REFUNDED" => array('label' => 'Partially refunded', 'class' => 'isDraft'),
+        "MARKED_AS_REFUNDED" => array('label' => 'Mark as refunded', 'class' => 'isDraft'),
+        "PAYMENT_PENDING" => array('label' => 'Payment pending', 'class' => 'isDraft'),
+        "PARTIALLY_PAID" => array('label' => 'Partially paid', 'class' => 'isPartiallyPaid', 'action' => array('remind' => 'Remind')),
     );
     if (!empty($invoice_status[$status])) {
         return $invoice_status[$status];

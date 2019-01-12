@@ -439,7 +439,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $status = get_post_meta($post->ID, 'status', true);
                 if (!empty($status)) {
                     $invoice_status_array = pifw_get_invoice_status_name_and_class($status);
-                    echo isset($invoice_status_array['lable']) ? $invoice_status_array['lable'] : '';
+                    echo isset($invoice_status_array['label']) ? $invoice_status_array['label'] : '';
                 }
                 break;
             case 'amount' :
@@ -1070,7 +1070,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $paypal_invoice_wp_post_id = get_post_meta($order_id, '_paypal_invoice_wp_post_id', true);
             $invoice_status = get_post_meta($paypal_invoice_wp_post_id, 'status', true);
             if (!empty($invoice_status)) {
-                echo "<p class='form-field form-field-wide wc-order-status'><strong>PayPal Invoice Status: </strong><label>" . ucfirst(strtolower($invoice_status)) . "</lable></p>";
+                echo "<p class='form-field form-field-wide wc-order-status'><strong>PayPal Invoice Status: </strong><label>" . ucfirst(strtolower($invoice_status)) . "</label></p>";
             }
         }
     }
