@@ -113,6 +113,8 @@ class AngellEYE_PayPal_Invoicing {
         require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-angelleye-paypal-invoicing-public.php';
 
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-activator.php';
+        
 
         $this->loader = new AngellEYE_PayPal_Invoicing_Loader();
     }
@@ -164,18 +166,19 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 9);
-        $this->loader->add_filter( 'woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_remind_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_remind_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_cancel_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_cancel_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice' , 10, 1 );
+        $this->loader->add_filter('woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_remind_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_remind_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_cancel_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_cancel_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice', 10, 1);
         $this->loader->add_action('woocommerce_admin_order_data_after_order_details', $plugin_admin, 'angelleye_paypal_invoicing_wc_display_paypal_invoice_status', 10, 1);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', 10);
-        $this->loader->add_filter( 'query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var'  );
-        $this->loader->add_filter( 'get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label'  );
-        $this->loader->add_action( 'parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
-        $this->loader->add_action( 'angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        $this->loader->add_filter('query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var');
+        $this->loader->add_filter('get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label');
+        $this->loader->add_action('parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
+        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        register_shutdown_function(array($plugin_admin, 'angelleye_log_errors'));
     }
 
     /**
@@ -233,14 +236,20 @@ class AngellEYE_PayPal_Invoicing {
     }
 
     public function angelleye_paypal_invoicing_new_interval_cron_time($interval) {
-        $interval['every_ten_minutes'] = array('interval' => 600, 'display' => 'Every 10 Minutes');
+        $interval['every_five_minute'] = array('interval' => 60 * 5, 'display' => 'Every 5 Minutes');
+        $interval['every_ten_minutes'] = array('interval' => 60 * 10, 'display' => 'Every 10 Minutes');
+        $interval['every_fifteen_minutes'] = array('interval' => 60 * 15, 'display' => 'Every 15 Minutes');
+        $interval['every_twenty_minutes'] = array('interval' => 60 * 20, 'display' => 'Every 20 Minutes');
+        $interval['every_twentyfive_minutes'] = array('interval' => 60 * 25, 'display' => 'Every 25 Minutes');
+        $interval['every_thirdty_minutes'] = array('interval' => 60 * 30, 'display' => 'Every 30 Minutes');
+        $interval['every_thirtyfive_minutes'] = array('interval' => 60 * 35, 'display' => 'Every 35 Minutes');
+        $interval['every_forty_minutes'] = array('interval' => 60 * 40, 'display' => 'Every 40 Minutes');
+        $interval['every_fortyfive_minutes'] = array('interval' => 60 * 45, 'display' => 'Every 45 Minutes');
+        $interval['every_fifty_minutes'] = array('interval' => 60 * 50, 'display' => 'Every 50 Minutes');
+        $interval['every_fiftyfive_minutes'] = array('interval' => 60 * 55, 'display' => 'Every 55 Minutes');
+        $interval['hourly'] = array('interval' => 60 * 60, 'display' => 'Once Hourly');
+        $interval['daily'] = array('interval' => 60 * 1440, 'display' => 'Once Daily');
         return $interval;
-    }
-
-    public function angelleye_paypal_invoicing_add_wp_schedule_event() {
-        if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-            wp_schedule_event(time(), 'every_ten_minutes', 'angelleye_paypal_invoicing_sync_event');
-        }
     }
 
     public function angelleye_paypal_invoicing_sync_with_paypal() {
