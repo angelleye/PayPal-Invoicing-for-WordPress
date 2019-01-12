@@ -164,18 +164,19 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 9);
-        $this->loader->add_filter( 'woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_remind_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_remind_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_cancel_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_cancel_paypal_invoice' , 10, 1 );
-        $this->loader->add_filter( 'woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice' , 10, 1 );
+        $this->loader->add_filter('woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_remind_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_remind_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_cancel_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_cancel_paypal_invoice', 10, 1);
+        $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_delete_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice', 10, 1);
         $this->loader->add_action('woocommerce_admin_order_data_after_order_details', $plugin_admin, 'angelleye_paypal_invoicing_wc_display_paypal_invoice_status', 10, 1);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', $plugin_admin, 'angelleye_paypal_invoicing_wc_delete_paypal_invoice_ajax', 10);
-        $this->loader->add_filter( 'query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var'  );
-        $this->loader->add_filter( 'get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label'  );
-        $this->loader->add_action( 'parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
-        $this->loader->add_action( 'angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        $this->loader->add_filter('query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var');
+        $this->loader->add_filter('get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label');
+        $this->loader->add_action('parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
+        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        register_shutdown_function(array($plugin_admin, 'angelleye_log_errors'));
     }
 
     /**

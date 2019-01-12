@@ -122,22 +122,25 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 'parent' => __('Parent PayPal Invoice', 'angelleye-paypal-invoicing')
             ),
             'description' => __('This is where you can add new PayPal Invoice to your store.', 'angelleye-paypal-invoicing'),
-            'public' => true,
+            'public' => false,
             'show_ui' => true,
             'show_in_menu' => true,
             'capability_type' => 'post',
             'map_meta_cap' => true,
-            'publicly_queryable' => true,
-            'exclude_from_search' => false,
+            'publicly_queryable' => false,
+            'exclude_from_search' => true,
             'hierarchical' => false, // Hierarchical causes memory issues - WP loads all records!
-            'query_var' => true,
+            'query_var' => false,
             'menu_icon' => ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png',
             'supports' => array('', ''),
-            'has_archive' => true,
+            'has_archive' => false,
             'show_in_nav_menus' => true
                         )
                 )
         );
+
+        $user_id = get_current_user_id();
+        update_user_meta($user_id, 'screen_layout_paypal_invoices', 1);
     }
 
     public function angelleye_paypal_invoicing_top_menu() {
@@ -152,9 +155,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         remove_meta_box('sqpt-meta-tags', 'paypal_invoices', 'normal');
         //add_menu_page('PayPal Invoicing', 'PayPal Invoicing', 'manage_options', 'apifw_manage_invoces', null, ANGELLEYE_PAYPAL_INVOICING_PLUGIN_URL . 'admin/images/angelleye-paypal-invoicing-icom.png', '54.6');
         // add_submenu_page('apifw_manage_invoces', 'Manage Invoces', 'Manage Invoces', 'manage_options', 'apifw_manage_invoces', array($this, 'angelleye_paypal_invoicing_manage_invoicing_content'));
-         //add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'post-new.php?post_type=paypal_invoices', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
+        //add_submenu_page('apifw_manage_invoces', 'Create Invoice', 'Create Invoice', 'manage_options', 'post-new.php?post_type=paypal_invoices', array($this, 'angelleye_paypal_invoicing_create_invoice_content'));
         //add_submenu_page('apifw_manage_invoces', 'Manage Items', 'Manage Items', 'manage_options', 'apifw_manage_items', array($this, 'angelleye_paypal_invoicing_manage_items_content'));
-         add_submenu_page('edit.php?post_type=paypal_invoices', 'Settings', 'Settings', 'manage_options', 'apifw_settings', array($this, 'angelleye_paypal_invoicing_settings_content'));
+        add_submenu_page('edit.php?post_type=paypal_invoices', 'Settings', 'Settings', 'manage_options', 'apifw_settings', array($this, 'angelleye_paypal_invoicing_settings_content'));
         //add_submenu_page('apifw_manage_invoces', 'Address Book', 'Address Book', 'manage_options', 'apifw_address_book', array($this, 'angelleye_paypal_invoicing_address_book_content'));
         //add_submenu_page('apifw_manage_invoces', 'Business Information Settings', 'Business Information', 'manage_options', 'apifw_business_information', array($this, 'angelleye_paypal_invoicing_business_information_content'));
         //add_submenu_page('apifw_manage_invoces', 'Tax Settings', 'Tax Information', 'manage_options', 'apifw_tax_settings', array($this, 'angelleye_paypal_invoicing_tax_information_content'));
@@ -170,7 +173,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'is_ssl' => is_ssl() ? 'yes' : 'no',
             'choose_image' => __('Choose Image', 'angelleye-paypal-invoicing'),
             'item_qty' => $this->item_quantity,
-            'dateFormat' => angelleye_date_format_php_to_js(get_option( 'date_format' ))
+            'dateFormat' => angelleye_date_format_php_to_js(get_option('date_format'))
         );
         wp_localize_script($this->plugin_name, 'angelleye_paypal_invoicing_js', $translation_array);
         wp_enqueue_style($this->plugin_name . 'bootstrap');
@@ -270,7 +273,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         ?>
         <br>
         <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
-        <?php echo wp_kses_post(sprintf(__('PayPal API credentials is not set up, <a href="%s" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing'), admin_url('admin.php?page=apifw_settings'))) . PHP_EOL; ?>
+            <?php echo wp_kses_post(sprintf(__('PayPal API credentials is not set up, <a href="%s" class="alert-link">Click here to set up</a>.', 'angelleye-paypal-invoicing'), admin_url('admin.php?page=apifw_settings'))) . PHP_EOL; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -1209,6 +1212,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 
             }
         }
+    }
+
+    public function angelleye_log_errors() {
+        $GLOBALS['wpdb']->query('COMMIT;');
     }
 
 }
