@@ -14,9 +14,9 @@
  * Domain Path:       /languages
  * GitHub Plugin URI: https://github.com/angelleye/PayPal-Invoicing-for-WordPress
  * Requires at least: 3.8
- * Tested up to: 4.9.8
+ * Tested up to: 5.0.3
  * WC requires at least: 3.0.0
- * WC tested up to: 3.5.0
+ * WC tested up to: 3.5.4
  */
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
