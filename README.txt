@@ -14,6 +14,8 @@ Add PayPal Invoicing functionality to your WordPress dashboard.  Includes full s
 
 = Introduction =
 
+[youtube https://youtu.be/FsQ4dFG8lWE]
+
 Easily create and manage PayPal Invoices from your WordPress / WooCommerce dashboard.
 
  * Create and Send new PayPal Invoices.
