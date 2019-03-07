@@ -97,6 +97,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
         }
+        if ( 'plugins.php' === $hook_suffix ) {
+            wp_enqueue_style( 'deactivation-modal-paypal-invoicing', plugin_dir_url(__FILE__) . 'css/deactivation-modal.css', null, $this->version );
+            wp_enqueue_script( 'deactivation-modal-paypal-invoicing', plugin_dir_url(__FILE__) .  'js/deactivation-form-modal.js', null, $this->version, true );
+            wp_localize_script( 'deactivation-modal-paypal-invoicing', 'angelleye_ajax_data', array( 'nonce' => wp_create_nonce( 'angelleye-ajax' ) ) );
+        }
     }
 
     public function angelleye_paypal_invoicing_sub_menu_manage_invoices() {
@@ -1247,6 +1252,34 @@ class AngellEYE_PayPal_Invoicing_Admin {
 
     public function angelleye_log_errors() {
         $GLOBALS['wpdb']->query('COMMIT;');
+    }
+    
+    public function angelleye_paypal_invoicing_add_deactivation_form() {
+        $current_screen = get_current_screen();
+        if ( 'plugins' !== $current_screen->id && 'plugins-network' !== $current_screen->id ) {
+                return;
+        }
+        include_once ( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/deactivation-form.php');
+    }
+    
+    public function angelleye_handle_plugin_deactivation_request() {
+        $log_url = wc_clean($_SERVER['HTTP_HOST']);
+            $log_plugin_id = 10;
+            $web_services_url = 'http://www.angelleye.com/web-services/wordpress/update-plugin-status.php';
+            $request_url = add_query_arg( array(
+                'url' => $log_url,
+                'plugin_id' => $log_plugin_id,
+                'activation_status' => 0,
+                'reason' => wc_clean($_POST['reason']),
+                'reason_details' => wc_clean($_POST['reason_details']),
+            ), $web_services_url );
+            $response = wp_remote_request($request_url);
+            update_option('angelleye_paypal_invoicing_submited_feedback', 'yes');
+            if (is_wp_error($response)) {
+                wp_send_json(wp_remote_retrieve_body($response));
+            } else {
+                wp_send_json(wp_remote_retrieve_body($response));
+            }
     }
 
 }
