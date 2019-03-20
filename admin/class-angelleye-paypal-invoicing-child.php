@@ -1,6 +1,16 @@
 <?php
 
-class AngellEYE_PayPal_Invoicing_Request extends Invoice {
+namespace PayPal\Api;
+
+use PayPal\Common\PayPalResourceModel;
+use PayPal\Rest\ApiContext;
+use PayPal\Transport\PayPalRestCall;
+use PayPal\Validation\ArgumentValidator;
+use PayPal\Validation\UrlValidator;
+
+class AngellEYE_PayPal_Invoice_Child extends Invoice {
+    
+    public static $_instance = null;
 
     public static function instance() {
         if (is_null(self::$_instance)) {

@@ -104,8 +104,8 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->debug_log = ($this->debug_log_value == 'on' ) ? true : false;
         $this->apifw_company_logo = isset($this->apifw_setting['apifw_company_logo']) ? $this->apifw_setting['apifw_company_logo'] : '';
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
-
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
+       
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
@@ -141,21 +141,19 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             $auth = new ApiContext("Bearer " . $this->apifw_access_token);
             $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $this->apifw_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'INFO', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
-            include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-child.php' );
-            $this->invoice_request = AngellEYE_PayPal_Invoicing_Request::instance();
+            
             return $auth;
         } else {
             $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
             $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'INFO', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
-            include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-child.php' );
-            $this->invoice_request = AngellEYE_PayPal_Invoicing_Request::instance();
             return $auth;
         }
     }
 
     public function angelleye_paypal_invoicing_get_all_invoice() {
         try {
-            $invoices = AngellEYE_PayPal_Invoicing_Request::getAll(array('page' => 120, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+             include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-child.php');
+            $invoices = AngellEYE_PayPal_Invoice_Child::getAll(array('page' => 120, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
             return json_decode($invoices, true);
         } catch (Exception $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
@@ -189,18 +187,20 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $wpdb->query( 'SET autocommit = 0;' );
                 $angelleye_paypal_invoice_last_page_synce_number = get_option('angelleye_paypal_invoice_last_page_synce_number', false);
                 if($angelleye_paypal_invoice_last_page_synce_number == false) {
-                    $page = 0;
+                    $page = 1;
                 } else {
                     $page = $angelleye_paypal_invoice_last_page_synce_number + 1000;
                 }
                 $bool = true;
                 while ($bool) {
-                    $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                     include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-child.php');
+                    $invoices_data = AngellEYE_PayPal_Invoice_Child::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
                     $invoices_array_data = json_decode($invoices_data, true);
+                    error_log(print_r($invoices_array_data));
                     if (!empty($invoices_array_data)) {
-                        if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
-                            krsort($invoices_array_data['invoices'], SORT_NUMERIC);
-                            foreach ($invoices_array_data['invoices'] as $key => $invoice) {
+                        if (isset($invoices_array_data['items']) && !empty($invoices_array_data['items']) > 0) {
+                            krsort($invoices_array_data['items'], SORT_NUMERIC);
+                            foreach ($invoices_array_data['items'] as $key => $invoice) {
                                 $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                             }
                         } else {
@@ -211,7 +211,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
                     }
                     update_option('angelleye_paypal_invoice_last_page_synce_number', $page);
-                    $page = $page + 1000;
+                    $page = $page + 1;
                 }
                 delete_option('angelleye_paypal_invoice_last_page_synce_number');
                 $wpdb->query( 'COMMIT;' );
@@ -227,17 +227,16 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice) {
-        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-        $amount = $invoice['total_amount'];
+        $amount = $invoice['amount'];
         $paypal_invoice_data_array = array(
             'id' => $invoice['id'],
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
-            'number' => isset($invoice['number']) ? $invoice['number'] : '',
-            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
-            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
+            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
-            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => '',
@@ -245,10 +244,10 @@ class AngellEYE_PayPal_Invoicing_Request {
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['number'],
             'post_author' => 0,
-            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date'])),
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
             'post_name' => sanitize_title($invoice['id'])
         );
-        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_name(sanitize_title($invoice['number']));
+        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_name(sanitize_title($paypal_invoice_data_array['number']));
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
