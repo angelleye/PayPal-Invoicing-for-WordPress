@@ -860,13 +860,20 @@ class AngellEYE_Invoice extends Invoice {
      * @param PayPalRestCall $restCall is the Rest Call Service that is used to make rest calls
      * @return Invoice
      */
-    public function create($apiContext = null, $restCall = null) {
-        $payLoad = $this->toJSON();
+    public function create($apiContext = null, $restCall = null, $payLoad = null) {
+        //$payLoad = $this->toJSON();
         $json = self::executeCall(
                         "/v2/invoicing/invoices", "POST", $payLoad, null, $apiContext, $restCall
         );
-        $this->fromJson($json);
-        return $this;
+        
+        $response = json_decode($json, true);
+        if(isset($response['href']) && !empty($response['href'])) {
+            $response_array = explode('/',$response['href']);
+            return end($response_array);
+        } else {
+            return false;
+        }
+        
     }
 
     /**

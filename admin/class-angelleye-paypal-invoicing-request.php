@@ -108,6 +108,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         try {
             require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-angelleye-paypal-invoicing-manage.php';
             require_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-manage.php');
+            
         } catch (Exception $ex) {
             
         }
@@ -696,11 +697,6 @@ class AngellEYE_PayPal_Invoicing_Request {
                     'note' => $notes,
                     'term' => $terms,
                     'memo' => $merchant_memo,
-                    'payment_term' =>
-                    array(
-                        'term_type' => $term_type,
-                        'due_date' => $due_date,
-                    ),
                 ),
                 'invoicer' =>
                 array(
@@ -728,10 +724,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                             'phone_type' => 'MOBILE',
                         ),
                     ),
-                    'website' => '',
-                    'tax_id' => '',
-                    'logo_url' => '',
-                    'additional_notes' => '',
+                    'logo_url' => $this->apifw_company_logo
                 ),
                 'primary_recipients' =>
                 array(
@@ -739,270 +732,94 @@ class AngellEYE_PayPal_Invoicing_Request {
                     array(
                         'billing_info' =>
                         array(
-                            'name' =>
-                            array(
-                                'given_name' => 'Stephanie',
-                                'surname' => 'Meyers',
-                            ),
-                            'address' =>
-                            array(
-                                'address_line_1' => '1234 Main Street',
-                                'admin_area_2' => 'Anytown',
-                                'admin_area_1' => 'CA',
-                                'postal_code' => '98765',
-                                'country_code' => 'US',
-                            ),
-                            'email' => 'bill-me@example.com',
-                            'phones' =>
-                            array(
-                                0 =>
-                                array(
-                                    'country_code' => '001',
-                                    'national_number' => '4884551234',
-                                    'phone_type' => 'HOME',
-                                ),
-                            ),
-                            'additional_info_value' => 'add-info',
+                            'email' => $bill_to,
                         ),
-                        'shipping_info' =>
-                        array(
-                            'name' =>
-                            array(
-                                'given_name' => 'Stephanie',
-                                'surname' => 'Meyers',
-                            ),
-                            'address' =>
-                            array(
-                                'address_line_1' => '1234 Main Street',
-                                'admin_area_2' => 'Anytown',
-                                'admin_area_1' => 'CA',
-                                'postal_code' => '98765',
-                                'country_code' => 'US',
-                            ),
-                        ),
-                    ),
-                ),
-                'items' =>
-                array(
-                    0 =>
-                    array(
-                        'name' => 'Yoga Mat',
-                        'description' => 'Elastic mat to practice yoga.',
-                        'quantity' => '1',
-                        'unit_amount' =>
-                        array(
-                            'currency_code' => 'USD',
-                            'value' => '50.00',
-                        ),
-                        'tax' =>
-                        array(
-                            'name' => 'Sales Tax',
-                            'percent' => '7.25',
-                        ),
-                        'discount' =>
-                        array(
-                            'percent' => '5',
-                        ),
-                        'unit_of_measure' => 'QUANTITY',
-                    ),
-                    1 =>
-                    array(
-                        'name' => 'Yoga t-shirt',
-                        'quantity' => '1',
-                        'unit_amount' =>
-                        array(
-                            'currency_code' => 'USD',
-                            'value' => '10.00',
-                        ),
-                        'tax' =>
-                        array(
-                            'name' => 'Sales Tax',
-                            'percent' => '7.25',
-                        ),
-                        'discount' =>
-                        array(
-                            'amount' =>
-                            array(
-                                'currency_code' => 'USD',
-                                'value' => '5.00',
-                            ),
-                        ),
-                        'unit_of_measure' => 'QUANTITY',
                     ),
                 ),
                 'configuration' =>
                 array(
-                    'partial_payment' =>
-                    array(
-                        'allow_partial_payment' => true,
-                        'minimum_amount_due' =>
-                        array(
-                            'currency_code' => 'USD',
-                            'value' => '20.00',
-                        ),
-                    ),
-                    'allow_tip' => true,
+                    'allow_tip' => false,
                     'tax_calculated_after_discount' => true,
-                    'tax_inclusive' => false,
-                    'template_id' => 'TEMP-19V05281TU309413B',
+                    'tax_inclusive' => false
                 ),
                 'amount' =>
                 array(
-                    'breakdown' =>
-                    array(
-                        'custom' =>
-                        array(
-                            'label' => 'Packing Charges',
-                            'amount' =>
-                            array(
-                                'currency_code' => 'USD',
-                                'value' => '10.00',
-                            ),
-                        ),
-                        'shipping' =>
-                        array(
-                            'amount' =>
-                            array(
-                                'currency_code' => 'USD',
-                                'value' => '10.00',
-                            ),
-                            'tax' =>
-                            array(
-                                'name' => 'Sales Tax',
-                                'percent' => '7.25',
-                            ),
-                        ),
-                        'discount' =>
-                        array(
-                            'invoice_discount' =>
-                            array(
-                                'percent' => '5',
-                            ),
-                        ),
-                    ),
+                    'breakdown' => array()
                 ),
             );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            $invoice = new Invoice();
-            $invoice->setReference($reference);
-            $invoice->setNumber($number);
-            $invoice->setInvoiceDate($invoice_date);
-            $invoice->setTerms($terms);
-            $invoice->setMerchantMemo($merchant_memo);
-            $participant = new Participant();
-            $participant->setEmail($cc_to);
-            $invoice->addCcInfo($participant);
-            $invoice
-                    ->setMerchantInfo(new MerchantInfo())
-                    ->setBillingInfo(array(new BillingInfo()))
-                    ->setNote($notes)
-                    ->setPaymentTerm(new PaymentTerm())
-                    ->setShippingInfo(new ShippingInfo());
-            $invoice->getMerchantInfo()
-                    ->setEmail($this->rest_paypal_email)
-                    ->setAddress(new Address());
-            $invoice->getMerchantInfo()->getAddress()
-                    ->setLine1($this->address_line_1)
-                    ->setLine2($this->address_line_2)
-                    ->setCity($this->city)
-                    ->setState($this->state)
-                    ->setPostalCode($this->post_code)
-                    ->setCountryCode($this->country);
-            $billing = $invoice->getBillingInfo();
-            $billing[0]
-                    ->setEmail($bill_to);
-            $billing[0]->setAddress(new InvoiceAddress());
-            $invoice->getShippingInfo()->setAddress(new InvoiceAddress());
-            $items = array();
+            if ($allowPartialPayments == 'on') {
+                $inovoice_param['detail']['configuration']['partial_payment'] = array(
+                    'allow_partial_payment' => $allowPartialPayments == 'on' ? true : false,
+                    'minimum_amount_due' =>
+                    array(
+                        'currency_code' => 'USD',
+                        'value' => $allowPartialPayments == 'on' ? $minimumDueAmount : '',
+                    ),
+                );
+            }
+            if (!empty($due_date)) {
+                $inovoice_param['detail']['payment_term'] = array(
+                    'term_type' => $term_type,
+                    'due_date' => $due_date,
+                );
+            }
             if (!empty($post_data['item_name'])) {
                 foreach ($post_data['item_name'] as $key => $order_items) {
-                    $items[$key] = new InvoiceItem();
-                    $items[$key]
-                            ->setName($order_items)
-                            ->setQuantity($post_data['item_qty'][$key])
-                            ->setDescription($post_data['item_description'][$key])
-                            ->setUnitPrice(new Currency());
-                    $items[$key]->getUnitPrice()
-                            ->setCurrency('USD')
-                            ->setValue($post_data['item_amt'][$key]);
+                    $inovoice_param['items'][$key] = array(
+                        'name' => $order_items,
+                        'description' => $post_data['item_description'][$key],
+                        'quantity' => $post_data['item_qty'][$key],
+                        'unit_amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => $post_data['item_amt'][$key],
+                        ),
+                    );
                     if (!empty($post_data['item_txt_rate'][$key])) {
-                        $tax = new \PayPal\Api\Tax();
-                        $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
-                        $items[$key]->setTax($tax);
+                        $inovoice_param['items'][$key]['tax'] = array(
+                            'name' => $post_data['item_txt_name'][$key],
+                            'percent' => $post_data['item_txt_rate'][$key],
+                        );
                     }
                 }
             }
 
             if (!empty($shippingAmount) && $shippingAmount > 0) {
-                $shipping_cost = new ShippingCost();
-                $shipping_currency = new Currency();
-                $shipping_currency->setCurrency('USD');
-                $shipping_currency->setValue($shippingAmount);
-                $shipping_cost->setAmount($shipping_currency);
-                $invoice->setShippingCost($shipping_cost);
-            }
-            if ($allowPartialPayments == 'on') {
-                $invoice->setAllowPartialPayment('true');
-                $minimum_amount_due_shipping_currency = new Currency();
-                $minimum_amount_due_shipping_currency->setCurrency('USD');
-                $minimum_amount_due_shipping_currency->setValue($minimumDueAmount);
-                $invoice->setMinimumAmountDue($minimum_amount_due_shipping_currency);
+                $inovoice_param['amount']['breakdown']['shipping'] = array(
+                    'amount' =>
+                    array(
+                        'currency_code' => 'USD',
+                        'value' => '10.00',
+                    ),
+                );
             }
             if (!empty($invDiscount) && $invDiscount > 0) {
-                $cost = new Cost();
                 if ($invoiceDiscType == 'percentage') {
-                    $cost->setPercent($invDiscount);
+                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                        'percent' => $invDiscount
+                    );
                 } else {
-                    $discount_currency = new Currency();
-                    $discount_currency->setCurrency('USD');
-                    $discount_currency->setValue($invDiscount);
-                    $cost->setAmount($discount_currency);
+                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                        'amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => $invDiscount,
+                        ),
+                    );
                 }
-                $invoice->setDiscount($cost);
             }
-            if ($allow_tips == 'on') {
-                // $invoice->setAllowtip('true');
-            }
-            if (!empty($due_date)) {
-                //$invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
-                //$invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
-                $invoice_due_date = pifw_get_paypal_invoice_date_format($due_date);
-                $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
-            }
-            if (!empty($this->apifw_company_logo)) {
-                $invoice->setLogoUrl($this->apifw_company_logo);
-            }
-            $invoice->setItems($items);
-            $invoice->getPaymentTerm()
-                    ->setTermType($term_type);
-            $invoice->create($this->angelleye_paypal_invoicing_getAuth());
+            $body_request = array_filter($inovoice_param);
+            $payLoad = json_encode($body_request);
+            $AngellEYE_Invoice = new AngellEYE_Invoice();
+            $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
             if (!empty($_REQUEST['send_invoice'])) {
-                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
+                update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
+                return $invoice_ob->getId();
             }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
-            return $invoice->getId();
+            return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
