@@ -55,7 +55,6 @@ class AngellEYE_PayPal_Invoicing_Request {
      * @var      string    $version    The current version of this plugin.
      */
     private $version;
-    
     public $invoice_request;
 
     /**
@@ -112,8 +111,6 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (Exception $ex) {
             
         }
-        
-       
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
@@ -149,7 +146,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             $auth = new ApiContext("Bearer " . $this->apifw_access_token);
             $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $this->apifw_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
-            
+
             return $auth;
         } else {
             $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
@@ -181,20 +178,20 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_sync_invoicing_with_wp() {
-        
+
         global $wpdb;
         try {
             if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
                 remove_action('do_pings', 'do_all_pings', 10, 1);
-                define( 'WP_IMPORTING', true );
-                ini_set("memory_limit",-1);
+                define('WP_IMPORTING', true);
+                ini_set("memory_limit", -1);
                 set_time_limit(0);
                 ignore_user_abort(true);
-                wp_defer_term_counting( true );
-                wp_defer_comment_counting( true );
-                $wpdb->query( 'SET autocommit = 0;' );
+                wp_defer_term_counting(true);
+                wp_defer_comment_counting(true);
+                $wpdb->query('SET autocommit = 0;');
                 $angelleye_paypal_invoice_last_page_synce_number = get_option('angelleye_paypal_invoice_last_page_synce_number', false);
-                if($angelleye_paypal_invoice_last_page_synce_number == false) {
+                if ($angelleye_paypal_invoice_last_page_synce_number == false) {
                     $page = 1;
                 } else {
                     $page = 1;
@@ -227,17 +224,15 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $page = $page + 1;
                 }
                 delete_option('angelleye_paypal_invoice_last_page_synce_number');
-                $wpdb->query( 'COMMIT;' );
-                wp_defer_term_counting( false );
-                wp_defer_comment_counting( false );
+                $wpdb->query('COMMIT;');
+                wp_defer_term_counting(false);
+                wp_defer_comment_counting(false);
             }
         } catch (Exception $ex) {
-            $wpdb->query( 'COMMIT;' );
-            wp_defer_term_counting( false );
-            wp_defer_comment_counting( false );
-            
+            $wpdb->query('COMMIT;');
+            wp_defer_term_counting(false);
+            wp_defer_comment_counting(false);
         }
-        
     }
 
     public function angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice) {
@@ -404,7 +399,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $i = $i + 1;
             }
         }
-        if( !empty($this->apifw_company_logo)) {
+        if (!empty($this->apifw_company_logo)) {
             $invoice->setLogoUrl($this->apifw_company_logo);
         }
         $invoice->setItems($items);
@@ -690,6 +685,226 @@ class AngellEYE_PayPal_Invoicing_Request {
             $allowPartialPayments = isset($post_data['allowPartialPayments']) ? $post_data['allowPartialPayments'] : 'no';
             $allow_tips = isset($post_data['allowTips']) ? $post_data['allowTips'] : 'no';
             $minimumDueAmount = isset($post_data['minimumDueAmount']) ? $post_data['minimumDueAmount'] : 0.00;
+
+            $inovoice_param = array(
+                'detail' =>
+                array(
+                    'invoice_number' => $number,
+                    'reference' => $reference,
+                    'invoice_date' => $invoice_date,
+                    'currency_code' => 'USD',
+                    'note' => $notes,
+                    'term' => $terms,
+                    'memo' => $merchant_memo,
+                    'payment_term' =>
+                    array(
+                        'term_type' => $term_type,
+                        'due_date' => $due_date,
+                    ),
+                ),
+                'invoicer' =>
+                array(
+                    'name' =>
+                    array(
+                        'given_name' => $this->first_name,
+                        'surname' => $this->last_name,
+                    ),
+                    'address' =>
+                    array(
+                        'address_line_1' => $this->address_line_1,
+                        'address_line_2' => $this->address_line_2,
+                        'admin_area_2' => $this->city,
+                        'admin_area_1' => $this->state,
+                        'postal_code' => $this->post_code,
+                        'country_code' => $this->country,
+                    ),
+                    'email_address' => $this->rest_paypal_email,
+                    'phones' =>
+                    array(
+                        0 =>
+                        array(
+                            'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
+                            'national_number' => $this->phone_number,
+                            'phone_type' => 'MOBILE',
+                        ),
+                    ),
+                    'website' => '',
+                    'tax_id' => '',
+                    'logo_url' => '',
+                    'additional_notes' => '',
+                ),
+                'primary_recipients' =>
+                array(
+                    0 =>
+                    array(
+                        'billing_info' =>
+                        array(
+                            'name' =>
+                            array(
+                                'given_name' => 'Stephanie',
+                                'surname' => 'Meyers',
+                            ),
+                            'address' =>
+                            array(
+                                'address_line_1' => '1234 Main Street',
+                                'admin_area_2' => 'Anytown',
+                                'admin_area_1' => 'CA',
+                                'postal_code' => '98765',
+                                'country_code' => 'US',
+                            ),
+                            'email' => 'bill-me@example.com',
+                            'phones' =>
+                            array(
+                                0 =>
+                                array(
+                                    'country_code' => '001',
+                                    'national_number' => '4884551234',
+                                    'phone_type' => 'HOME',
+                                ),
+                            ),
+                            'additional_info_value' => 'add-info',
+                        ),
+                        'shipping_info' =>
+                        array(
+                            'name' =>
+                            array(
+                                'given_name' => 'Stephanie',
+                                'surname' => 'Meyers',
+                            ),
+                            'address' =>
+                            array(
+                                'address_line_1' => '1234 Main Street',
+                                'admin_area_2' => 'Anytown',
+                                'admin_area_1' => 'CA',
+                                'postal_code' => '98765',
+                                'country_code' => 'US',
+                            ),
+                        ),
+                    ),
+                ),
+                'items' =>
+                array(
+                    0 =>
+                    array(
+                        'name' => 'Yoga Mat',
+                        'description' => 'Elastic mat to practice yoga.',
+                        'quantity' => '1',
+                        'unit_amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => '50.00',
+                        ),
+                        'tax' =>
+                        array(
+                            'name' => 'Sales Tax',
+                            'percent' => '7.25',
+                        ),
+                        'discount' =>
+                        array(
+                            'percent' => '5',
+                        ),
+                        'unit_of_measure' => 'QUANTITY',
+                    ),
+                    1 =>
+                    array(
+                        'name' => 'Yoga t-shirt',
+                        'quantity' => '1',
+                        'unit_amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => '10.00',
+                        ),
+                        'tax' =>
+                        array(
+                            'name' => 'Sales Tax',
+                            'percent' => '7.25',
+                        ),
+                        'discount' =>
+                        array(
+                            'amount' =>
+                            array(
+                                'currency_code' => 'USD',
+                                'value' => '5.00',
+                            ),
+                        ),
+                        'unit_of_measure' => 'QUANTITY',
+                    ),
+                ),
+                'configuration' =>
+                array(
+                    'partial_payment' =>
+                    array(
+                        'allow_partial_payment' => true,
+                        'minimum_amount_due' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => '20.00',
+                        ),
+                    ),
+                    'allow_tip' => true,
+                    'tax_calculated_after_discount' => true,
+                    'tax_inclusive' => false,
+                    'template_id' => 'TEMP-19V05281TU309413B',
+                ),
+                'amount' =>
+                array(
+                    'breakdown' =>
+                    array(
+                        'custom' =>
+                        array(
+                            'label' => 'Packing Charges',
+                            'amount' =>
+                            array(
+                                'currency_code' => 'USD',
+                                'value' => '10.00',
+                            ),
+                        ),
+                        'shipping' =>
+                        array(
+                            'amount' =>
+                            array(
+                                'currency_code' => 'USD',
+                                'value' => '10.00',
+                            ),
+                            'tax' =>
+                            array(
+                                'name' => 'Sales Tax',
+                                'percent' => '7.25',
+                            ),
+                        ),
+                        'discount' =>
+                        array(
+                            'invoice_discount' =>
+                            array(
+                                'percent' => '5',
+                            ),
+                        ),
+                    ),
+                ),
+            );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             $invoice = new Invoice();
             $invoice->setReference($reference);
             $invoice->setNumber($number);
@@ -732,7 +947,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $items[$key]->getUnitPrice()
                             ->setCurrency('USD')
                             ->setValue($post_data['item_amt'][$key]);
-                    if(!empty($post_data['item_txt_rate'][$key])) {
+                    if (!empty($post_data['item_txt_rate'][$key])) {
                         $tax = new \PayPal\Api\Tax();
                         $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
                         $items[$key]->setTax($tax);
@@ -776,7 +991,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $invoice_due_date = pifw_get_paypal_invoice_date_format($due_date);
                 $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
             }
-            if( !empty($this->apifw_company_logo)) {
+            if (!empty($this->apifw_company_logo)) {
                 $invoice->setLogoUrl($this->apifw_company_logo);
             }
             $invoice->setItems($items);
@@ -1056,13 +1271,14 @@ class AngellEYE_PayPal_Invoicing_Request {
             return false;
         }
     }
-    
+
     public function angelleye_paypal_invoice_get_payment($transaction_id) {
         try {
             $payment = Payment::get($transaction_id, $this->angelleye_paypal_invoicing_getAuth());
             return $payment;
         } catch (Exception $ex) {
-
+            
         }
     }
+
 }

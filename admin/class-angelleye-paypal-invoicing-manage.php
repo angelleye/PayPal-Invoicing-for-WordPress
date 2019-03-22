@@ -1126,7 +1126,7 @@ class AngellEYE_Invoice extends Invoice {
     public static function generateNumber($apiContext = null, $restCall = null) {
         $payLoad = "";
         $json = self::executeCall(
-                        "/v2/invoicing/invoices/next-invoice-number", "POST", $payLoad, null, $apiContext, $restCall
+                        "/v2/invoicing/generate-next-invoice-number", "POST", $payLoad, null, $apiContext, $restCall
         );
         $ret = new InvoiceNumber();
         $ret->fromJson($json);

@@ -180,17 +180,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
         wp_enqueue_style($this->plugin_name);
     }
 
-    public function angelleye_paypal_invoicing_manage_invoicing_content() {
-        $this->angelleye_paypal_invoicing_add_bootstrap();
-        $this->angelleye_paypal_invoicing_load_rest_api();
-        if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
-            $this->response = $this->request->angelleye_paypal_invoicing_get_all_invoice();
-            include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-invoice-list.php';
-        } else {
-            $this->angelleye_paypal_invoicing_print_error();
-        }
-    }
-
     public function angelleye_paypal_invoicing_create_invoice_content() {
         global $post;
         wp_enqueue_style('jquery-ui-style');
@@ -429,7 +418,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         global $post;
         switch ($column) {
             case 'invoice_date' :
-                $invoice = get_post_meta($post->ID, 'invoice_date', true);
+                $invoice = get_post_meta($post->ID, 'wp_invoice_date', true);
                 echo date_i18n(get_option('date_format'), strtotime($invoice));
                 break;
             case 'recipient' :
