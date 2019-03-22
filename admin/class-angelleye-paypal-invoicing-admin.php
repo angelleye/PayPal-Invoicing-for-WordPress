@@ -197,8 +197,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->angelleye_paypal_invoicing_add_bootstrap();
         $this->angelleye_paypal_invoicing_load_rest_api();
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
-            $this->response = $this->request->angelleye_paypal_invoicing_get_next_invoice_number();
             if (empty($_GET['action'])) {
+                $this->response = $this->request->angelleye_paypal_invoicing_get_next_invoice_number();
                 include_once ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/views/html-admin-page-create-invoice.php';
             } elseif (!empty($_GET['action']) && $_GET['action'] == 'edit') {
                 $invoice_id = get_post_meta($post->ID, 'id', true);

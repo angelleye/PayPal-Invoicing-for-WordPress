@@ -820,23 +820,25 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
-        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-        $amount = isset($invoice['total_amount']) ? $invoice['total_amount'] : '';
+        $amount = $invoice['amount'];
         $paypal_invoice_data_array = array(
-            'id' => isset($invoice['id']) ? $invoice['id'] : '',
+            'id' => $invoice['id'],
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
-            'number' => isset($invoice['number']) ? $invoice['number'] : '',
-            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
-            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
+            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => $post_id,
             'post_type' => 'paypal_invoices',
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['number'],
-            'post_author' => 0
+            'post_author' => 0,
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
+            'post_name' => sanitize_title($invoice['id'])
         );
         wp_update_post($insert_invoice_array);
         foreach ($paypal_invoice_data_array as $key => $value) {

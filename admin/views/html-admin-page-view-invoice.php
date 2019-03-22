@@ -1,7 +1,7 @@
 <?php
 $all_invoice_data = get_post_meta($post->ID, 'all_invoice_data', true);
 $status = get_post_meta($post->ID, 'status', true);
-$apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url']) ) ? $invoice['logo_url'] : '';
+$apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoice['invoicer']['logo_url']) ) ? $invoice['invoicer']['logo_url'] : '';
 ?>
 <div class="container" id="invoice_view_table">
     <div class="card">
@@ -15,23 +15,23 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                     <?php } ?>
                     <br>
                     <div class="mt30-invoice clearboth">
-                        <?php echo isset($invoice['merchant_info']['address']['first_name']) ? $invoice['merchant_info']['address']['first_name'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['last_name']) ? $invoice['merchant_info']['address']['last_name'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['name']['given_name']) ? $invoice['invoicer']['name']['given_name'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['name']['surname']) ? $invoice['invoicer']['name']['surname'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['merchant_info']['address']['line1']) ? '<div>' . $invoice['merchant_info']['address']['line1'] . '</div>' : ''; ?>
-                    <?php echo isset($invoice['merchant_info']['address']['line2']) ? '<div>' . $invoice['merchant_info']['address']['line2'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['invoicer']['address']['address_line_1']) ? '<div>' . $invoice['invoicer']['address']['address_line_1'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['invoicer']['address']['address_line_2']) ? '<div>' . $invoice['invoicer']['address']['address_line_2'] . '</div>' : ''; ?>
                     <div>
-                        <?php echo isset($invoice['merchant_info']['address']['city']) ? $invoice['merchant_info']['address']['city'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['state']) ? $invoice['merchant_info']['address']['state'] : ''; ?>
-                        <?php echo isset($invoice['merchant_info']['address']['postal_code']) ? $invoice['merchant_info']['address']['postal_code'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['address']['admin_area_2']) ? $invoice['invoicer']['address']['admin_area_2'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['address']['admin_area_1']) ? $invoice['invoicer']['address']['admin_area_1'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['address']['postal_code']) ? $invoice['invoicer']['address']['postal_code'] : ''; ?>
                     </div>
                     <div>
-                        <?php echo isset($invoice['merchant_info']['address']['country_code']) ? $invoice['merchant_info']['address']['country_code'] : ''; ?>
+                        <?php echo isset($invoice['invoicer']['address']['country_code']) ? $invoice['invoicer']['address']['country_code'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['merchant_info']['email']) ? '<div>' . $invoice['merchant_info']['email'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['invoicer']['email_address']) ? '<div>' . $invoice['invoicer']['email_address'] . '</div>' : ''; ?>
                     <?php
-                    if (!empty($invoice['merchant_info']['phone'])) {
-                        echo '<div>+' . $invoice['merchant_info']['phone']['country_code'] . '  ' . $invoice['merchant_info']['phone']['national_number'] . '</div>';
+                    if (!empty($invoice['invoicer']['phones'])) {
+                        echo '<div>+' . $invoice['invoicer']['phones']['country_code'] . '  ' . $invoice['merchant_info']['phones']['national_number'] . '</div>';
                     }
                     ?>
                 </div>
@@ -57,8 +57,9 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                         </button>
                         <div class="dropdown-menu">
                             <?php
-                            if ($payer_view_url = $this->angelleye_paypal_invoicing_get_payer_view($all_invoice_data)) {
-                                echo '<a class="dropdown-item" target="_blank" href="' . $payer_view_url . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                            
+                            if (isset($invoice['detail']['metadata']['recipient_view_url']) && !empty($invoice['detail']['metadata']['recipient_view_url'])) {
+                                echo '<a class="dropdown-item" target="_blank" href="' . $invoice['detail']['metadata']['recipient_view_url'] . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
                             }
                             if ($status == 'DRAFT') {
                                 echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
@@ -75,28 +76,28 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                     </div>
                     </div>
                     
-                    <?php if (!empty($invoice['number'])) : ?>
+                    <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', 'angelleye-paypal-invoicing'); ?></span>
-                            <span><?php echo $invoice['number']; ?></span>
+                            <span><?php echo $invoice['detail']['invoice_number']; ?></span>
                         </div>
                     <?php endif; ?>
-                    <?php if (!empty($invoice['invoice_date'])) : ?>
+                    <?php if (!empty($invoice['detail']['invoice_date'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice date:', 'angelleye-paypal-invoicing'); ?></span>
-                            <span><?php echo date_i18n(get_option('date_format'), strtotime($invoice['invoice_date'])); ?></span>
+                            <span><?php echo date_i18n(get_option('date_format'), strtotime($invoice['detail']['invoice_date'])); ?></span>
                         </div>
                     <?php endif; ?>
-                    <?php if (!empty($invoice['reference'])) : ?>
+                    <?php if (!empty($invoice['detail']['reference'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Reference:', 'angelleye-paypal-invoicing'); ?></span>
-                            <span><?php echo $invoice['reference']; ?></span>
+                            <span><?php echo $invoice['detail']['reference']; ?></span>
                         </div>
                     <?php endif; ?>
-                    <?php if (!empty($invoice['payment_term']['due_date'])) : ?>
+                    <?php if (!empty($invoice['detail']['payment_term']['due_date'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Due date:', 'angelleye-paypal-invoicing'); ?></span>
-                            <span><?php echo date_i18n(get_option('date_format'), strtotime($invoice['payment_term']['due_date'])); ?></span>
+                            <span><?php echo date_i18n(get_option('date_format'), strtotime($invoice['detail']['payment_term']['due_date'])); ?></span>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -107,59 +108,51 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
             <div class="row mb-4">
                 <div class="col-sm-6">
                     <?php
-                    if (!empty($invoice['billing_info'][0]['email'])) {
+                    if (!empty($invoice['primary_recipients'][0]['billing_info']['email_address'])) {
                         echo '<h4 class="mb-3">Bill To</h4>';
                     }
                     ?>
-                    <?php echo isset($invoice['billing_info'][0]['business_name']) ? '<div>' . $invoice['billing_info'][0]['business_name'] . '</div>' : ''; ?>
                     <div>
-                        <?php echo isset($invoice['billing_info'][0]['first_name']) ? $invoice['billing_info'][0]['first_name'] : ''; ?>
-                        <?php echo isset($invoice['billing_info'][0]['last_name']) ? $invoice['billing_info'][0]['last_name'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['name']['given_name']) ? $invoice['primary_recipients'][0]['billing_info']['name']['given_name'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['name']['surname']) ? $invoice['primary_recipients'][0]['billing_info']['name']['surname'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['billing_info'][0]['address']['line1']) ? '<div>' . $invoice['billing_info'][0]['address']['line1'] . '</div>' : ''; ?>
-                    <?php echo isset($invoice['billing_info'][0]['address']['line2']) ? '<div>' . $invoice['billing_info'][0]['address']['line2'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['address_line_1']) ? '<div>' . $invoice['primary_recipients'][0]['billing_info']['address']['address_line_1'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['address_line_2']) ? '<div>' . $invoice['primary_recipients'][0]['billing_info']['address']['address_line_2'] . '</div>' : ''; ?>
                     <div>
-                        <?php echo isset($invoice['billing_info'][0]['address']['city']) ? $invoice['billing_info'][0]['address']['city'] : ''; ?>
-                        <?php echo isset($invoice['billing_info'][0]['address']['state']) ? $invoice['billing_info'][0]['address']['state'] : ''; ?>
-                        <?php echo isset($invoice['billing_info'][0]['address']['postal_code']) ? $invoice['billing_info'][0]['address']['postal_code'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['admin_area_2']) ? $invoice['primary_recipients'][0]['billing_info']['address']['admin_area_2'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['admin_area_1']) ? $invoice['primary_recipients'][0]['billing_info']['address']['admin_area_1'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['postal_code']) ? $invoice['primary_recipients'][0]['billing_info']['address']['postal_code'] : ''; ?>
                     </div>
                     <div>
-                        <?php echo isset($invoice['billing_info'][0]['address']['country_code']) ? $invoice['billing_info'][0]['address']['country_code'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['billing_info']['address']['country_code']) ? $invoice['primary_recipients'][0]['billing_info']['address']['country_code'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['billing_info'][0]['email']) ? '<div>' . $invoice['billing_info'][0]['email'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? '<div>' . $invoice['primary_recipients'][0]['billing_info']['email_address'] . '</div>' : ''; ?>
                     <?php
-                    if (!empty($invoice['billing_info'][0]['address']['phone']['country_code'])) {
-                        echo '<div>' . $invoice['billing_info'][0]['address']['phone']['country_code'] . '  ' . $invoice['billing_info'][0]['address']['phone']['national_number'] . '</div>';
+                    if (!empty($invoice['primary_recipients'][0]['billing_info']['phones']['country_code'])) {
+                        echo '<div>' . $invoice['primary_recipients'][0]['billing_info']['phones']['country_code'] . '  ' . $invoice['primary_recipients'][0]['billing_info']['phones']['national_number'] . '</div>';
                     }
                     ?>
                 </div>
                 <div class="col-sm-6">
                     <?php
-                    if (!empty($invoice['shipping_info']['first_name'])) {
+                    if (!empty($invoice['primary_recipients'][0]['shipping_info']['name']['given_name'])) {
                         echo '<h4 class="mb-3">Ship To</h4>';
                     }
                     ?>
-                    <?php echo isset($invoice['shipping_info']['business_name']) ? '<div>' . $invoice['shipping_info']['business_name'] . '</div>' : ''; ?>
                     <div>
-                        <?php echo isset($invoice['shipping_info']['first_name']) ? $invoice['shipping_info']['first_name'] : ''; ?>
-                        <?php echo isset($invoice['shipping_info']['last_name']) ? $invoice['shipping_info']['last_name'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['name']['given_name']) ? $invoice['primary_recipients'][0]['shipping_info']['name']['given_name'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['name']['surname']) ? $invoice['primary_recipients'][0]['shipping_info']['name']['surname'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['shipping_info']['address']['line1']) ? '<div>' . $invoice['shipping_info']['address']['line1'] . '</div>' : ''; ?>
-                    <?php echo isset($invoice['shipping_info']['address']['line2']) ? '<div>' . $invoice['shipping_info']['address']['line2'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['address_line_1']) ? '<div>' . $invoice['primary_recipients'][0]['shipping_info']['address']['address_line_1'] . '</div>' : ''; ?>
+                    <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['address_line_2']) ? '<div>' . $invoice['primary_recipients'][0]['shipping_info']['address']['address_line_2'] . '</div>' : ''; ?>
                     <div>
-                        <?php echo isset($invoice['shipping_info']['address']['city']) ? $invoice['shipping_info']['address']['city'] : ''; ?>
-                        <?php echo isset($invoice['shipping_info']['address']['state']) ? $invoice['shipping_info']['address']['state'] : ''; ?>
-                        <?php echo isset($invoice['shipping_info']['address']['postal_code']) ? $invoice['shipping_info']['address']['postal_code'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['admin_area_2']) ? $invoice['primary_recipients'][0]['shipping_info']['address']['admin_area_2'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['admin_area_1']) ? $invoice['primary_recipients'][0]['shipping_info']['address']['admin_area_1'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['postal_code']) ? $invoice['primary_recipients'][0]['shipping_info']['address']['postal_code'] : ''; ?>
                     </div>
                     <div>
-                        <?php echo isset($invoice['shipping_info']['address']['country_code']) ? $invoice['shipping_info']['address']['country_code'] : ''; ?>
+                        <?php echo isset($invoice['primary_recipients'][0]['shipping_info']['address']['country_code']) ? $invoice['primary_recipients'][0]['shipping_info']['address']['country_code'] : ''; ?>
                     </div>
-                    <?php echo isset($invoice['shipping_info']['email']) ? '<div>' . $invoice['shipping_info']['email'] . '</div>' : ''; ?>
-                    <?php
-                    if (!empty($invoice['shipping_info']['phone'])) {
-                        echo '<div>+' . $invoice['shipping_info']['phone']['country_code'] . '  ' . $invoice['shipping_info']['phone']['national_number'] . '</div>';
-                    }
-                    ?>
                 </div>
             </div>
             <div class="table-responsive-sm">
@@ -191,22 +184,13 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                                 echo $description_html;
                                 echo '</div></td>';
                                 echo '<td class="itemquantity text-right">' . $invoice_item['quantity'] . '</td>';
-                                echo '<td class="itemprice text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . $invoice_item['unit_price']['value'] . '</td>';
-                                echo '<td class="itemamount text-right">' . pifw_get_currency_symbol($invoice_item['unit_price']['currency']) . number_format($invoice_item['quantity'] * $invoice_item['unit_price']['value'], 2) . '</td>';
+                                echo '<td class="itemprice text-right">' . pifw_get_currency_symbol($invoice_item['unit_amount']['currency_code']) . $invoice_item['unit_amount']['value'] . '</td>';
+                                echo '<td class="itemamount text-right">' . pifw_get_currency_symbol($invoice_item['unit_amount']['currency_code']) . number_format($invoice_item['quantity'] * $invoice_item['unit_amount']['value'], 2) . '</td>';
                                 echo '</tr>';
-                                $sub_total = $sub_total + ($invoice_item['quantity'] * $invoice_item['unit_price']['value']);
                                 if (!empty($invoice_item['tax'])) {
                                     $invoice_total_array['tax'][$key] = $invoice_item['tax'];
                                 }
                             }
-                            if (!empty($invoice['discount'])) {
-                                $invoice_total_array['discount'] = $invoice['discount'];
-                            }
-                            if (!empty($invoice['shipping_cost'])) {
-                                $invoice_total_array['shipping_cost'] = $invoice['shipping_cost'];
-                            }
-
-                            $invoice_total_array['sub_total'] = array('currency' => $invoice_item['unit_price']['currency'], 'value' => $sub_total);
                         }
                         ?>
                     </tbody>
@@ -219,20 +203,20 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
-                                <?php if (!empty($invoice_total_array['sub_total'])) : ?>
+                                <?php if (!empty($invoice['amount']['breakdown']['item_total'])) : ?>
                                     <tr>
                                         <td class="left">
                                             <?php echo __('Subtotal', 'angelleye-paypal-invoicing'); ?>
                                         </td>
-                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['sub_total']['currency']) . number_format($invoice_total_array['sub_total']['value'], 2); ?></td>
+                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice['amount']['breakdown']['item_total']['currency_code']) . number_format($invoice['amount']['breakdown']['item_total']['value'], 2); ?></td>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (!empty($invoice_total_array['shipping_cost'])) : ?>
+                                <?php if (!empty($invoice['amount']['breakdown']['shipping']['amount'])) : ?>
                                     <tr>
                                         <td class="left">
                                             <?php echo __('Shipping', 'angelleye-paypal-invoicing'); ?>
                                         </td>
-                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice_total_array['shipping_cost']['amount']['currency']) . number_format($invoice_total_array['shipping_cost']['amount']['value'], 2); ?></td>
+                                        <td class="right"><?php echo pifw_get_currency_symbol($invoice['amount']['breakdown']['shipping']['amount']['currency_code']) . number_format($invoice['amount']['breakdown']['shipping']['amount']['value'], 2); ?></td>
                                     </tr>
                                 <?php endif; ?>
                                 <?php if (!empty($invoice_total_array['tax'])) : ?>
@@ -255,7 +239,7 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                                                     echo '<td class="left">';
                                                     echo $tax_data['name'] . ' (' . $tax_data['percent'] . '%)';
                                                     echo '</td>';
-                                                    echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency']) . number_format($tax_data['amount']['value'], 2) . '</td>';
+                                                    echo '<td class="right">' . pifw_get_currency_symbol($tax_data['amount']['currency_code']) . number_format($tax_data['amount']['value'], 2) . '</td>';
                                                     echo '</tr>';
                                                 }
                                             }
@@ -263,20 +247,20 @@ $apifw_company_logo = ( isset($invoice['logo_url']) && !empty($invoice['logo_url
                                     }
                                     ?>
                                 <?php endif; ?>
-                                <?php if (!empty($invoice_total_array['discount'])) : ?>
+                                <?php if (!empty($invoice['amount']['breakdown']['discount']['invoice_discount']['amount'])) : ?>
                                     <tr>
                                         <td class="left">
                                             <?php echo __('Discount', 'angelleye-paypal-invoicing'); ?>
                                         </td>
-                                        <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice_total_array['discount']['amount']['currency']) . number_format($invoice_total_array['discount']['amount']['value'], 2) . '</td>'; ?>
+                                        <?php echo '<td class="right">-' . pifw_get_currency_symbol($invoice['amount']['breakdown']['discount']['invoice_discount']['amount']['currency_code']) . number_format(abs($invoice['amount']['breakdown']['discount']['invoice_discount']['amount']['value']), 2) . '</td>'; ?>
                                     </tr>
                                 <?php endif; ?>
-                                <?php if (!empty($invoice['total_amount'])) : ?>
+                                <?php if (!empty($invoice['amount']['value'])) : ?>
                                     <tr>
                                         <td class="left total">
                                             <strong><?php echo __('Total', 'angelleye-paypal-invoicing'); ?></strong>
                                         </td>
-                                        <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['total_amount']['currency']) . number_format($invoice['total_amount']['value'], 2) . ' ' . $invoice['total_amount']['currency'] . '</strong></td>'; ?>
+                                        <?php echo '<td class="right total"><strong>' . pifw_get_currency_symbol($invoice['amount']['currency_code']) . number_format($invoice['amount']['value'], 2) . ' ' . $invoice['amount']['currency_code'] . '</strong></td>'; ?>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
