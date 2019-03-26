@@ -205,7 +205,6 @@ class AngellEYE_PayPal_Invoicing_Request {
                         break;
                     }
                     $invoices_array_data = json_decode($invoices_data, true);
-                    error_log(print_r($invoices_array_data, true));
                     if (!empty($invoices_array_data)) {
                         if (isset($invoices_array_data['items']) && !empty($invoices_array_data['items']) > 0) {
                             krsort($invoices_array_data['items'], SORT_NUMERIC);
