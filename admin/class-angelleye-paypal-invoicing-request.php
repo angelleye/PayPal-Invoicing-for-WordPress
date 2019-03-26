@@ -331,7 +331,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $shipping_last_name = $billing_last_name;
             $shipping_address_1 = $billing_address_1;
             $shipping_address_2 = $billing_address_2;
-            $shipping_city = $shipping_city;
+            $shipping_city = $billing_city;
             $shipping_postcode = $billing_postcode;
             $shipping_country = $billing_country;
             $shipping_state = $billing_state;
@@ -400,17 +400,13 @@ class AngellEYE_PayPal_Invoicing_Request {
                 'allow_tip' => false,
                 'tax_calculated_after_discount' => true,
                 'tax_inclusive' => false
-            ),
-            'amount' =>
-            array(
-                'breakdown' => array()
-            ),
+            )
+            
         );
         if (!empty($this->order_param['order_items'])) {
             foreach ($this->order_param['order_items'] as $key => $order_items) {
                 $inovoice_param['items'][$key] = array(
                     'name' => $order_items['name'],
-                    'description' => $order_items['description'],
                     'quantity' => $order_items['quantity'],
                     'unit_amount' =>
                     array(

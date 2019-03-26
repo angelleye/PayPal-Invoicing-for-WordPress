@@ -30,8 +30,8 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                     </div>
                     <?php echo isset($invoice['invoicer']['email_address']) ? '<div>' . $invoice['invoicer']['email_address'] . '</div>' : ''; ?>
                     <?php
-                    if (!empty($invoice['invoicer']['phones'])) {
-                        echo '<div>+' . $invoice['invoicer']['phones']['country_code'] . '  ' . $invoice['merchant_info']['phones']['national_number'] . '</div>';
+                    if (isset($invoice['invoicer']['phones'][0]['country_code']) && !empty($invoice['invoicer']['phones'][0]['country_code'])) {
+                        echo '<div>+' . $invoice['invoicer']['phones'][0]['country_code'] . '  ' . $invoice['invoicer']['phones'][0]['national_number'] . '</div>';
                     }
                     ?>
                 </div>
@@ -108,7 +108,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
             <div class="row mb-4">
                 <div class="col-sm-6">
                     <?php
-                    if (!empty($invoice['primary_recipients'][0]['billing_info']['email_address'])) {
+                    if (!empty($invoice['primary_recipients'][0]['billing_info']['address'])) {
                         echo '<h4 class="mb-3">Bill To</h4>';
                     }
                     ?>
