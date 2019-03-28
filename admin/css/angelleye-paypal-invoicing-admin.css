@@ -391,4 +391,9 @@ body {
 .updated.fade {
     opacity: 50;
 }
+.angelleye-invoice-company-logo {
+    max-width: 250px !important;
+    height: 90px !important;
+}
+
 

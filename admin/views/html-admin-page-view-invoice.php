@@ -11,7 +11,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
             <div class="row">
                 <div class="col-sm-8">
                     <?php if (!empty($apifw_company_logo)) { ?>
-                        <img src="<?php echo $apifw_company_logo; ?>" class="rounded img-fluid float-left">
+                        <img src="<?php echo $apifw_company_logo; ?>" class="rounded img-fluid float-left angelleye-invoice-company-logo">
                     <?php } ?>
                     <br>
                     <div class="mt30-invoice clearboth">
@@ -50,6 +50,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                         </div>
                     <?php endif; ?>
                     <div class="row">
+                        <?php if(isset($invoice['status']) && $invoice['status'] != 'PAID') : ?>
                         <span class="col-sm-6"></span>
                         <div class="btn-group invoice-action-group">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -74,6 +75,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                             ?>
                         </div>
                     </div>
+                        <?php endif; ?>
                     </div>
                     
                     <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
