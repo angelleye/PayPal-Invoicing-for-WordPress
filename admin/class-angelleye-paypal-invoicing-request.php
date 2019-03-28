@@ -6,8 +6,9 @@ use PayPal\Api\Address;
 use PayPal\Api\BillingInfo;
 use PayPal\Api\Cost;
 use PayPal\Api\Currency;
-use PayPal\Api\Invoice;
 use PayPal\Api\InvoiceAddress;
+use PayPal\Api\Invoice;
+use PayPal\Api\AngellEYE_Invoice;
 use PayPal\Api\InvoiceItem;
 use PayPal\Api\MerchantInfo;
 use PayPal\Api\PaymentTerm;
@@ -54,6 +55,7 @@ class AngellEYE_PayPal_Invoicing_Request {
      * @var      string    $version    The current version of this plugin.
      */
     private $version;
+    public $invoice_request;
 
     /**
      * Initialize the class and set its properties.
@@ -102,8 +104,13 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->debug_log = ($this->debug_log_value == 'on' ) ? true : false;
         $this->apifw_company_logo = isset($this->apifw_setting['apifw_company_logo']) ? $this->apifw_setting['apifw_company_logo'] : '';
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
-
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
+        try {
+            require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-angelleye-paypal-invoicing-manage.php';
+            require_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-manage.php');
+        } catch (Exception $ex) {
+
+        }
     }
 
     public function angelleye_paypal_invoicing_getAuth() {
@@ -133,23 +140,24 @@ class AngellEYE_PayPal_Invoicing_Request {
                         }
                         $this->apifw_access_token = $data['access_token'];
                     } else {
-                        
+
                     }
                 }
             }
             $auth = new ApiContext("Bearer " . $this->apifw_access_token);
-            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $this->apifw_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'INFO', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.Authorization' => "Bearer " . $this->apifw_access_token, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+
             return $auth;
         } else {
             $auth = new ApiContext(new OAuthTokenCredential($this->rest_client_id, $this->rest_secret_id));
-            $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'INFO', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
+            $auth->setConfig(array('mode' => $this->mode, 'http.headers.PayPal-Partner-Attribution-Id' => 'AngellEYE_SP_WP_Invoice', 'log.LogEnabled' => $this->debug_log, 'log.LogLevel' => 'DEBUG', 'log.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice.log', 'cache.enabled' => true, 'cache.FileName' => ANGELLEYE_PAYPAL_INVOICING_LOG_DIR . 'paypal_invoice_cache.log'));
             return $auth;
         }
     }
 
     public function angelleye_paypal_invoicing_get_all_invoice() {
         try {
-            $invoices = Invoice::getAll(array('page' => 120, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+            $invoices = AngellEYE_Invoice::getAll(array('page' => 120, 'page_size' => 20, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
             return json_decode($invoices, true);
         } catch (Exception $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
@@ -160,7 +168,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_get_next_invoice_number() {
         try {
-            $invoices = Invoice::generateNumber($this->angelleye_paypal_invoicing_getAuth());
+            $invoices = AngellEYE_Invoice::generateNumber($this->angelleye_paypal_invoicing_getAuth());
             return json_decode($invoices, true);
         } catch (Exception $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
@@ -170,31 +178,37 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_sync_invoicing_with_wp() {
+
         global $wpdb;
         try {
             if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
                 remove_action('do_pings', 'do_all_pings', 10, 1);
-                define( 'WP_IMPORTING', true );
-                ini_set("memory_limit",-1);
+                define('WP_IMPORTING', true);
+                ini_set("memory_limit", -1);
                 set_time_limit(0);
                 ignore_user_abort(true);
-                wp_defer_term_counting( true );
-                wp_defer_comment_counting( true );
-                $wpdb->query( 'SET autocommit = 0;' );
+                wp_defer_term_counting(true);
+                wp_defer_comment_counting(true);
+                $wpdb->query('SET autocommit = 0;');
                 $angelleye_paypal_invoice_last_page_synce_number = get_option('angelleye_paypal_invoice_last_page_synce_number', false);
-                if($angelleye_paypal_invoice_last_page_synce_number == false) {
-                    $page = 0;
+                if ($angelleye_paypal_invoice_last_page_synce_number == false) {
+                    $page = 1;
                 } else {
-                    $page = $angelleye_paypal_invoice_last_page_synce_number + 1000;
+                    $page = 1;
                 }
                 $bool = true;
                 while ($bool) {
-                    $invoices_data = Invoice::getAll(array('page' => $page, 'page_size' => 1000, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                    try {
+                        $invoices_data = AngellEYE_Invoice::getAll(array('page' => $page, 'page_size' => 100, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                    } catch (Exception $ex) {
+                        $bool = false;
+                        break;
+                    }
                     $invoices_array_data = json_decode($invoices_data, true);
                     if (!empty($invoices_array_data)) {
-                        if (isset($invoices_array_data['invoices']) && !empty($invoices_array_data['invoices']) > 0) {
-                            krsort($invoices_array_data['invoices'], SORT_NUMERIC);
-                            foreach ($invoices_array_data['invoices'] as $key => $invoice) {
+                        if (isset($invoices_array_data['items']) && !empty($invoices_array_data['items']) > 0) {
+                            krsort($invoices_array_data['items'], SORT_NUMERIC);
+                            foreach ($invoices_array_data['items'] as $key => $invoice) {
                                 $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice);
                             }
                         } else {
@@ -202,36 +216,35 @@ class AngellEYE_PayPal_Invoicing_Request {
                             break;
                         }
                     } else {
-
+                        $bool = false;
+                        break;
                     }
                     update_option('angelleye_paypal_invoice_last_page_synce_number', $page);
-                    $page = $page + 1000;
+                    $page = $page + 1;
                 }
                 delete_option('angelleye_paypal_invoice_last_page_synce_number');
-                $wpdb->query( 'COMMIT;' );
-                wp_defer_term_counting( false );
-                wp_defer_comment_counting( false );
+                $wpdb->query('COMMIT;');
+                wp_defer_term_counting(false);
+                wp_defer_comment_counting(false);
             }
         } catch (Exception $ex) {
-            $wpdb->query( 'COMMIT;' );
-            wp_defer_term_counting( false );
-            wp_defer_comment_counting( false );
+            $wpdb->query('COMMIT;');
+            wp_defer_term_counting(false);
+            wp_defer_comment_counting(false);
         }
-        
     }
 
     public function angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice) {
-        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-        $amount = $invoice['total_amount'];
+        $amount = $invoice['amount'];
         $paypal_invoice_data_array = array(
             'id' => $invoice['id'],
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
-            'number' => isset($invoice['number']) ? $invoice['number'] : '',
-            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
-            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
+            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
-            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date']))
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => '',
@@ -239,10 +252,10 @@ class AngellEYE_PayPal_Invoicing_Request {
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['number'],
             'post_author' => 0,
-            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['invoice_date'])),
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
             'post_name' => sanitize_title($invoice['id'])
         );
-        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_name(sanitize_title($invoice['number']));
+        $existing_post_id = $this->angelleye_paypal_invoicing_exist_post_by_name(sanitize_title($paypal_invoice_data_array['number']));
         if ($existing_post_id == false) {
             $post_id = wp_insert_post($insert_invoice_array);
             foreach ($paypal_invoice_data_array as $key => $value) {
@@ -317,86 +330,101 @@ class AngellEYE_PayPal_Invoicing_Request {
             $shipping_last_name = $billing_last_name;
             $shipping_address_1 = $billing_address_1;
             $shipping_address_2 = $billing_address_2;
-            $shipping_city = $shipping_city;
+            $shipping_city = $billing_city;
             $shipping_postcode = $billing_postcode;
             $shipping_country = $billing_country;
             $shipping_state = $billing_state;
         }
         $currency = version_compare(WC_VERSION, '3.0', '<') ? $order->get_order_currency() : $order->get_currency();
-        $invoice = new Invoice();
-        $invoice
-                ->setMerchantInfo(new MerchantInfo())
-                ->setBillingInfo(array(new BillingInfo()))
-                ->setNote("")
-                ->setPaymentTerm(new PaymentTerm())
-                ->setShippingInfo(new ShippingInfo());
-        $invoice->getMerchantInfo()
-                ->setEmail($this->rest_paypal_email)
-                ->setAddress(new Address());
-        $invoice->getMerchantInfo()->getAddress()
-                ->setLine1(get_option('woocommerce_store_address'))
-                ->setLine1(get_option('woocommerce_store_address_2'))
-                ->setCity(get_option('woocommerce_store_city'))
-                ->setState(get_option('store_state'))
-                ->setPostalCode(get_option('woocommerce_store_postcode'))
-                ->setCountryCode(WC()->countries->get_base_country());
-        $billing = $invoice->getBillingInfo();
-        $billing[0]
-                ->setEmail($billing_email)
-                ->setFirstName($billing_first_name)
-                ->setLastName($billing_last_name);
-        $billing[0]->setBusinessName($billing_company)
-                ->setAddress(new InvoiceAddress());
-        $billing[0]->getAddress()
-                ->setLine1($billing_address_1)
-                ->setLine2($billing_address_2)
-                ->setCity($billing_city)
-                ->setState($billing_state)
-                ->setPostalCode($billing_postcode)
-                ->setCountryCode($billing_country);
-        $invoice->getShippingInfo()
-                ->setFirstName($shipping_first_name)
-                ->setLastName($shipping_last_name)
-                ->setBusinessName($billing_company)
-                ->setPhone(new Phone())
-                ->setAddress(new InvoiceAddress());
-        $invoice->getShippingInfo()->getPhone()
-                ->setCountryCode($this->angelleye_paypal_invoice_get_phone_country_code($billing_country))
-                ->setNationalNumber($billing_phone);
-        $invoice->getShippingInfo()->getAddress()
-                ->setLine1($shipping_address_1)
-                ->setLine2($shipping_address_2)
-                ->setCity($shipping_city)
-                ->setState($shipping_state)
-                ->setPostalCode($shipping_postcode)
-                ->setCountryCode($shipping_country);
-        $items = array();
-        $i = 0;
+        $inovoice_param = array(
+            'detail' =>
+            array(
+                'currency_code' => $currency
+            ),
+            'invoicer' =>
+            array(
+                'name' =>
+                array(
+                    'given_name' => $this->first_name,
+                    'surname' => $this->last_name,
+                ),
+                'address' =>
+                array(
+                    'address_line_1' => $this->address_line_1,
+                    'address_line_2' => $this->address_line_2,
+                    'admin_area_2' => $this->city,
+                    'admin_area_1' => $this->state,
+                    'postal_code' => $this->post_code,
+                    'country_code' => $this->country,
+                ),
+                'email_address' => $this->rest_paypal_email,
+                'phones' =>
+                array(
+                    0 =>
+                    array(
+                        'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
+                        'national_number' => $this->phone_number,
+                        'phone_type' => 'MOBILE',
+                    ),
+                ),
+                'logo_url' => $this->apifw_company_logo
+            ),
+            'primary_recipients' =>
+            array(
+                0 =>
+                array(
+                    'billing_info' =>
+                    array(
+                        'email' => $billing_email,
+                        'phones' => array(
+                            0 =>
+                            array(
+                                'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($billing_country),
+                                'national_number' => $billing_phone,
+                                'phone_type' => 'MOBILE',
+                            ),
+                        ),
+                        'name' => array('given_name' => $billing_first_name, 'surname' => $billing_last_name),
+                        'address' => array('address_line_1' => $billing_address_1, 'address_line_1' => $billing_address_2, 'admin_area_2' => $billing_city, 'admin_area_1' => $billing_state, 'postal_code' => $billing_postcode, 'country_code' => $billing_country)
+                    ),
+                    'shipping_info' =>
+                    array(
+                        'name' => array('given_name' => $shipping_first_name, 'surname' => $shipping_last_name),
+                        'address' => array('address_line_1' => $shipping_address_1, 'address_line_1' => $shipping_address_2, 'admin_area_2' => $shipping_city, 'admin_area_1' => $shipping_state, 'postal_code' => $shipping_postcode, 'country_code' => $shipping_country)
+                    ),
+                ),
+            ),
+            'configuration' =>
+            array(
+                'allow_tip' => false,
+                'tax_calculated_after_discount' => true,
+                'tax_inclusive' => false
+            )
+            
+        );
         if (!empty($this->order_param['order_items'])) {
             foreach ($this->order_param['order_items'] as $key => $order_items) {
-                $items[$key] = new InvoiceItem();
-                $items[$key]
-                        ->setName($order_items['name'])
-                        ->setQuantity($order_items['quantity'])
-                        ->setUnitPrice(new Currency());
-                $items[$key]->getUnitPrice()
-                        ->setCurrency($currency)
-                        ->setValue($order_items['unitPrice']);
-                $i = $i + 1;
+                $inovoice_param['items'][$key] = array(
+                    'name' => $order_items['name'],
+                    'quantity' => $order_items['quantity'],
+                    'unit_amount' =>
+                    array(
+                        'currency_code' => $currency,
+                        'value' => $order_items['unitPrice'],
+                    ),
+                );
             }
         }
-        if( !empty($this->apifw_company_logo)) {
-            $invoice->setLogoUrl($this->apifw_company_logo);
-        }
-        $invoice->setItems($items);
-        $invoice->getPaymentTerm()
-                ->setTermType("DUE_ON_RECEIPT");
+        $body_request = array_filter($inovoice_param);
+        $payLoad = json_encode($body_request);
+        $AngellEYE_Invoice = new AngellEYE_Invoice();
         try {
-            $invoice->create($this->angelleye_paypal_invoicing_getAuth());
+            $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
             if ($is_send == true) {
-                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
             }
-            return $invoice->getId();
+            return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
@@ -671,104 +699,140 @@ class AngellEYE_PayPal_Invoicing_Request {
             $allowPartialPayments = isset($post_data['allowPartialPayments']) ? $post_data['allowPartialPayments'] : 'no';
             $allow_tips = isset($post_data['allowTips']) ? $post_data['allowTips'] : 'no';
             $minimumDueAmount = isset($post_data['minimumDueAmount']) ? $post_data['minimumDueAmount'] : 0.00;
-            $invoice = new Invoice();
-            $invoice->setReference($reference);
-            $invoice->setNumber($number);
-            $invoice->setInvoiceDate($invoice_date);
-            $invoice->setTerms($terms);
-            $invoice->setMerchantMemo($merchant_memo);
-            $participant = new Participant();
-            $participant->setEmail($cc_to);
-            $invoice->addCcInfo($participant);
-            $invoice
-                    ->setMerchantInfo(new MerchantInfo())
-                    ->setBillingInfo(array(new BillingInfo()))
-                    ->setNote($notes)
-                    ->setPaymentTerm(new PaymentTerm())
-                    ->setShippingInfo(new ShippingInfo());
-            $invoice->getMerchantInfo()
-                    ->setEmail($this->rest_paypal_email)
-                    ->setAddress(new Address());
-            $invoice->getMerchantInfo()->getAddress()
-                    ->setLine1($this->address_line_1)
-                    ->setLine2($this->address_line_2)
-                    ->setCity($this->city)
-                    ->setState($this->state)
-                    ->setPostalCode($this->post_code)
-                    ->setCountryCode($this->country);
-            $billing = $invoice->getBillingInfo();
-            $billing[0]
-                    ->setEmail($bill_to);
-            $billing[0]->setAddress(new InvoiceAddress());
-            $invoice->getShippingInfo()->setAddress(new InvoiceAddress());
-            $items = array();
+
+            $inovoice_param = array(
+                'detail' =>
+                array(
+                    'invoice_number' => $number,
+                    'reference' => $reference,
+                    'invoice_date' => $invoice_date,
+                    'currency_code' => 'USD',
+                    'note' => $notes,
+                    'term' => $terms,
+                    'memo' => $merchant_memo,
+                ),
+                'invoicer' =>
+                array(
+                    'name' =>
+                    array(
+                        'given_name' => $this->first_name,
+                        'surname' => $this->last_name,
+                    ),
+                    'address' =>
+                    array(
+                        'address_line_1' => $this->address_line_1,
+                        'address_line_2' => $this->address_line_2,
+                        'admin_area_2' => $this->city,
+                        'admin_area_1' => $this->state,
+                        'postal_code' => $this->post_code,
+                        'country_code' => $this->country,
+                    ),
+                    'email_address' => $this->rest_paypal_email,
+                    'phones' =>
+                    array(
+                        0 =>
+                        array(
+                            'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
+                            'national_number' => $this->phone_number,
+                            'phone_type' => 'MOBILE',
+                        ),
+                    ),
+                    'logo_url' => $this->apifw_company_logo
+                ),
+                'primary_recipients' =>
+                array(
+                    0 =>
+                    array(
+                        'billing_info' =>
+                        array(
+                            'email' => $bill_to,
+                        ),
+                    ),
+                ),
+                'configuration' =>
+                array(
+                    'allow_tip' => false,
+                    'tax_calculated_after_discount' => true,
+                    'tax_inclusive' => false
+                ),
+                'amount' =>
+                array(
+                    'breakdown' => array()
+                ),
+            );
+            if ($allowPartialPayments == 'on') {
+                $inovoice_param['detail']['configuration']['partial_payment'] = array(
+                    'allow_partial_payment' => $allowPartialPayments == 'on' ? true : false,
+                    'minimum_amount_due' =>
+                    array(
+                        'currency_code' => 'USD',
+                        'value' => $allowPartialPayments == 'on' ? $minimumDueAmount : '',
+                    ),
+                );
+            }
+            if (!empty($due_date)) {
+                $inovoice_param['detail']['payment_term'] = array(
+                    'term_type' => $term_type,
+                    'due_date' => $due_date,
+                );
+            }
             if (!empty($post_data['item_name'])) {
                 foreach ($post_data['item_name'] as $key => $order_items) {
-                    $items[$key] = new InvoiceItem();
-                    $items[$key]
-                            ->setName($order_items)
-                            ->setQuantity($post_data['item_qty'][$key])
-                            ->setDescription($post_data['item_description'][$key])
-                            ->setUnitPrice(new Currency());
-                    $items[$key]->getUnitPrice()
-                            ->setCurrency('USD')
-                            ->setValue($post_data['item_amt'][$key]);
-                    if(!empty($post_data['item_txt_rate'][$key])) {
-                        $tax = new \PayPal\Api\Tax();
-                        $tax->setPercent($post_data['item_txt_rate'][$key])->setName($post_data['item_txt_name'][$key]);
-                        $items[$key]->setTax($tax);
+                    $inovoice_param['items'][$key] = array(
+                        'name' => $order_items,
+                        'description' => $post_data['item_description'][$key],
+                        'quantity' => $post_data['item_qty'][$key],
+                        'unit_amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => $post_data['item_amt'][$key],
+                        ),
+                    );
+                    if (!empty($post_data['item_txt_rate'][$key])) {
+                        $inovoice_param['items'][$key]['tax'] = array(
+                            'name' => $post_data['item_txt_name'][$key],
+                            'percent' => $post_data['item_txt_rate'][$key],
+                        );
                     }
                 }
             }
 
             if (!empty($shippingAmount) && $shippingAmount > 0) {
-                $shipping_cost = new ShippingCost();
-                $shipping_currency = new Currency();
-                $shipping_currency->setCurrency('USD');
-                $shipping_currency->setValue($shippingAmount);
-                $shipping_cost->setAmount($shipping_currency);
-                $invoice->setShippingCost($shipping_cost);
-            }
-            if ($allowPartialPayments == 'on') {
-                $invoice->setAllowPartialPayment('true');
-                $minimum_amount_due_shipping_currency = new Currency();
-                $minimum_amount_due_shipping_currency->setCurrency('USD');
-                $minimum_amount_due_shipping_currency->setValue($minimumDueAmount);
-                $invoice->setMinimumAmountDue($minimum_amount_due_shipping_currency);
+                $inovoice_param['amount']['breakdown']['shipping'] = array(
+                    'amount' =>
+                    array(
+                        'currency_code' => 'USD',
+                        'value' => $shippingAmount,
+                    ),
+                );
             }
             if (!empty($invDiscount) && $invDiscount > 0) {
-                $cost = new Cost();
                 if ($invoiceDiscType == 'percentage') {
-                    $cost->setPercent($invDiscount);
+                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                        'percent' => $invDiscount
+                    );
                 } else {
-                    $discount_currency = new Currency();
-                    $discount_currency->setCurrency('USD');
-                    $discount_currency->setValue($invDiscount);
-                    $cost->setAmount($discount_currency);
+                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                        'amount' =>
+                        array(
+                            'currency_code' => 'USD',
+                            'value' => $invDiscount,
+                        ),
+                    );
                 }
-                $invoice->setDiscount($cost);
             }
-            if ($allow_tips == 'on') {
-                // $invoice->setAllowtip('true');
-            }
-            if (!empty($due_date)) {
-                //$invoice_due_date_obj = DateTime::createFromFormat('d/m/Y', $due_date);
-                //$invoice_due_date = $invoice_due_date_obj->format('Y-m-d e');
-                $invoice_due_date = pifw_get_paypal_invoice_date_format($due_date);
-                $invoice->getPaymentTerm()->setDueDate($invoice_due_date);
-            }
-            if( !empty($this->apifw_company_logo)) {
-                $invoice->setLogoUrl($this->apifw_company_logo);
-            }
-            $invoice->setItems($items);
-            $invoice->getPaymentTerm()
-                    ->setTermType($term_type);
-            $invoice->create($this->angelleye_paypal_invoicing_getAuth());
+            $body_request = array_filter($inovoice_param);
+            $payLoad = json_encode($body_request);
+            $AngellEYE_Invoice = new AngellEYE_Invoice();
+            $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
             if (!empty($_REQUEST['send_invoice'])) {
-                $invoice->send($this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
+                update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
+                return $invoice_ob->getId();
             }
             update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
-            return $invoice->getId();
+            return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
@@ -790,7 +854,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_get_invoice_details($invoiceId) {
         try {
-            $invoice = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $invoice = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoices_array_data = json_decode($invoice, true);
             return $invoices_array_data;
         } catch (PayPalConnectionException $ex) {
@@ -801,23 +865,25 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
-        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-        $amount = isset($invoice['total_amount']) ? $invoice['total_amount'] : '';
+        $amount = $invoice['amount'];
         $paypal_invoice_data_array = array(
-            'id' => isset($invoice['id']) ? $invoice['id'] : '',
+            'id' => $invoice['id'],
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
-            'number' => isset($invoice['number']) ? $invoice['number'] : '',
-            'email' => isset($billing_info[0]['email']) ? $billing_info[0]['email'] : '',
-            'currency' => isset($amount['currency']) ? $amount['currency'] : '',
+            'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
+            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
+            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
         );
         $insert_invoice_array = array(
             'ID' => $post_id,
             'post_type' => 'paypal_invoices',
             'post_status' => $paypal_invoice_data_array['status'],
             'post_title' => $paypal_invoice_data_array['number'],
-            'post_author' => 0
+            'post_author' => 0,
+            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
+            'post_name' => sanitize_title($invoice['id'])
         );
         wp_update_post($insert_invoice_array);
         foreach ($paypal_invoice_data_array as $key => $value) {
@@ -828,7 +894,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_send_invoice_remind($invoiceId) {
         try {
-            $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $notify = new Notification();
             $notify
                     ->setSubject(apply_filters('angelleye_paypal_invoice_remind_subject', "Past due"))
@@ -844,7 +910,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_send_invoice_from_draft($invoiceId, $post_id) {
         try {
-            $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
             $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
             $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
@@ -857,7 +923,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_cancel_invoice($invoiceId) {
         try {
-            $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $notify = new CancelNotification();
             $notify
                     ->setSubject(apply_filters('angelleye_paypal_invoice_cancel_subject', "Past due"))
@@ -874,7 +940,7 @@ class AngellEYE_PayPal_Invoicing_Request {
 
     public function angelleye_paypal_invoicing_delete_invoice($invoiceId) {
         try {
-            $invoice_ob = Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
             set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
@@ -990,7 +1056,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 }
             }
         } catch (Exception $ex) {
-            
+
         }
     }
 
@@ -1035,7 +1101,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             return false;
         }
     }
-    
+
     public function angelleye_paypal_invoice_get_payment($transaction_id) {
         try {
             $payment = Payment::get($transaction_id, $this->angelleye_paypal_invoicing_getAuth());
@@ -1044,4 +1110,5 @@ class AngellEYE_PayPal_Invoicing_Request {
 
         }
     }
+
 }

@@ -200,7 +200,7 @@ function pifw_clean($var) {
     }
 }
 
-function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d T') {
+function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d') {
     $input_date_format  = get_option('date_format');
     $string = preg_replace('/[(]+[^*]+/', '', $date);
     $current_offset = get_option('gmt_offset');
