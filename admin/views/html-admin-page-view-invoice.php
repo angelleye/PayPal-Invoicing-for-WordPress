@@ -50,8 +50,8 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                         </div>
                     <?php endif; ?>
                     <div class="row">
-                        <?php if(isset($invoice['status']) && $invoice['status'] != 'PAID') : ?>
                         <span class="col-sm-6"></span>
+                        <?php if(isset($invoice['status']) && $invoice['status'] != 'PAID') : ?>
                         <div class="btn-group invoice-action-group">
                         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <?php echo __('Action', 'angelleye-paypal-invoicing'); ?>
