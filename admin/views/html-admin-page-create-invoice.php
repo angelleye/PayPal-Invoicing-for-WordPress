@@ -27,14 +27,14 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
     <div class="row">
         <div class="col-12 mt30-invoice col-sm-8">
             <?php if( !empty($apifw_company_logo)) { ?>
-            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left company_logo">
+            <img src="<?php echo $apifw_company_logo; ?>" class="rounded float-left company_logo angelleye-invoice-company-logo">
             <?php } ?>
         </div>
         <div class="col-12 mt30-invoice col-sm-4">
             <div class="form-group row">
                 <label for="invoice_number" class="col-sm-5 col-form-label pifw_label_left col-12"><?php echo __('Invoice number', 'angelleye-paypal-invoicing'); ?> </label>
                 <div class="col-sm-6 col-11 ">
-                    <input type="text" class="form-control" value="<?php echo isset($this->response['number']) ? esc_attr($this->response['number']) : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
+                    <input type="text" class="form-control" value="<?php echo isset($this->response['invoice_number']) ? esc_attr($this->response['invoice_number']) : '' ?>" id="invoice_number" placeholder="" name="invoice_number" required>
                 </div>
                 <div class="input-group-append">
                     <span class="dashicons dashicons-info" data-toggle="tooltip" data-placement="top" title="<?php echo __("Invoices are numbered automatically beginning with invoice number 0001. You can customize the invoice number any way you'd like, and the next number will increment by 1.", 'angelleye-paypal-invoicing'); ?>"></span>
