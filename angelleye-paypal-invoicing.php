@@ -45,7 +45,12 @@ if (!defined('PAYPAL_INVOICE_PLUGIN_LIVE_API_URL')) {
 if (!defined('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL')) {
     define('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL', 'https://sandbox.angelleye.com/web-services/ppiwp-return/');
 }
-
+if (!defined('AEU_ZIP_URL')) {
+    define('AEU_ZIP_URL', 'https://github.com/angelleye/angelleye-updater/archive/master.zip');
+}
+if (!function_exists('angelleye_queue_update')) {
+    require_once( 'includes/angelleye-functions.php' );
+}
 
 if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
     $upload_dir = wp_upload_dir( null, false );
