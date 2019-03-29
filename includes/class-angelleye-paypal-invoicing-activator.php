@@ -41,6 +41,18 @@ class AngellEYE_PayPal_Invoicing_Activator {
             self::angelleye_paypal_invoicing_create_web_hook();
         }
         //self::angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp();
+        
+        if(!in_array( 'woocommerce/woocommerce.php',apply_filters('active_plugins',get_option('active_plugins'))) && !is_plugin_active_for_network( 'woocommerce/woocommerce.php' )) {
+            deactivate_plugins(plugin_basename(__FILE__));
+        }
+        delete_option('angelleye_paypal_invoicing_submited_feedback');
+        $opt_in_log = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+        if($opt_in_log == 'yes') {
+            $log_url = $_SERVER['HTTP_HOST'];
+            $log_plugin_id = 10;
+            $log_activation_status = 1;
+            wp_remote_request('http://www.angelleye.com/web-services/wordpress/update-plugin-status.php?url='.$log_url.'&plugin_id='.$log_plugin_id.'&activation_status='.$log_activation_status);               
+        } 
     }
 
     private static function create_files() {
