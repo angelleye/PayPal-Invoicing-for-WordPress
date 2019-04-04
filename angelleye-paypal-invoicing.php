@@ -46,7 +46,7 @@ if (!defined('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL')) {
     define('PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL', 'https://sandbox.angelleye.com/web-services/ppiwp-return/');
 }
 if (!defined('AEU_ZIP_URL')) {
-    define('AEU_ZIP_URL', 'https://github.com/angelleye/angelleye-updater/archive/master.zip');
+    define('AEU_ZIP_URL', 'https://updates.angelleye.com/ae-updater/angelleye-updater/angelleye-updater.zip');
 }
 if (!function_exists('angelleye_queue_update')) {
     require_once( 'includes/angelleye-functions.php' );
