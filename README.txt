@@ -100,7 +100,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 = 2.0.0 =
 * Feature - Updates all current functionality to Invoicing v2 APIs. ([PPIW-19](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/56))
-* Feature - Adds AE Updater compatibility for notices and automated updates. ([PPIW-35](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/57))
+* Feature - Adds AE Updater compatibility for notices and automated updates. ([PPIW-35](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/57)) ([PPIW-42](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/58))
 * Feature - Adds opt-in for basic tracking / feedback purposes. ([PPIW-5](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/55))
 
 = 1.0.0 =
