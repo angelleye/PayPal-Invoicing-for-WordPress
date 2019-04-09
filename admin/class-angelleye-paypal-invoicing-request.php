@@ -241,7 +241,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
             'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
-            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'email' => isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? $invoice['primary_recipients'][0]['billing_info']['email_address'] : '',
             'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
             'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
