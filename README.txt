@@ -4,7 +4,7 @@ Donate link: http://www.angelleye.com/
 Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
 Tested up to: 5.1.1
-Stable tag: 2.0.0
+Stable tag: 2.0.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -97,6 +97,9 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * We offer [premium support](https://www.angelleye.com/product/paypal-help/) for things that fall outside the scope of installation and configuration.
 
 == Changelog ==
+
+= 2.0.1 - 04.09.2019 =
+* Fix - Resolves an issue with some invoices resulting in malformed request. ([PPIW-45](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/59))
 
 = 2.0.0 - 04.04.2019 =
 * Feature - Updates all current functionality to Invoicing v2 APIs. ([PPIW-19](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/56))
