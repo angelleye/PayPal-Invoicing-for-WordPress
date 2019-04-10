@@ -57,7 +57,8 @@ class PayPalRestCall
         $headers = $headers ? $headers : array();
         $httpConfig->setHeaders($headers +
             array(
-                'Content-Type' => 'application/json'
+                'Content-Type' => 'application/json',
+                'Prefer' =>  'return=representation'
             )
         );
 
