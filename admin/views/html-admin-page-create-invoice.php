@@ -116,7 +116,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 <tbody class="first_tbody">
                     <tr class="invoice-item-data">
                         <td><input name="item_name[]" class="form-control" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_qty[]" class="form-control" pattern="\d{1,15}" placeholder="<?php echo __('0'); ?>" required></td>
+                        <td><input name="item_qty[]" class="form-control" pattern="\d{1,15}" placeholder="<?php if(empty($item_quantity)) { echo __('0'); } ?>" value="<?php echo $item_quantity; ?>" required></td>
                         <td><input name="item_amt[]"  class="form-control" pattern='[[0-9]+(\.[0-9][0-9]?)?' placeholder="<?php echo __('0.00'); ?>" required></td>
                         <td><input name="item_txt_name[]" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>"></td>
                         <td>
