@@ -84,7 +84,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="bill_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Bill to:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
-                    <input type="text" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
+                    <input type="email" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="cc_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Cc:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
-                    <input type="text" name="cc_to" class="form-control" id="cc_to" placeholder="">
+                    <input type="email" name="cc_to" class="form-control" id="cc_to" placeholder="">
                 </div>
             </div>
         </div>
@@ -116,12 +116,12 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 <tbody class="first_tbody">
                     <tr class="invoice-item-data">
                         <td><input name="item_name[]" class="form-control" type="text" placeholder="<?php echo __('Item name', 'angelleye-paypal-invoicing'); ?>" required></td>
-                        <td><input name="item_qty[]" class="form-control" type="text" placeholder="<?php echo __('0'); ?>" required></td>
-                        <td><input name="item_amt[]"  class="form-control" type="text" placeholder="<?php echo __('0.00'); ?>" required></td>
+                        <td><input name="item_qty[]" class="form-control" pattern="\d{1,15}" placeholder="<?php echo __('0'); ?>" required></td>
+                        <td><input name="item_amt[]"  class="form-control" pattern='[[0-9]+(\.[0-9][0-9]?)?' placeholder="<?php echo __('0.00'); ?>" required></td>
                         <td><input name="item_txt_name[]" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>"></td>
                         <td>
                             <div class="input-group">
-                                <input name="item_txt_rate[]" class="form-control" type="text" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
+                                <input name="item_txt_rate[]" class="form-control" pattern="\d{1,15}" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
                               </div>
@@ -164,7 +164,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                 </div>
                 <div class="col-sm-12">
                     <div class="form-inline">
-                        <input type="text" class="form-control" id="minimumDueAmount" placeholder="0" name="minimumDueAmount">
+                        <input pattern='[[0-9]+(\.[0-9][0-9]?)?' class="form-control" id="minimumDueAmount" placeholder="0" name="minimumDueAmount">
                         <label for="minimumDueAmount">&nbsp;&nbsp;USD</label>
                     </div>
                 </div>
@@ -186,7 +186,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                             <tr>
                                 <th><?php echo __('Discount', 'angelleye-paypal-invoicing'); ?></th>
                                 <td>
-                                        <input name="invDiscount" id="invDiscount" class="text form-control" placeholder="0.00" type="text">
+                                        <input name="invDiscount" id="invDiscount" class="text form-control" placeholder="0.00" pattern='[[0-9]+(\.[0-9][0-9]?)?'>
                                 </td>
                                 <td>
                                     <select name="invoiceDiscType" id="invoiceDiscType" class="select form-control">
@@ -200,7 +200,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                                 <th><?php echo __('Shipping', 'angelleye-paypal-invoicing'); ?></th>
                                 <td colspan="2">
                                     
-                                        <input name="shippingAmount" id="shippingAmount" class="text form-control" value="<?php echo esc_attr($shipping_amount); ?>" type="text">
+                                        <input name="shippingAmount" id="shippingAmount" class="text form-control" value="<?php echo esc_attr($shipping_amount); ?>" pattern='[[0-9]+(\.[0-9][0-9]?)?'>
                                     
                                 </td>
                                 <td class="grey-bg shippingAmountTd"><?php echo esc_attr($shipping_amount); ?></td>

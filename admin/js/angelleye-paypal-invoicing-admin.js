@@ -2,7 +2,7 @@
     'use strict';
     $(function () {
         var el_notice = jQuery(".angelleye-notice");
-        console.log('hi');
+       
         el_notice.fadeIn(750);
         jQuery(".angelleye-notice-dismiss").click(function(e){
             e.preventDefault();
