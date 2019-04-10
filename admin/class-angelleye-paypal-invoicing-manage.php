@@ -867,9 +867,8 @@ class AngellEYE_Invoice extends Invoice {
         );
         
         $response = json_decode($json, true);
-        if(isset($response['href']) && !empty($response['href'])) {
-            $response_array = explode('/',$response['href']);
-            return end($response_array);
+        if(isset($response['id']) && !empty($response['id'])) {
+            return $response['id'];
         } else {
             return false;
         }
