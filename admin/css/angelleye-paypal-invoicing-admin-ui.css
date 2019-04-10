@@ -119,3 +119,8 @@ input:focus:invalid {
   border: 2px solid red;
   -moz-box-shadow: none;
 }
+
+
+:-moz-ui-invalid {
+  box-shadow:none;
+}
