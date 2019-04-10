@@ -73,7 +73,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             </div>
             <div class="form-group row" id="dueDate_box">
                 <label for="dueDate" class="col-sm-5 col-form-label pifw_label_left"></label>
-                <div class="col-sm-7">
+                <div class="col-sm-6 col-11">
                     <input type="text" class="form-control" id="dueDate" name="DUE_ON_DATE_SPECIFIED" value="<?php echo date(get_option('date_format')); ?>">
                 </div>
             </div>
