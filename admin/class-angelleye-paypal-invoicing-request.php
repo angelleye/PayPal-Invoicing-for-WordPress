@@ -831,7 +831,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                         'percent' => $invDiscount
                     );
                 } else {
-                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                    $inovoice_param['amount']['breakdown']['discount']['invoice_discount'] = array(
                         'amount' =>
                         array(
                             'currency_code' => 'USD',

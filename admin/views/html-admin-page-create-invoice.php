@@ -84,7 +84,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="bill_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Bill to:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
-                    <input type="email" name="bill_to" class="form-control" id="bill_to" placeholder="" required>
+                    <input type="email" name="bill_to" class="form-control" id="bill_to" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="" required>
                 </div>
             </div>
         </div>
@@ -94,7 +94,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
             <div class="form-group row">
                 <label for="cc_to" class="col-sm-2 col-form-label pifw_label_left"><b><?php echo __('Cc:', 'angelleye-paypal-invoicing'); ?></b></label>
                 <div class="col-sm-10">
-                    <input type="email" name="cc_to" class="form-control" id="cc_to" placeholder="">
+                    <input type="email" name="cc_to" class="form-control" id="cc_to" placeholder="" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@ $apifw_company_logo = isset($apifw_setting['apifw_company_logo']) ? $apifw_setti
                         <td><input name="item_txt_name[]" class="form-control" type="text" value="<?php echo $tax_name; ?>" placeholder="<?php echo __('Name', 'angelleye-paypal-invoicing'); ?>"></td>
                         <td>
                             <div class="input-group">
-                                <input name="item_txt_rate[]" class="form-control" pattern="\d{1,15}" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
+                                <input name="item_txt_rate[]" class="form-control" pattern="[0-9]+(\.[0-9][0-9]?)?" <?php if(!empty($tax_rate)) { echo "value=".$tax_rate.""; } ?>  placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" oninvalid="this.setCustomValidity('<?php echo __('Please enter a tax rate, or remove the tax name to continue.', 'angelleye-paypal-invoicing'); ?>' )" onvalid="this.setCustomValidity('')" oninput="setCustomValidity('')" onchange="setCustomValidity('')">
                                 <div class="input-group-prepend">
                                 <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
                               </div>
