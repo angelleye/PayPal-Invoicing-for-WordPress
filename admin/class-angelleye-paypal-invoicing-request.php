@@ -745,7 +745,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 'configuration' =>
                 array(
                     'allow_tip' => false,
-                    'tax_calculated_after_discount' => true,
+                    'tax_calculated_after_discount' => false,
                     'tax_inclusive' => false
                 ),
                 'amount' =>
