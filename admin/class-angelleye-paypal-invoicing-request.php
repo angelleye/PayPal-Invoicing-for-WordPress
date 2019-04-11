@@ -827,7 +827,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             if (!empty($invDiscount) && $invDiscount > 0) {
                 if ($invoiceDiscType == 'percentage') {
-                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                    $inovoice_param['amount']['breakdown']['discount']['invoice_discount'] = array(
                         'percent' => $invDiscount
                     );
                 } else {
