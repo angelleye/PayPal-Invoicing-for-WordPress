@@ -98,6 +98,9 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
+= 2.0.2 - 04.12.2019 =
+* Fix - Resolves an issue where the sender email was displayed in the Invoice list instead of the recipient. ([PPIW-43](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/60))
+
 = 2.0.1 - 04.09.2019 =
 * Fix - Resolves an issue with some invoices resulting in malformed request. ([PPIW-45](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/59))
 
