@@ -103,6 +103,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Tweak - Adds better error handling for malformed request failures. ([PPIW-49](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/62))
 * Fix - Resolves an issue where the sender email was displayed in the Invoice list instead of the recipient. ([PPIW-43](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/60))
 * Fix - Resolves additional causes of malformed request. ([PPIW-48](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/61))
+* Fix - Resolves an issue where default values did not carry on to additional line items during invoice creation. ([PPIW-51](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/64))
 
 = 2.0.1 - 04.09.2019 =
 * Fix - Resolves an issue with some invoices resulting in malformed request. ([PPIW-45](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/59))
