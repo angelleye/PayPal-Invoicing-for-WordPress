@@ -241,7 +241,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
             'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
-            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'email' => isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? $invoice['primary_recipients'][0]['billing_info']['email_address'] : '',
             'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
             'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
@@ -365,7 +365,8 @@ class AngellEYE_PayPal_Invoicing_Request {
                 array(
                     'billing_info' =>
                     array(
-                        'email' => $billing_email,
+                        'email_address' => $billing_email,
+                        'additional_info_value' => 'add-info',
                         'phones' => array(
                             0 =>
                             array(
@@ -389,6 +390,10 @@ class AngellEYE_PayPal_Invoicing_Request {
                 'allow_tip' => false,
                 'tax_calculated_after_discount' => true,
                 'tax_inclusive' => false
+            ),
+            'amount' =>
+            array(
+                'breakdown' => array()
             )
         );
 
@@ -420,8 +425,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 );
             }
         }
-        $inovoice_param = array_map('array_filter', $inovoice_param);
-        $body_request = array_filter($inovoice_param);
+        $body_request = $this->angelleye_remove_empty_key($inovoice_param);
         $payLoad = json_encode($body_request);
         $AngellEYE_Invoice = new AngellEYE_Invoice();
         try {
@@ -688,7 +692,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_date = pifw_get_paypal_invoice_date_format($invoice_date);
             $term_type = isset($post_data['invoiceTerms']) ? $post_data['invoiceTerms'] : '';
             if ($term_type == 'DUE_ON_DATE_SPECIFIED') {
-                $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? $post_data['DUE_ON_DATE_SPECIFIED'] : '';
+                $due_date = isset($post_data['DUE_ON_DATE_SPECIFIED']) ? pifw_get_paypal_invoice_date_format($post_data['DUE_ON_DATE_SPECIFIED']) : '';
             } else {
                 $due_date = '';
             }
@@ -741,9 +745,10 @@ class AngellEYE_PayPal_Invoicing_Request {
                     array(
                         'billing_info' =>
                         array(
-                            'email' => $bill_to,
-                        ),
-                    ),
+                            'email_address' => $bill_to,
+                            'additional_info_value' => 'add-info'
+                        )
+                    )
                 ),
                 'configuration' =>
                 array(
@@ -835,8 +840,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     );
                 }
             }
-            $inovoice_param = array_map('array_filter', $inovoice_param);
-            $body_request = array_filter($inovoice_param);
+            $body_request = $this->angelleye_remove_empty_key($inovoice_param);
             $payLoad = json_encode($body_request);
             $AngellEYE_Invoice = new AngellEYE_Invoice();
             $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
@@ -853,6 +857,15 @@ class AngellEYE_PayPal_Invoicing_Request {
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
+    }
+
+    public function angelleye_remove_empty_key($data) {
+        $original = $data;
+        $data = array_filter($data);
+        $data = array_map(function ($e) {
+            return is_array($e) ? $this->angelleye_remove_empty_key($e) : $e;
+        }, $data);
+        return $original === $data ? $data : $this->angelleye_remove_empty_key($data);
     }
 
     public function angelleye_paypal_invoicing_print_api_error($error_msg) {
@@ -886,7 +899,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'status' => isset($invoice['status']) ? $invoice['status'] : '',
             'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
             'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
-            'email' => isset($invoice['invoicer']['email_address']) ? $invoice['invoicer']['email_address'] : '',
+            'email' => isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? $invoice['primary_recipients'][0]['billing_info']['email_address'] : '',
             'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
             'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
             'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
