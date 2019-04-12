@@ -2,7 +2,7 @@
     'use strict';
     $(function () {
         var el_notice = jQuery(".angelleye-notice");
-        console.log('hi');
+       
         el_notice.fadeIn(750);
         jQuery(".angelleye-notice-dismiss").click(function(e){
             e.preventDefault();
@@ -76,9 +76,9 @@
                     $first_row = $table.find('tbody:last').clone().find('input').val('').end();
             $first_row.removeClass('first_tbody');
             $first_row.find('.amount').html('');
-            $first_row.find("#item_txt_name").val(angelleye_paypal_invoicing_js.tax_name);
-            $first_row.find("#item_txt_rate").val(angelleye_paypal_invoicing_js.tax_rate);
-            $first_row.find("#item_qty").val(angelleye_paypal_invoicing_js.item_qty);
+            $first_row.find("[name='item_txt_name[]']").val(angelleye_paypal_invoicing_js.tax_name);
+            $first_row.find("[name='item_txt_rate[]']").val(angelleye_paypal_invoicing_js.tax_rate);
+            $first_row.find("[name='item_qty[]']").val(angelleye_paypal_invoicing_js.item_qty);
             $table.append($first_row);
         });
         jQuery(document).on('click', '.deleteItem', function (event) {
@@ -137,22 +137,22 @@
             jQuery('#tax_tr_0').html('');
             jQuery('input[name="item_name[]"]').each(function () {
                 jQuery('#tax_tr_' + (i + 1)).html('');
-                var qty = parseInt(jQuery(this).parent().next().children('input[type="text"]').val());
+                var qty = parseInt(jQuery(this).parent().next().children('input').val());
                 if (isNaN(qty)) {
                     tax = 0;
                 }
-                var price = parseFloat(jQuery(this).parent().next().next().children('input[type="text"]').val()).toFixed(2);
+                var price = parseFloat(jQuery(this).parent().next().next().children('input').val()).toFixed(2);
                 if (isNaN(price)) {
                     tax = 0.00;
                 }
-                var tax_name = jQuery(this).parent().next().next().next().children('input[type="text"]').val();
+                var tax_name = jQuery(this).parent().next().next().next().children('input').val();
                 if (tax_name != '') {
-                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", true);
+                    jQuery(this).parent().next().next().next().next().children().children('input').attr("required", true);
                 } else {
-                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').attr("required", false);
-                    jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').trigger("change");
+                    jQuery(this).parent().next().next().next().next().children().children('input').attr("required", false);
+                    jQuery(this).parent().next().next().next().next().children().children('input').trigger("change");
                 }
-                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children().children('input[type="text"]').val());
+                var tax = parseFloat(jQuery(this).parent().next().next().next().next().children().children('input').val());
                 if (isNaN(tax)) {
                     tax = 0.00;
                 }
