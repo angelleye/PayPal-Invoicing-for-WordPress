@@ -1097,11 +1097,18 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
                 }
                 break;
+            case 'INVALID_REQUEST':
+                foreach ($error_object->details as $e) {
+                    $message .= "\t" . $e->field . "\n\t" . $e->description . "\n\n";
+                }
+                break;
             case 'BUSINESS_ERROR':
                 $message .= $error_object->message;
                 break;
         }
-        if (!empty($error_object->message)) {
+        if( !empty($message)) {
+            return $message;
+        } else if (!empty($error_object->message)) {
             $message = $error_object->message;
         } else if (!empty($error_object->error_description)) {
             $message = $error_object->error_description;
