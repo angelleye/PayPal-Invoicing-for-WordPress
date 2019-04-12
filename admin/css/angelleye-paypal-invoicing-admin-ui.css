@@ -115,3 +115,12 @@
     margin: 3px 0px !important;
     padding: 0px;
 }
+input:focus:invalid {
+  border: 2px solid red;
+  -moz-box-shadow: none;
+}
+
+
+:-moz-ui-invalid {
+  box-shadow:none;
+}

@@ -367,14 +367,6 @@ class AngellEYE_PayPal_Invoicing_Request {
                     array(
                         'email_address' => $billing_email,
                         'additional_info_value' => 'add-info',
-                        'phones' => array(
-                            0 =>
-                            array(
-                                'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($billing_country),
-                                'national_number' => $billing_phone,
-                                'phone_type' => 'MOBILE',
-                            ),
-                        ),
                         'name' => array('given_name' => $billing_first_name, 'surname' => $billing_last_name),
                         'address' => array('address_line_1' => $billing_address_1, 'address_line_1' => $billing_address_2, 'admin_area_2' => $billing_city, 'admin_area_1' => $billing_state, 'postal_code' => $billing_postcode, 'country_code' => $billing_country)
                     ),
@@ -388,7 +380,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'configuration' =>
             array(
                 'allow_tip' => false,
-                'tax_calculated_after_discount' => true,
+                'tax_calculated_after_discount' => false,
                 'tax_inclusive' => false
             ),
             'amount' =>
@@ -753,7 +745,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 'configuration' =>
                 array(
                     'allow_tip' => false,
-                    'tax_calculated_after_discount' => true,
+                    'tax_calculated_after_discount' => false,
                     'tax_inclusive' => false
                 ),
                 'amount' =>
@@ -827,11 +819,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             if (!empty($invDiscount) && $invDiscount > 0) {
                 if ($invoiceDiscType == 'percentage') {
-                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                    $inovoice_param['amount']['breakdown']['discount']['invoice_discount'] = array(
                         'percent' => $invDiscount
                     );
                 } else {
-                    $inovoice_param['amount']['breakdown']['discount'] = array(
+                    $inovoice_param['amount']['breakdown']['discount']['invoice_discount'] = array(
                         'amount' =>
                         array(
                             'currency_code' => 'USD',
