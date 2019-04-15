@@ -398,7 +398,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 0 =>
                 array(
                     'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                    'national_number' => $this->phone_number,
+                    'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
                     'phone_type' => 'MOBILE',
                 ),
             );
@@ -648,7 +648,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'TZ' => array('name' => 'TANZANIA, UNITED REPUBLIC OF', 'code' => '255'),
             'UA' => array('name' => 'UKRAINE', 'code' => '380'),
             'UG' => array('name' => 'UGANDA', 'code' => '256'),
-            'US' => array('name' => 'UNITED STATES', 'code' => '1'),
+            'US' => array('name' => 'UNITED STATES', 'code' => '001'),
             'UY' => array('name' => 'URUGUAY', 'code' => '598'),
             'UZ' => array('name' => 'UZBEKISTAN', 'code' => '998'),
             'VA' => array('name' => 'HOLY SEE (VATICAN CITY STATE)', 'code' => '39'),
@@ -759,7 +759,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     0 =>
                     array(
                         'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                        'national_number' => $this->phone_number,
+                        'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
                         'phone_type' => 'MOBILE',
                     ),
                 );
