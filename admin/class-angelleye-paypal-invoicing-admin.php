@@ -862,7 +862,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             );
             if (is_wp_error($response)) {
                 $error_message = $response->get_error_message();
-                $this->log->add('paypal_invoice_log', print_r($error_message, true));
+                error_log(print_r($error_message, true));
                 echo "Something went wrong: $error_message";
                 exit();
             } else {
@@ -878,7 +878,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     wp_redirect(admin_url('admin.php?page=apifw_settings'));
                     exit();
                 } else {
-                    $this->log->add('paypal_invoice_log', print_r($data, true));
+                    error_log(print_r($data, true));
                 }
             }
         }
