@@ -342,7 +342,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
             } catch (Exception $ex) {
-                
+                error_log(print_r($ex->getMessage(), true));
             }
         }
     }
@@ -680,7 +680,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $this->angelleye_paypal_invoicing_print_error();
             }
         } catch (Exception $ex) {
-            echo $ex->getMessage();
+            error_log(print_r($ex->getMessage(), true));
         }
     }
 
@@ -787,7 +787,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
         } catch (Exception $ex) {
-            echo $ex->getMessage();
+            error_log(print_r($ex->getMessage(), true));
         }
     }
 
@@ -797,7 +797,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
                 $log = new AngellEYE_PayPal_Invoicing_Logger();
                 $posted_raw = $this->angelleye_paypal_invoicing_get_raw_data();
-                $log->add('paypal_invoice_log', print_r($posted_raw, true));
                 $headers = getallheaders();
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
@@ -863,12 +862,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
             );
             if (is_wp_error($response)) {
                 $error_message = $response->get_error_message();
+                $this->log->add('paypal_invoice_log', print_r($error_message, true));
                 echo "Something went wrong: $error_message";
                 exit();
             } else {
                 $json_data_string = wp_remote_retrieve_body($response);
                 $data = json_decode($json_data_string, true);
-                error_log(print_r($data, true));
                 if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
                     if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
                         set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
@@ -879,7 +878,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     wp_redirect(admin_url('admin.php?page=apifw_settings'));
                     exit();
                 } else {
-                    
+                    $this->log->add('paypal_invoice_log', print_r($data, true));
                 }
             }
         }
@@ -1235,7 +1234,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     $order->update_status('refunded');
                 }
             } catch (Exception $ex) {
-                
+                error_log(print_r($ex->getMessage(), true));
             }
         }
     }
