@@ -868,6 +868,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             } else {
                 $json_data_string = wp_remote_retrieve_body($response);
                 $data = json_decode($json_data_string, true);
+                error_log(print_r($data, true));
                 if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
                     if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
                         set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
