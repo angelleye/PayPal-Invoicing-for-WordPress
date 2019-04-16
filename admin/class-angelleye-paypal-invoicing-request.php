@@ -129,6 +129,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 );
                 if (is_wp_error($response)) {
                     $error_message = $response->get_error_message();
+                    error_log(print_r($error_message, true));
                 } else {
                     $json_data_string = wp_remote_retrieve_body($response);
                     $data = json_decode($json_data_string, true);
@@ -140,7 +141,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                         }
                         $this->apifw_access_token = $data['access_token'];
                     } else {
-                        
+                        error_log(print_r($data, true));
                     }
                 }
             }
