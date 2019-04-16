@@ -166,7 +166,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return json_decode($invoices, true);
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -178,7 +182,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return json_decode($invoices, true);
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -408,7 +416,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 0 =>
                 array(
                     'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                    'national_number' => $this->phone_number,
+                    'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
                     'phone_type' => 'MOBILE',
                 ),
             );
@@ -439,7 +447,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -659,7 +671,7 @@ class AngellEYE_PayPal_Invoicing_Request {
             'TZ' => array('name' => 'TANZANIA, UNITED REPUBLIC OF', 'code' => '255'),
             'UA' => array('name' => 'UKRAINE', 'code' => '380'),
             'UG' => array('name' => 'UGANDA', 'code' => '256'),
-            'US' => array('name' => 'UNITED STATES', 'code' => '1'),
+            'US' => array('name' => 'UNITED STATES', 'code' => '001'),
             'UY' => array('name' => 'URUGUAY', 'code' => '598'),
             'UZ' => array('name' => 'UZBEKISTAN', 'code' => '998'),
             'VA' => array('name' => 'HOLY SEE (VATICAN CITY STATE)', 'code' => '39'),
@@ -770,7 +782,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     0 =>
                     array(
                         'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                        'national_number' => $this->phone_number,
+                        'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
                         'phone_type' => 'MOBILE',
                     ),
                 );
@@ -857,7 +869,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -891,7 +907,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $invoices_array_data;
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -936,7 +956,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -950,7 +974,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -968,7 +996,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -980,7 +1012,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -1067,7 +1103,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $output;
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            set_transient('angelleye_paypal_invoicing_error', $this->angelleye_paypal_invoicing_get_readable_message($ex->getData()));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
             wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
             exit();
         }
@@ -1098,6 +1138,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
         }
     }
 
@@ -1159,6 +1204,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $payment;
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
         }
     }
 
