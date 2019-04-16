@@ -85,7 +85,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
             $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
             $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
         } catch (Exception $ex) {
-            
+            error_log(print_r($ex->getMessage(), true));
         }
     }
     
@@ -95,7 +95,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
             $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
             $request->angelleye_paypal_invoicing_create_web_hook_request();
         } catch (Exception $ex) {
-
+            error_log(print_r($ex->getMessage(), true));
         }
     }
 
