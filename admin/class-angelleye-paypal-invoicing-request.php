@@ -1083,20 +1083,22 @@ class AngellEYE_PayPal_Invoicing_Request {
     public function angelleye_paypal_invoicing_get_readable_message($json_error) {
         $message = '';
         $error_object = json_decode($json_error);
-        switch ($error_object->name) {
-            case 'VALIDATION_ERROR':
-                foreach ($error_object->details as $e) {
-                    $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
-                }
-                break;
-            case 'INVALID_REQUEST':
-                foreach ($error_object->details as $e) {
-                    $message .= "\t" . $e->field . "\n\t" . $e->description . "\n\n";
-                }
-                break;
-            case 'BUSINESS_ERROR':
-                $message .= $error_object->message;
-                break;
+        if( isset($error_object->name) ) {
+            switch ($error_object->name) {
+                case 'VALIDATION_ERROR':
+                    foreach ($error_object->details as $e) {
+                        $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
+                    }
+                    break;
+                case 'INVALID_REQUEST':
+                    foreach ($error_object->details as $e) {
+                        $message .= "\t" . $e->field . "\n\t" . $e->description . "\n\n";
+                    }
+                    break;
+                case 'BUSINESS_ERROR':
+                    $message .= $error_object->message;
+                    break;
+            }
         }
         if( !empty($message)) {
             return $message;
