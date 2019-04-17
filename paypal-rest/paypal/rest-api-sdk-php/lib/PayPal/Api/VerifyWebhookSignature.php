@@ -222,7 +222,7 @@ class VerifyWebhookSignature extends PayPalResourceModel
         $payLoad = $this->toJSON();
 
         $json = self::executeCall(
-            "/v2/notifications/verify-webhook-signature",
+            "/v1/notifications/verify-webhook-signature",
             "POST",
             $payLoad,
             null,
