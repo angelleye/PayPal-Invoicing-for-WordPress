@@ -874,6 +874,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     } else {
                         set_transient('apifw_live_access_token', $data['access_token'], 28200);
                     }
+                    delete_option('webhook_id');
                     $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
                     wp_redirect(admin_url('admin.php?page=apifw_settings'));
                     exit();
@@ -886,11 +887,13 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
                 delete_option('apifw_sandbox_refresh_token');
                 delete_transient('apifw_sandbox_access_token');
+                delete_option('webhook_id');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
                 delete_option('apifw_live_refresh_token');
                 delete_transient('apifw_live_access_token');
+                delete_option('webhook_id');
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             }
@@ -1269,6 +1272,13 @@ class AngellEYE_PayPal_Invoicing_Admin {
             } else {
                 wp_send_json(wp_remote_retrieve_body($response));
             }
+    }
+    
+    public function angelleye_paypal_invoicing_add_web_hooks() {
+        $webhook_id = get_option('webhook_id', false);
+        if( $webhook_id == false) {
+            AngellEYE_PayPal_Invoicing_Activator::activate();
+        }
     }
 
 }
