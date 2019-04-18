@@ -98,6 +98,9 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
+= 2.0.3 - 04.18.2019 =
+* Fix - Resolves an issue with some international phone number formats. ([PPIW-56](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/65))
+
 = 2.0.2 - 04.12.2019 =
 * Tweak - Adds validation on invoice field values during creation. ([PPIW-50](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/63))
 * Tweak - Adds better error handling for malformed request failures. ([PPIW-49](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/62))
