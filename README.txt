@@ -98,6 +98,9 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
+= 2.0.4 - 04.22.2019 =
+* Fix - Resolves an issue where WooCommerce orders were not updating properly with PayPal Invoices. ([PPIW-57](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/66))
+
 = 2.0.3 - 04.18.2019 =
 * Fix - Resolves an issue with some international phone number formats. ([PPIW-56](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/65))
 
