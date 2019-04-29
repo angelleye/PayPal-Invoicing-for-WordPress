@@ -69,6 +69,9 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                             if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
                                 echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
                             }
+                            if ($status == 'PARTIALLY_PAID' || $status == 'SENT') {
+                                echo '<a class="dropdown-item thickbox" href="#TB_inline?&width=600&height=550&inlineId=thickbox-record-payment-content">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
+                            }
                             if ($status == 'SENT') {
                                 echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
                             }
@@ -329,3 +332,10 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
         </div>
     </div>
 </div>
+<?php add_thickbox(); ?>
+<div id="thickbox-record-payment-content" style="display:none;">
+     <p>
+          This is my hidden content! It will appear in ThickBox when the link is clicked.
+     </p>
+</div>
+<a href="" class="thickbox "></a>	
