@@ -57,7 +57,7 @@ if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
     define('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR', $upload_dir['basedir'] . '/angelleye-paypal-invoicing/');
 }
 if (!defined('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL')) {
-    define('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL', 'http://localhost/activation/');
+    define('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL', 'https://www.angelleye.com/');
 }
 
 /**
