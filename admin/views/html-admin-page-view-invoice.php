@@ -51,36 +51,35 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                     <?php endif; ?>
                     <div class="row">
                         <span class="col-sm-6"></span>
-                        <?php if(isset($invoice['status']) && $invoice['status'] != 'PAID') : ?>
-                        <div class="btn-group invoice-action-group">
-                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <?php echo __('Action', 'angelleye-paypal-invoicing'); ?>
-                        </button>
-                        <div class="dropdown-menu">
-                            <?php
-                            
-                            if (isset($invoice['detail']['metadata']['recipient_view_url']) && !empty($invoice['detail']['metadata']['recipient_view_url'])) {
-                                echo '<a class="dropdown-item" target="_blank" href="' . $invoice['detail']['metadata']['recipient_view_url'] . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                            }
-                            if ($status == 'DRAFT') {
-                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                            }
-                            if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
-                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
-                            }
-                            if ($status == 'PARTIALLY_PAID' || $status == 'SENT') {
-                                echo '<a class="dropdown-item thickbox" href="#TB_inline?&width=600&height=550&inlineId=thickbox-record-payment-content">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
-                            }
-                            if ($status == 'SENT') {
-                                echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                            }
-                            ?>
-                        </div>
-                    </div>
+                        <?php if (isset($invoice['status']) && $invoice['status'] != 'PAID') : ?>
+                            <div class="btn-group invoice-action-group">
+                                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <?php echo __('Action', 'angelleye-paypal-invoicing'); ?>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <?php
+                                    if (isset($invoice['detail']['metadata']['recipient_view_url']) && !empty($invoice['detail']['metadata']['recipient_view_url'])) {
+                                        echo '<a class="dropdown-item" target="_blank" href="' . $invoice['detail']['metadata']['recipient_view_url'] . '">' . __('View PayPal Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                    }
+                                    if ($status == 'DRAFT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_send')) . '">' . __('Send Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_delete')) . '">' . __('Delete Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                    }
+                                    if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
+                                    }
+                                    if ($status == 'PARTIALLY_PAID' || $status == 'SENT') {
+                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
+                                    }
+                                    if ($status == 'SENT') {
+                                        echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                    }
+                                    ?>
+                                </div>
+                            </div>
                         <?php endif; ?>
                     </div>
-                    
+
                     <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
                         <div class="row">
                             <span class="col-sm-6 text-right"><?php echo __('Invoice #:', 'angelleye-paypal-invoicing'); ?></span>
@@ -332,10 +331,71 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
         </div>
     </div>
 </div>
-<?php add_thickbox(); ?>
-<div id="thickbox-record-payment-content" style="display:none;">
-     <p>
-          This is my hidden content! It will appear in ThickBox when the link is clicked.
-     </p>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form>
+                        <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
+                            <div class="row">
+                                <span class="col-4"><?php echo __('Invoice number:', 'angelleye-paypal-invoicing'); ?></span>
+                                <span class="col-4"><?php echo $invoice['detail']['invoice_number']; ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if (!empty($invoice['due_amount']['value'])) : ?>
+                            <div class="row">
+                                <span class="col-4"><?php echo __('Amount due:', 'angelleye-paypal-invoicing'); ?></span>
+                                <span class="col-4"><?php echo pifw_get_currency_symbol($invoice['due_amount']['currency_code']) . $invoice['due_amount']['value']; ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="payment_amount">Payment amount</label>
+                                    <input type="number" step="0.01" class="form-control" id="payment_amount" max="<?php echo $invoice['due_amount']['value']; ?>">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group row">
+                                    <label for="record_payment_invoice_date" ><?php echo __('Payment date', 'angelleye-paypal-invoicing'); ?></label>
+                                    <input type="text" class="form-control" value="<?php echo date(get_option('date_format')); ?>" id="record_payment_invoice_date" placeholder="" name="record_payment_invoice_date" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <label for="payment_method" ><?php echo __('Payment method', 'angelleye-paypal-invoicing'); ?></label>
+                                    <select class="form-control" id="exampleFormControlSelect1">
+                                        <option value="BANK_TRANSFER"><?php echo __('Bank transfer', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="CASH"><?php echo __('Cash', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="CHECK"><?php echo __('Check', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="CREDIT_CARD"><?php echo __('Credit card', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="DEBIT_CARD"><?php echo __('Debit card', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="PAYPAL"><?php echo __('PayPal', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="WIRE_TRANSFER"><?php echo __('Wire transfer', 'angelleye-paypal-invoicing'); ?></option>
+                                        <option value="OTHER"><?php echo __('Other', 'angelleye-paypal-invoicing'); ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group row">
+                                    <textarea placeholder="<?php echo __('Add a note for your records', 'angelleye-paypal-invoicing'); ?>" rows="5" class="form-control" name="notes" id="notes"></textarea><p class="help-block text-right" id="notesChars"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></button>
+            </div>
+        </div>
+    </div>
 </div>
-<a href="" class="thickbox "></a>	

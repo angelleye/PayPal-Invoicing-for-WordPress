@@ -97,6 +97,13 @@
                         jQuery("#invoice_date").datepicker("getDate"));
             }
         });
+        jQuery('#record_payment_invoice_date').datepicker({
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat,
+            onSelect: function (dateText, inst) {
+                jQuery("#dueDate").datepicker("option", "minDate",
+                        jQuery("#record_payment_invoice_date").datepicker("getDate"));
+            }
+        });
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
             jQuery(".memoDetail").show();
