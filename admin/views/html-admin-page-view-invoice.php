@@ -467,14 +467,14 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                     <div class="row mt30-invoice">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="angelleye_record_payment_amount"><strong><?php echo __('Refund amount', 'angelleye-paypal-invoicing'); ?></strong></label>
-                                <input type="number" step="0.01" class="form-control" value="<?php echo $invoice['payments']['paid_amount']['value']; ?>" id="angelleye_record_payment_amount" max="<?php echo $invoice['payments']['paid_amount']['value']; ?>">
+                                <label for="angelleye_record_refund_amount"><strong><?php echo __('Refund amount', 'angelleye-paypal-invoicing'); ?></strong></label>
+                                <input type="number" step="0.01" class="form-control" value="<?php echo $invoice['payments']['paid_amount']['value']; ?>" id="angelleye_record_refund_amount" max="<?php echo $invoice['payments']['paid_amount']['value']; ?>">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="record_payment_invoice_date"><strong><?php echo __('Refund date', 'angelleye-paypal-invoicing'); ?></strong></label>
-                                <input type="text" class="form-control" value="<?php echo date(get_option('date_format')); ?>" id="record_payment_invoice_date" placeholder="" name="record_payment_invoice_date" required>
+                                <label for="record_refund_invoice_date"><strong><?php echo __('Refund date', 'angelleye-paypal-invoicing'); ?></strong></label>
+                                <input type="text" class="form-control" value="<?php echo date(get_option('date_format')); ?>" id="record_refund_invoice_date" placeholder="" name="record_refund_invoice_date" required>
                             </div>
                         </div>
                     </div>
@@ -507,7 +507,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="angelleye_record_payment"><?php echo __('Record Refund', 'angelleye-paypal-invoicing'); ?></button>
+                <button type="button" class="btn btn-primary" id="angelleye_record_refund"><?php echo __('Record Refund', 'angelleye-paypal-invoicing'); ?></button>
             </div>
         </div>
     </div>
