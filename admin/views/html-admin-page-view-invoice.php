@@ -69,11 +69,11 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                                         echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     if ($status == 'PARTIALLY_PAID' || $status == 'SENT') {
-                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
+                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#Payment_RecordModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     if ($status == 'SENT' || $status == 'UNPAID') {
                                         echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
-                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
+                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#Payment_RecordModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     ?>
                                 </div>
@@ -332,11 +332,11 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
         </div>
     </div>
 </div>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="Payment_RecordModal" tabindex="-1" role="dialog" aria-labelledby="Payment_RecordModalLabel" aria-hidden="true">
     <div class="modal-dialog invoice-table" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></h5>
+                <h5 class="modal-title" id="Payment_RecordModalLabel"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
