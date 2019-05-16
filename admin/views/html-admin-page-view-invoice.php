@@ -439,6 +439,15 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
+                    <?php 
+                    $max_refund_amout = 0;
+                    if (!empty($invoice['payments']['paid_amount']['value'])) {
+                        $max_refund_amout = $invoice['payments']['paid_amount']['value'];
+                    }
+                    if (!empty($invoice['refunds']['refund_amount']['value'])) {
+                        $max_refund_amout = $max_refund_amout - $invoice['refunds']['refund_amount']['value'];
+                    }
+                    ?>
                     <input type="hidden" name="angelleye_paypal_invoice_id" id="angelleye_paypal_invoice_id" value="<?php echo $invoice['id']; ?>">
                     <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
                         <div class="row">
@@ -464,11 +473,17 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                             <span class="col-6"><?php echo pifw_get_currency_symbol($invoice['payments']['paid_amount']['currency_code']) . $invoice['payments']['paid_amount']['value']; ?></span>
                         </div>
                     <?php endif; ?>
+                    <?php if (!empty($invoice['refunds']['refund_amount']['value'])) : ?>
+                        <div class="row">
+                            <span class="col-6"><strong><?php echo __('Recorded refunds:', 'angelleye-paypal-invoicing'); ?></strong></span>
+                            <span class="col-6"><?php echo pifw_get_currency_symbol($invoice['refunds']['refund_amount']['currency_code']) . $invoice['refunds']['refund_amount']['value']; ?></span>
+                        </div>
+                    <?php endif; ?>
                     <div class="row mt30-invoice">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="angelleye_record_refund_amount"><strong><?php echo __('Refund amount', 'angelleye-paypal-invoicing'); ?></strong></label>
-                                <input type="number" step="0.01" class="form-control" value="<?php echo $invoice['payments']['paid_amount']['value']; ?>" id="angelleye_record_refund_amount" max="<?php echo $invoice['payments']['paid_amount']['value']; ?>">
+                                <input type="number" step="0.01" class="form-control" value="<?php echo $max_refund_amout; ?>" id="angelleye_record_refund_amount" max="<?php echo $max_refund_amout; ?>">
                             </div>
                         </div>
                         <div class="col-6">
