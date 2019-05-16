@@ -384,7 +384,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="angelleye_record_payment_amount"><strong><?php echo __('Payment amount:', 'angelleye-paypal-invoicing'); ?></strong></label>
-                                <input type="number" step="0.01" class="form-control" id="angelleye_record_payment_amount" max="<?php echo $invoice['due_amount']['value']; ?>">
+                                <input type="number" step="0.01" class="form-control" id="angelleye_record_payment_amount" value="<?php echo $invoice['due_amount']['value']; ?>" max="<?php echo $invoice['due_amount']['value']; ?>">
                             </div>
                         </div>
                         <div class="col-6">
@@ -468,7 +468,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="angelleye_record_payment_amount"><strong><?php echo __('Refund amount', 'angelleye-paypal-invoicing'); ?></strong></label>
-                                <input type="number" step="0.01" class="form-control" id="angelleye_record_payment_amount" max="<?php echo $invoice['due_amount']['value']; ?>">
+                                <input type="number" step="0.01" class="form-control" value="<?php echo $invoice['payments']['paid_amount']['value']; ?>" id="angelleye_record_payment_amount" max="<?php echo $invoice['payments']['paid_amount']['value']; ?>">
                             </div>
                         </div>
                         <div class="col-6">
