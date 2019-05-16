@@ -1293,5 +1293,18 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
         }
     }
+    
+    public function angelleye_paypal_invoicing_record_refund() {
+        $this->angelleye_paypal_invoicing_load_rest_api();
+        if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
+            $record_refund_data = array();
+            $record_refund_data['method'] = $_POST['refund_method'];
+            $record_refund_data['payment_date'] = $_POST['refund_date'];
+            $record_refund_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['refund_amount']);
+            $record_refund_data['note'] = $_POST['refund_note'];
+            $invoice_id = $_POST['invoice_id'];
+            $this->request->angelleye_paypal_invoice_record_refund($invoice_id, $record_refund_data);
+        }
+    }
 
 }

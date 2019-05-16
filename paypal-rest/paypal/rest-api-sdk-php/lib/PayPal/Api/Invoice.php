@@ -1122,7 +1122,7 @@ class Invoice extends PayPalResourceModel
         ArgumentValidator::validate($refundDetail, 'refundDetail');
         $payLoad = $refundDetail->toJSON();
         self::executeCall(
-            "/v1/invoicing/invoices/{$this->getId()}/record-refund",
+            "/v2/invoicing/invoices/{$this->getId()}/record-refund",
             "POST",
             $payLoad,
             null,

@@ -296,6 +296,21 @@
                 });
 
             });
+            jQuery('#angelleye_record_refund').click(function (event) {
+                console.log('refund');
+                var data = {
+                    'action': 'angelleye_paypal_invoicing_record_refund',
+                    'invoice_id': jQuery('#angelleye_paypal_invoice_id').val(),
+                    'refund_amount' : jQuery('#angelleye_record_refund_amount').val(),
+                    'refund_date' : jQuery('#record_refund_invoice_date').val(),
+                    'refund_method' : jQuery('#angelleye_paypal_invoice_payment_method').val(),
+                    'refund_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
+                };
+                jQuery.post(ajaxurl, data, function (response) {
+                    console.log(response);
+                });
+
+            });
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
                     production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
             jQuery('.angelleye-invoice-toggle-settings').click(function (evt) {
