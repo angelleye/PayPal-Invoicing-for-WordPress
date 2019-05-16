@@ -1098,7 +1098,7 @@ class Invoice extends PayPalResourceModel
         ArgumentValidator::validate($paymentDetail, 'paymentDetail');
         $payLoad = $paymentDetail->toJSON();
         self::executeCall(
-            "/v1/invoicing/invoices/{$this->getId()}/record-payment",
+            "/v2/invoicing/invoices/{$this->getId()}/record-payment",
             "POST",
             $payLoad,
             null,

@@ -71,8 +71,9 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                                     if ($status == 'PARTIALLY_PAID' || $status == 'SENT') {
                                         echo '<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
-                                    if ($status == 'SENT') {
+                                    if ($status == 'SENT' || $status == 'UNPAID') {
                                         echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
+                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     ?>
                                 </div>
@@ -332,7 +333,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
     </div>
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog invoice-table" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></h5>
@@ -342,59 +343,63 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
             </div>
             <div class="modal-body">
                 <div class="container-fluid">
-                    <form>
-                        <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
-                            <div class="row">
-                                <span class="col-4"><?php echo __('Invoice number:', 'angelleye-paypal-invoicing'); ?></span>
-                                <span class="col-4"><?php echo $invoice['detail']['invoice_number']; ?></span>
-                            </div>
-                        <?php endif; ?>
-                        <?php if (!empty($invoice['due_amount']['value'])) : ?>
-                            <div class="row">
-                                <span class="col-4"><?php echo __('Amount due:', 'angelleye-paypal-invoicing'); ?></span>
-                                <span class="col-4"><?php echo pifw_get_currency_symbol($invoice['due_amount']['currency_code']) . $invoice['due_amount']['value']; ?></span>
-                            </div>
-                        <?php endif; ?>
+                    <input type="hidden" name="angelleye_paypal_invoice_id" id="angelleye_paypal_invoice_id" value="<?php echo $invoice['id']; ?>">
+                    <?php if (!empty($invoice['detail']['invoice_number'])) : ?>
                         <div class="row">
-                            <div class="col-6">
-                                <div class="form-group">
-                                    <label for="payment_amount">Payment amount</label>
-                                    <input type="number" step="0.01" class="form-control" id="payment_amount" max="<?php echo $invoice['due_amount']['value']; ?>">
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group row">
-                                    <label for="record_payment_invoice_date" ><?php echo __('Payment date', 'angelleye-paypal-invoicing'); ?></label>
-                                    <input type="text" class="form-control" value="<?php echo date(get_option('date_format')); ?>" id="record_payment_invoice_date" placeholder="" name="record_payment_invoice_date" required>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <label for="payment_method" ><?php echo __('Payment method', 'angelleye-paypal-invoicing'); ?></label>
-                                    <select class="form-control" id="exampleFormControlSelect1">
-                                        <option value="BANK_TRANSFER"><?php echo __('Bank transfer', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="CASH"><?php echo __('Cash', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="CHECK"><?php echo __('Check', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="CREDIT_CARD"><?php echo __('Credit card', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="DEBIT_CARD"><?php echo __('Debit card', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="PAYPAL"><?php echo __('PayPal', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="WIRE_TRANSFER"><?php echo __('Wire transfer', 'angelleye-paypal-invoicing'); ?></option>
-                                        <option value="OTHER"><?php echo __('Other', 'angelleye-paypal-invoicing'); ?></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-group row">
-                                    <textarea placeholder="<?php echo __('Add a note for your records', 'angelleye-paypal-invoicing'); ?>" rows="5" class="form-control" name="notes" id="notes"></textarea><p class="help-block text-right" id="notesChars"></p>
-                                </div>
+                            <span class="col-4"><?php echo __('Invoice number:', 'angelleye-paypal-invoicing'); ?></span>
+                            <span class="col-4"><?php echo $invoice['detail']['invoice_number']; ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($invoice['due_amount']['value'])) : ?>
+                        <div class="row">
+                            <span class="col-4"><?php echo __('Amount due:', 'angelleye-paypal-invoicing'); ?></span>
+                            <span class="col-4"><?php echo pifw_get_currency_symbol($invoice['due_amount']['currency_code']) . $invoice['due_amount']['value']; ?></span>
+                        </div>
+                    <?php endif; ?>
+                    <div class="row mt30-invoice">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="angelleye_record_payment_amount">Payment amount</label>
+                                <input type="number" step="0.01" class="form-control" id="angelleye_record_payment_amount" max="<?php echo $invoice['due_amount']['value']; ?>">
                             </div>
                         </div>
-                    </form>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="record_payment_invoice_date" ><?php echo __('Payment date', 'angelleye-paypal-invoicing'); ?></label>
+                                <input type="text" class="form-control" value="<?php echo date(get_option('date_format')); ?>" id="record_payment_invoice_date" placeholder="" name="record_payment_invoice_date" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="angelleye_paypal_invoice_payment_method" ><?php echo __('Payment method', 'angelleye-paypal-invoicing'); ?></label>
+                                <select class="form-control" id="angelleye_paypal_invoice_payment_method">
+                                    <option value="BANK_TRANSFER"><?php echo __('Bank transfer', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="CASH"><?php echo __('Cash', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="CHECK"><?php echo __('Check', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="CREDIT_CARD"><?php echo __('Credit card', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="DEBIT_CARD"><?php echo __('Debit card', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="PAYPAL"><?php echo __('PayPal', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="WIRE_TRANSFER"><?php echo __('Wire transfer', 'angelleye-paypal-invoicing'); ?></option>
+                                    <option value="OTHER"><?php echo __('Other', 'angelleye-paypal-invoicing'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea placeholder="<?php echo __('Add a note for your records', 'angelleye-paypal-invoicing'); ?>" rows="5" class="form-control" name="notes" id="angelleye_paypal_invoice_payment_note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></button>
+                <button type="button" class="btn btn-primary" id="angelleye_record_payment"><?php echo __('Record a payment', 'angelleye-paypal-invoicing'); ?></button>
             </div>
         </div>
     </div>

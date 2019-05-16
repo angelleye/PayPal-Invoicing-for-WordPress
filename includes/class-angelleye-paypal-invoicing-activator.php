@@ -88,7 +88,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
         try {
             include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
             $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-            $request->angelleye_paypal_invoicing_create_web_hook_request();
+            //$request->angelleye_paypal_invoicing_create_web_hook_request();
         } catch (Exception $ex) {
             error_log(print_r($ex->getMessage(), true));
         }
