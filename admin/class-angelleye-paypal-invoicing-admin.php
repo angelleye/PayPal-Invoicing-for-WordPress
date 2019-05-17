@@ -544,6 +544,18 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 echo "<div class='notice notice-error is-dismissible'><p>" . $angelleye_paypal_invoicing_error . "</p></div>";
             }
         }
+        if (!empty($_GET['message']) && $_GET['message'] == '1030') {
+            echo "<div class='notice notice-success is-dismissible'><p>Payment for invoice is recorded.</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1031') {
+             echo "<div class='notice notice-error is-dismissible'><p>" . __('Payment for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1032') {
+            echo "<div class='notice notice-success is-dismissible'><p>Refund for invoice is recorded.</p></div>";
+        }
+        if (!empty($_GET['message']) && $_GET['message'] == '1033') {
+             echo "<div class='notice notice-error is-dismissible'><p>" . __('Refund for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
+        }
         $opt_in_log = get_option('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing', 'yes');
         $angelleye_send_opt_in_logging_details_paypal_invoicing = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', '');
         if ($opt_in_log == 'yes' && empty($angelleye_send_opt_in_logging_details_paypal_invoicing)) {
@@ -1282,15 +1294,21 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_paypal_invoicing_record_payment() {
+        global $post;
         $this->angelleye_paypal_invoicing_load_rest_api();
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             $record_payment_data = array();
             $record_payment_data['method'] = $_POST['payment_method'];
-            $record_payment_data['payment_date'] = $_POST['payment_date'];
-            $record_payment_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['payment_amount']);
+            $record_payment_data['date'] = date('Y-m-d\TH:i:s\Z',$_POST['payment_date']);
+            $record_payment_data['amount'] = array('currency' => 'USD', 'value' => $_POST['payment_amount']);
             $record_payment_data['note'] = $_POST['payment_note'];
             $invoice_id = $_POST['invoice_id'];
-            $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
+            $return = $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
+            if($return == true) {
+                wp_send_json_success(admin_url('edit.php?post_type=paypal_invoices&message=1030'));
+            } else {
+                wp_send_json_error(admin_url('edit.php?post_type=paypal_invoices&message=1031'));
+            }
         }
     }
     
@@ -1299,11 +1317,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             $record_refund_data = array();
             $record_refund_data['method'] = $_POST['refund_method'];
-            $record_refund_data['payment_date'] = $_POST['refund_date'];
-            $record_refund_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['refund_amount']);
+            $record_refund_data['date'] = date('Y-m-d\TH:i:s\Z',$_POST['refund_date']); 
+            $record_refund_data['amount'] = array('currency' => 'USD', 'value' => $_POST['refund_amount']);
             $record_refund_data['note'] = $_POST['refund_note'];
             $invoice_id = $_POST['invoice_id'];
-            $this->request->angelleye_paypal_invoice_record_refund($invoice_id, $record_refund_data);
+            $return = $this->request->angelleye_paypal_invoice_record_refund($invoice_id, $record_refund_data);
+            if($return == true) {
+                wp_send_json_success(admin_url('edit.php?post_type=paypal_invoices&message=1032'));
+            } else {
+                wp_send_json_error(admin_url('edit.php?post_type=paypal_invoices&message=1033'));
+            }
         }
     }
 

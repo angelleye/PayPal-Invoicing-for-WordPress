@@ -278,7 +278,7 @@
                         'move_to_trace_url': jQuery(this).attr("href")
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-
+                        
                     });
                 }
             });
@@ -292,7 +292,8 @@
                     'payment_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
                 };
                 jQuery.post(ajaxurl, data, function (response) {
-
+                    console.log(response);
+                    window.location.href = response.data;
                 });
 
             });
@@ -308,6 +309,7 @@
                 };
                 jQuery.post(ajaxurl, data, function (response) {
                     console.log(response);
+                    window.location.href = response.data;
                 });
 
             });

@@ -1220,7 +1220,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             $payLoad = json_encode($body_request);
             $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $record = new PaymentDetail($payLoad);
-            $invoice_ob->recordPayment($record, $this->angelleye_paypal_invoicing_getAuth());
+            $return = $invoice_ob->recordPayment($record, $this->angelleye_paypal_invoicing_getAuth());
+            return $return;
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
@@ -1228,6 +1229,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
+            return false;
         }
     }
     
@@ -1237,7 +1239,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             $payLoad = json_encode($body_request);
             $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $record = new RefundDetail($payLoad);
-            $invoice_ob->recordRefund($record, $this->angelleye_paypal_invoicing_getAuth());
+            $return = $invoice_ob->recordRefund($record, $this->angelleye_paypal_invoicing_getAuth());
+            return $return;
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
@@ -1245,6 +1248,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
+            return false;
         }
     }
 }

@@ -959,7 +959,7 @@ class AngellEYE_Invoice extends Invoice {
         ArgumentValidator::validate($paymentDetail, 'paymentDetail');
         $payLoad = $paymentDetail->toJSON();
         self::executeCall(
-                "/v2/invoicing/invoices/{$this->getId()}/record-payment", "POST", $payLoad, null, $apiContext, $restCall
+                "/v1/invoicing/invoices/{$this->getId()}/record-payment", "POST", $payLoad, null, $apiContext, $restCall
         );
         return true;
     }
@@ -977,7 +977,7 @@ class AngellEYE_Invoice extends Invoice {
         ArgumentValidator::validate($refundDetail, 'refundDetail');
         $payLoad = $refundDetail->toJSON();
         self::executeCall(
-                "/v2/invoicing/invoices/{$this->getId()}/record-refund", "POST", $payLoad, null, $apiContext, $restCall
+                "/v1/invoicing/invoices/{$this->getId()}/record-refund", "POST", $payLoad, null, $apiContext, $restCall
         );
         return true;
     }

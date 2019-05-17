@@ -1050,7 +1050,7 @@ class Invoice extends PayPalResourceModel
         ArgumentValidator::validate($notification, 'notification');
         $payLoad = $notification->toJSON();
         self::executeCall(
-            "/v1/invoicing/invoices/{$this->getId()}/remind",
+            "/v2/invoicing/invoices/{$this->getId()}/remind",
             "POST",
             $payLoad,
             null,
@@ -1098,7 +1098,7 @@ class Invoice extends PayPalResourceModel
         ArgumentValidator::validate($paymentDetail, 'paymentDetail');
         $payLoad = $paymentDetail->toJSON();
         self::executeCall(
-            "/v2/invoicing/invoices/{$this->getId()}/record-payment",
+            "/v1/invoicing/invoices/{$this->getId()}/record-payment",
             "POST",
             $payLoad,
             null,
@@ -1122,7 +1122,7 @@ class Invoice extends PayPalResourceModel
         ArgumentValidator::validate($refundDetail, 'refundDetail');
         $payLoad = $refundDetail->toJSON();
         self::executeCall(
-            "/v2/invoicing/invoices/{$this->getId()}/record-refund",
+            "/v1/invoicing/invoices/{$this->getId()}/record-refund",
             "POST",
             $payLoad,
             null,
