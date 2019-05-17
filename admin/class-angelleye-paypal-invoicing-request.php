@@ -25,6 +25,8 @@ use PayPal\Exception\PayPalConnectionException;
 use PayPal\Api\OpenIdTokeninfo;
 use PayPal\Api\OpenIdUserinfo;
 use PayPal\Api\Payment;
+use PayPal\Api\PaymentDetail;
+use PayPal\Api\RefundDetail;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -1211,5 +1213,42 @@ class AngellEYE_PayPal_Invoicing_Request {
             set_transient('angelleye_paypal_invoicing_error', $error);
         }
     }
-
+    
+    public function angelleye_paypal_invoice_record_payment($invoiceId, $paymentDetail) {
+        try {
+            $body_request = $this->angelleye_remove_empty_key($paymentDetail);
+            $payLoad = json_encode($body_request);
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $record = new PaymentDetail($payLoad);
+            $return = $invoice_ob->recordPayment($record, $this->angelleye_paypal_invoicing_getAuth());
+            return $return;
+        } catch (Exception $ex) {
+            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
+            return false;
+        }
+    }
+    
+    public function angelleye_paypal_invoice_record_refund($invoiceId, $paymentDetail) {
+        try {
+            $body_request = $this->angelleye_remove_empty_key($paymentDetail);
+            $payLoad = json_encode($body_request);
+            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+            $record = new RefundDetail($payLoad);
+            $return = $invoice_ob->recordRefund($record, $this->angelleye_paypal_invoicing_getAuth());
+            return $return;
+        } catch (Exception $ex) {
+            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
+            return false;
+        }
+    }
 }
