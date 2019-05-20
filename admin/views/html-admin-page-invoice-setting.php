@@ -19,7 +19,7 @@ $sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_s
 
 $first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name'] : '';
 $last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : '';
-$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : get_bloginfo('name');
+$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : '';
 $phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : '';
 
 $address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : '';
