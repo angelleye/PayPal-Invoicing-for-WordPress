@@ -15,7 +15,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
     /**
      * @since    1.0.0
      */
-    public static function activate() {
+    public static function activate($web_services) {
         $apifw_setting = get_option('apifw_setting');
         $sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
         $enable_sync_paypal_invoice_history = isset($apifw_setting['enable_sync_paypal_invoice_history']) ? $apifw_setting['enable_sync_paypal_invoice_history'] : '';
@@ -40,14 +40,16 @@ class AngellEYE_PayPal_Invoicing_Activator {
         if( $webhook_id == false) {
             self::angelleye_paypal_invoicing_create_web_hook();
         }
-        delete_option('angelleye_paypal_invoicing_submited_feedback');
-        $opt_in_log = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
-        if($opt_in_log == 'yes') {
-            $log_url = $_SERVER['HTTP_HOST'];
-            $log_plugin_id = 10;
-            $log_activation_status = 1;
-            wp_remote_request('http://www.angelleye.com/web-services/wordpress/update-plugin-status.php?url='.$log_url.'&plugin_id='.$log_plugin_id.'&activation_status='.$log_activation_status);               
-        } 
+        if($web_services) { 
+            delete_option('angelleye_paypal_invoicing_submited_feedback');
+            $opt_in_log = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+            if($opt_in_log == 'yes') {
+                $log_url = $_SERVER['HTTP_HOST'];
+                $log_plugin_id = 10;
+                $log_activation_status = 1;
+                wp_remote_request('http://www.angelleye.com/web-services/wordpress/update-plugin-status.php?url='.$log_url.'&plugin_id='.$log_plugin_id.'&activation_status='.$log_activation_status);               
+            } 
+        }
     }
 
     private static function create_files() {
