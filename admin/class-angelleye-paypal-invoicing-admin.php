@@ -896,6 +896,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             }
         }
         if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
+            $this->angelleye_paypal_invoicing_load_rest_api();
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
                 $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
                 if (!empty($list_webhooks)) {
