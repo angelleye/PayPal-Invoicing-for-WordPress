@@ -885,11 +885,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
-                $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
+                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
                 if (!empty($list_webhooks)) {
                     try {
                         foreach ($list_webhooks->getWebhooks() as $webhook) {
-                            $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
                         }
                     } catch (Exception $ex) {
                         $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
@@ -905,11 +905,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 wp_redirect(admin_url('admin.php?page=apifw_settings'));
                 exit();
             } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
-                $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
+                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
                 if (!empty($list_webhooks)) {
                     try {
                         foreach ($list_webhooks->getWebhooks() as $webhook) {
-                            $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
                         }
                     } catch (Exception $ex) {
                         $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
