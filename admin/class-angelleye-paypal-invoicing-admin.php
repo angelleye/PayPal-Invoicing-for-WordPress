@@ -287,7 +287,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
             update_option('apifw_setting', $api_setting_field);
-            AngellEYE_PayPal_Invoicing_Activator::activate();
+            AngellEYE_PayPal_Invoicing_Activator::activate($web_services = false);
             echo "<br><div class='alert alert-success alert-dismissible' role='alert'>" . __('Your settings have been saved.', 'angelleye-paypal-invoicing') . "<button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                 <span aria-hidden='true'>&times;</span>
             </button></div>";
@@ -1319,7 +1319,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_add_web_hooks() {
         $webhook_id = get_option('webhook_id', false);
         if ($webhook_id == false) {
-            AngellEYE_PayPal_Invoicing_Activator::activate();
+            AngellEYE_PayPal_Invoicing_Activator::activate($web_services = false);
         }
     }
     
