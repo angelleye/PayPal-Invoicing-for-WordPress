@@ -165,13 +165,13 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $live_email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>"  name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $live_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="apifw_sandbox_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $sandbox_email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>"  name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $sandbox_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
