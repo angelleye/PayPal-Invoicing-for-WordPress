@@ -1299,8 +1299,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             $record_payment_data = array();
             $record_payment_data['method'] = $_POST['payment_method'];
-            $record_payment_data['date'] = date('Y-m-d\TH:i:s\Z',$_POST['payment_date']);
-            $record_payment_data['amount'] = array('currency' => 'USD', 'value' => $_POST['payment_amount']);
+            $record_payment_data['payment_date'] = pifw_get_paypal_invoice_date_format($_POST['payment_date']);//date('Y-m-d\TH:i:s\Z',$_POST['payment_date']);
+            $record_payment_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['payment_amount']);
             $record_payment_data['note'] = $_POST['payment_note'];
             $invoice_id = $_POST['invoice_id'];
             $return = $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
@@ -1317,8 +1317,8 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
             $record_refund_data = array();
             $record_refund_data['method'] = $_POST['refund_method'];
-            $record_refund_data['date'] = date('Y-m-d\TH:i:s\Z',$_POST['refund_date']); 
-            $record_refund_data['amount'] = array('currency' => 'USD', 'value' => $_POST['refund_amount']);
+            $record_refund_data['payment_date'] = pifw_get_paypal_invoice_date_format($_POST['refund_date']);//date('Y-m-d\TH:i:s\Z',$_POST['refund_date']); 
+            $record_refund_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['refund_amount']);
             $record_refund_data['note'] = $_POST['refund_note'];
             $invoice_id = $_POST['invoice_id'];
             $return = $this->request->angelleye_paypal_invoice_record_refund($invoice_id, $record_refund_data);
