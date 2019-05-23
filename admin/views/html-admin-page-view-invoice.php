@@ -74,7 +74,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                                     if ($status == 'SENT' || $status == 'UNPAID') {
                                         echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_cancel')) . '">' . __('Cancel Invoice', 'angelleye-paypal-invoicing') . '</a>';
                                     }
-                                    if ($status == 'PARTIALLY_PAID' || $status == 'PAID' || $status == 'PARTIALLY_REFUNDED') { 
+                                    if ($status == 'PARTIALLY_PAID' || $status == 'PAID' || $status == 'PARTIALLY_REFUNDED' || $status == 'MARKED_AS_PAID') { 
                                         echo '<a class="dropdown-item" data-toggle="modal" data-target="#Refund_RecordModal" href="">' . __('Record a Refund', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     ?>
