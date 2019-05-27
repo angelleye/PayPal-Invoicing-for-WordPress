@@ -195,7 +195,7 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_phone_number" class="col-sm-3 col-form-label"><?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" max="13" name="phone_number" value="<?php echo esc_attr($phone_number); ?>">
+                            <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" pattern="^[0-9]{1,14}?$" minlength="1" maxlength="14" name="phone_number" value="<?php echo esc_attr($phone_number); ?>">
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 <?php echo __('Enter your phone number without country code.', 'angelleye-paypal-invoicing'); ?>
                             </small>
