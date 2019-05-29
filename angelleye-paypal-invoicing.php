@@ -3,7 +3,7 @@
 /**
  * @wordpress-plugin
  * Plugin Name:       PayPal Invoicing for WordPress
- * Plugin URI:        http://www.angelleye.com/product/angelleye-paypal-invoicing/
+ * Plugin URI:        https://www.angelleye.com/product/wordpress-paypal-invoice-plugin/
  * Description:       Add PayPal Invoicing functionality to your WordPress dashboard.  Includes full support for WooCommerce if installed.
  * Version:           2.0.4
  * Author:            Angell EYE
