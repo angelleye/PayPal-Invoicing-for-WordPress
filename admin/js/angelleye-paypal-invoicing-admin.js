@@ -96,11 +96,10 @@
             }
         });
         jQuery('#record_payment_invoice_date').datepicker({
-            dateFormat: angelleye_paypal_invoicing_js.dateFormat,
-            onSelect: function (dateText, inst) {
-                jQuery("#dueDate").datepicker("option", "minDate",
-                        jQuery("#record_payment_invoice_date").datepicker("getDate"));
-            }
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
+        });
+        jQuery('#record_refund_invoice_date').datepicker({
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
         });
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
@@ -276,7 +275,7 @@
                         'move_to_trace_url': jQuery(this).attr("href")
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-
+                        
                     });
                 }
             });
@@ -290,7 +289,24 @@
                     'payment_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
                 };
                 jQuery.post(ajaxurl, data, function (response) {
+                    console.log(response);
+                    window.location.href = response.data;
+                });
 
+            });
+            jQuery('#angelleye_record_refund').click(function (event) {
+                console.log('refund');
+                var data = {
+                    'action': 'angelleye_paypal_invoicing_record_refund',
+                    'invoice_id': jQuery('#angelleye_paypal_invoice_id').val(),
+                    'refund_amount' : jQuery('#angelleye_record_refund_amount').val(),
+                    'refund_date' : jQuery('#record_refund_invoice_date').val(),
+                    'refund_method' : jQuery('#angelleye_paypal_invoice_payment_method').val(),
+                    'refund_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
+                };
+                jQuery.post(ajaxurl, data, function (response) {
+                    console.log(response);
+                    window.location.href = response.data;
                 });
 
             });

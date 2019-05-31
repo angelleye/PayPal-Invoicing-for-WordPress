@@ -231,19 +231,20 @@ function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d
 }
 
 function angelleye_date_format_php_to_js( $sFormat ) {
-    switch( $sFormat ) {
-        //Predefined WP date formats
-        case 'F j, Y':
-            return( 'MM dd, yy' );
-            break;
-        case 'Y/m/d':
-            return( 'yy/mm/dd' );
-            break;
-        case 'm/d/Y':
-            return( 'mm/dd/yy' );
-            break;
-        case 'd/m/Y':
-            return( 'dd/mm/yy' );
-            break;
-     }
+    $chars = array(
+            // Day
+            'd' => 'dd',
+            'j' => 'd',
+            'l' => 'DD',
+            'D' => 'D',
+            // Month
+            'm' => 'mm',
+            'n' => 'm',
+            'F' => 'MM',
+            'M' => 'M',
+            // Year
+            'Y' => 'yy',
+            'y' => 'y',
+    );
+    return strtr( (string) $sFormat, $chars );
 }

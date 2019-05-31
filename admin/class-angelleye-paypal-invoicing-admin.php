@@ -567,7 +567,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             echo "<div class='notice notice-success is-dismissible'><p>Refund for invoice is recorded.</p></div>";
         }
         if (!empty($_GET['message']) && $_GET['message'] == '1033') {
-             echo "<div class='notice notice-error is-dismissible'><p>" . __('Refund for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
+            echo "<div class='notice notice-error is-dismissible'><p>" . __('Refund for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
         }
         $opt_in_log = get_option('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing', 'yes');
         $angelleye_send_opt_in_logging_details_paypal_invoicing = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', '');
@@ -822,7 +822,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
                 $log = new AngellEYE_PayPal_Invoicing_Logger();
                 $posted_raw = $this->angelleye_paypal_invoicing_get_raw_data();
-                $headers = getallheaders();
+                $headers = $this->getallheaders_value();
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
                 $posted = json_decode($posted_raw, true);
@@ -1336,25 +1336,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
     }
     
-    public function angelleye_paypal_invoicing_record_payment() {
-        global $post;
-        $this->angelleye_paypal_invoicing_load_rest_api();
-        if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
-            $record_payment_data = array();
-            $record_payment_data['method'] = $_POST['payment_method'];
-            $record_payment_data['date'] = date('Y-m-d\TH:i:s\Z',$_POST['payment_date']);
-            $record_payment_data['amount'] = array('currency' => 'USD', 'value' => $_POST['payment_amount']);
-            $record_payment_data['note'] = $_POST['payment_note'];
-            $invoice_id = $_POST['invoice_id'];
-            $return = $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
-            if($return == true) {
-                wp_send_json_success(admin_url('edit.php?post_type=paypal_invoices&message=1030'));
-            } else {
-                wp_send_json_error(admin_url('edit.php?post_type=paypal_invoices&message=1031'));
-            }
-        }
-    }
-    
     public function angelleye_paypal_invoicing_record_refund() {
         $this->angelleye_paypal_invoicing_load_rest_api();
         if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
@@ -1373,16 +1354,40 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
     }
     
-    public function angelleye_paypal_invoicing_display_push_notification() {
-        global $current_user;
-        $user_id = $current_user->ID;
-        $response = $this->angelleye_get_push_notifications();
-        if (is_object($response)) {
-            foreach ($response->data as $key => $response_data) {
-                if (!get_user_meta($user_id, $response_data->id)) {
-                    $this->angelleye_display_push_notification($response_data);
-                }
+    public function angelleye_paypal_invoicing_record_payment() {
+        global $post;
+        $this->angelleye_paypal_invoicing_load_rest_api();
+        if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
+            $record_payment_data = array();
+            $record_payment_data['method'] = $_POST['payment_method'];
+            $record_payment_data['payment_date'] = pifw_get_paypal_invoice_date_format($_POST['payment_date']); //date('Y-m-d\TH:i:s\Z',$_POST['payment_date']);
+            $record_payment_data['amount'] = array('currency_code' => 'USD', 'value' => $_POST['payment_amount']);
+            $record_payment_data['note'] = $_POST['payment_note'];
+            $invoice_id = $_POST['invoice_id'];
+            $return = $this->request->angelleye_paypal_invoice_record_payment($invoice_id, $record_payment_data);
+            if ($return == true) {
+                wp_send_json_success(admin_url('edit.php?post_type=paypal_invoices&message=1030'));
+            } else {
+                wp_send_json_error(admin_url('edit.php?post_type=paypal_invoices&message=1031'));
             }
         }
+    }
+
+    public function getallheaders_value() {
+        if (!function_exists('getallheaders')) {
+            return $this->getallheaders_custome();
+        } else {
+            return getallheaders();
+        }
+    }
+
+    public function getallheaders_custome() {
+        $headers = [];
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
     }
 }
