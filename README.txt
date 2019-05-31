@@ -98,6 +98,9 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
+= 2.1.0 - xx.xx.2019 =
+* Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67))
+
 = 2.0.4 - 04.22.2019 =
 * Fix - Resolves an issue where WooCommerce orders were not updating properly with PayPal Invoices. ([PPIW-57](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/66))
 
