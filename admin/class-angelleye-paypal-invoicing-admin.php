@@ -832,7 +832,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
                         $invoice = $posted['resource']['invoice'];
                         $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'paypal-for-woocommerce'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'angelleye-paypal-invoicing'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
                         $invoice = $posted['resource']['invoice'];
                         $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
@@ -844,7 +844,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             } else {
                                 $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                             }
-                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
                         } else {
                             $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                         }
@@ -1284,7 +1284,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         } else {
                             $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                         }
-                        $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'paypal-for-woocommerce'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
+                        $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                     }
                 } else if ($invoice['status'] == 'CANCELLED') {
                     $order->update_status('cancelled');
