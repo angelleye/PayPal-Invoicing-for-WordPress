@@ -105,6 +105,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Fix - Resolves an issue with the PayPal Webhook handler getting stuck sometimes. ([PPIW-149](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/68))
 * Fix - Resolves an issue where the user cannot clear out a company name entered in the plugin settings. ([PPIW-55](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/69))
 * Fix - Resolves a broken link in the settings panel. ([PPIW-150](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/76))
+* Fix - Resolves a PHP headers issue. ([PPIW-152](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/73))
 
 = 2.0.4 - 04.22.2019 =
 * Fix - Resolves an issue where WooCommerce orders were not updating properly with PayPal Invoices. ([PPIW-57](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/66))
