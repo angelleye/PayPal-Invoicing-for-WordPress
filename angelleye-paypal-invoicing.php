@@ -3,7 +3,7 @@
 /**
  * @wordpress-plugin
  * Plugin Name:       PayPal Invoicing for WordPress
- * Plugin URI:        http://www.angelleye.com/product/angelleye-paypal-invoicing/
+ * Plugin URI:        https://www.angelleye.com/product/wordpress-paypal-invoice-plugin/
  * Description:       Add PayPal Invoicing functionality to your WordPress dashboard.  Includes full support for WooCommerce if installed.
  * Version:           2.0.4
  * Author:            Angell EYE
@@ -56,7 +56,9 @@ if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
     $upload_dir = wp_upload_dir( null, false );
     define('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR', $upload_dir['basedir'] . '/angelleye-paypal-invoicing/');
 }
-
+if (!defined('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL')) {
+    define('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL', 'https://www.angelleye.com/');
+}
 
 /**
  * The code that runs during plugin activation.
@@ -64,7 +66,7 @@ if (!defined('ANGELLEYE_PAYPAL_INVOICING_LOG_DIR')) {
  */
 function activate_angelleye_paypal_invoicing() {
     require_once plugin_dir_path(__FILE__) . 'includes/class-angelleye-paypal-invoicing-activator.php';
-    AngellEYE_PayPal_Invoicing_Activator::activate();
+    AngellEYE_PayPal_Invoicing_Activator::activate($web_services = true);
 }
 
 /**

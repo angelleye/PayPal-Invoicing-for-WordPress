@@ -2,14 +2,13 @@
     'use strict';
     $(function () {
         var el_notice = jQuery(".angelleye-notice");
-       
         el_notice.fadeIn(750);
-        jQuery(".angelleye-notice-dismiss").click(function(e){
+        jQuery(".angelleye-notice-dismiss").click(function (e) {
             e.preventDefault();
-            jQuery( this ).parent().parent(".angelleye-notice").fadeOut(600, function () {
-                jQuery( this ).parent().parent(".angelleye-notice").remove();
+            jQuery(this).parent().parent(".angelleye-notice").fadeOut(600, function () {
+                jQuery(this).parent().parent(".angelleye-notice").remove();
             });
-            notify_wordpress(jQuery( this ).data("msg"));
+            notify_wordpress(jQuery(this).data("msg"));
         });
         function notify_wordpress(message) {
             var param = {
@@ -18,7 +17,6 @@
             };
             jQuery.post(ajaxurl, param);
         }
-            
         jQuery('#apifw_enable_paypal_sandbox').change(function () {
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
                     production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
@@ -96,6 +94,12 @@
                 jQuery("#dueDate").datepicker("option", "minDate",
                         jQuery("#invoice_date").datepicker("getDate"));
             }
+        });
+        jQuery('#record_payment_invoice_date').datepicker({
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
+        });
+        jQuery('#record_refund_invoice_date').datepicker({
+            dateFormat: angelleye_paypal_invoicing_js.dateFormat
         });
         jQuery('[data-toggle="tooltip"]').tooltip();
         jQuery(".memoHead").click(function () {
@@ -271,9 +275,40 @@
                         'move_to_trace_url': jQuery(this).attr("href")
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-
+                        
                     });
                 }
+            });
+            jQuery('#angelleye_record_payment').click(function (event) {
+                var data = {
+                    'action': 'angelleye_paypal_invoicing_record_payment',
+                    'invoice_id': jQuery('#angelleye_paypal_invoice_id').val(),
+                    'payment_amount' : jQuery('#angelleye_record_payment_amount').val(),
+                    'payment_date' : jQuery('#record_payment_invoice_date').val(),
+                    'payment_method' : jQuery('#angelleye_paypal_invoice_payment_method').val(),
+                    'payment_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
+                };
+                jQuery.post(ajaxurl, data, function (response) {
+                    console.log(response);
+                    window.location.href = response.data;
+                });
+
+            });
+            jQuery('#angelleye_record_refund').click(function (event) {
+                console.log('refund');
+                var data = {
+                    'action': 'angelleye_paypal_invoicing_record_refund',
+                    'invoice_id': jQuery('#angelleye_paypal_invoice_id').val(),
+                    'refund_amount' : jQuery('#angelleye_record_refund_amount').val(),
+                    'refund_date' : jQuery('#record_refund_invoice_date').val(),
+                    'refund_method' : jQuery('#angelleye_paypal_invoice_payment_method').val(),
+                    'refund_note' : jQuery('#angelleye_paypal_invoice_payment_note').val(),
+                };
+                jQuery.post(ajaxurl, data, function (response) {
+                    console.log(response);
+                    window.location.href = response.data;
+                });
+
             });
             var sandbox = jQuery('#apifw_sandbox_client_id, #apifw_sandbox_secret').closest('.row'),
                     production = jQuery('#apifw_client_id, #apifw_secret').closest('.row');
@@ -317,9 +352,9 @@
             });
 
         });
-        
-        
-    
+
+
+
     });
 })(jQuery);
 

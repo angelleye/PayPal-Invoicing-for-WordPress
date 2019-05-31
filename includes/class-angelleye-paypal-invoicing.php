@@ -182,6 +182,10 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action( 'admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
         $this->loader->add_action( 'wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_add_web_hooks', 10);
+        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_payment', $plugin_admin, 'angelleye_paypal_invoicing_record_payment', 10);
+        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_refund', $plugin_admin, 'angelleye_paypal_invoicing_record_refund', 10);
+        $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_push_notification', 10);
+        $this->loader->add_action('wp_ajax_angelleye_dismiss_notice', $plugin_admin, 'angelleye_dismiss_notice', 10);
         register_shutdown_function(array($plugin_admin, 'angelleye_log_errors'));
     }
 
