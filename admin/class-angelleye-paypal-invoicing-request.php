@@ -1135,6 +1135,8 @@ class AngellEYE_PayPal_Invoicing_Request {
                         return $post_id;
                     }
                 }
+            } else {
+                return false;
             }
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));

@@ -66,7 +66,7 @@ if (!defined('PAYPAL_FOR_WOOCOMMERCE_PUSH_NOTIFICATION_WEB_URL')) {
  */
 function activate_angelleye_paypal_invoicing() {
     require_once plugin_dir_path(__FILE__) . 'includes/class-angelleye-paypal-invoicing-activator.php';
-    AngellEYE_PayPal_Invoicing_Activator::activate();
+    AngellEYE_PayPal_Invoicing_Activator::activate($web_services = true);
 }
 
 /**
