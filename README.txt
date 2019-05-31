@@ -100,6 +100,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 = 2.1.0 - xx.xx.2019 =
 * Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67))
+* Tweak - Adds validation to the settings form. ([PPIW-54](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/70))
 * Fix - Resolves an issue with the PayPal Webhook handler getting stuck sometimes. ([PPIW-149](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/68))
 * Fix - Resolves an issue where the user cannot clear out a company name entered in the plugin settings. ([PPIW-55](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/69))
 
