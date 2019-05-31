@@ -103,6 +103,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Feature - Adds ability to refund invoice payments from within WordPress invoice screen. ([PPIW-38](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/72))
 * Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67))
 * Tweak - Adds validation to the settings form. ([PPIW-54](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/70))
+* Tweak - Adjusts placeholder on feedback form. ([PPIW-153](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/75))
 * Fix - Resolves an issue with the PayPal Webhook handler getting stuck sometimes. ([PPIW-149](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/68))
 * Fix - Resolves an issue where the user cannot clear out a company name entered in the plugin settings. ([PPIW-55](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/69))
 * Fix - Resolves a broken link in the settings panel. ([PPIW-150](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/76))
