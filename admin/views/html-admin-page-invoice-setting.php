@@ -19,7 +19,7 @@ $sandbox_paypal_email = isset($apifw_setting['sandbox_paypal_email']) ? $apifw_s
 
 $first_name = isset($apifw_setting['first_name']) ? $apifw_setting['first_name'] : '';
 $last_name = isset($apifw_setting['last_name']) ? $apifw_setting['last_name'] : '';
-$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : get_bloginfo('name');
+$compnay_name = isset($apifw_setting['compnay_name']) ? $apifw_setting['compnay_name'] : '';
 $phone_number = isset($apifw_setting['phone_number']) ? $apifw_setting['phone_number'] : '';
 
 $address_line_1 = isset($apifw_setting['address_line_1']) ? $apifw_setting['address_line_1'] : '';
@@ -165,13 +165,13 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $live_email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>"  name="paypal_email" value="<?php echo esc_attr($paypal_email); ?>" <?php echo $live_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="apifw_sandbox_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>" name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $sandbox_email_read_only; ?>>
+                            <input type="text" class="form-control" id="apifw_sandbox_paypal_email" placeholder="<?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?>"  name="sandbox_paypal_email" value="<?php echo esc_attr($sandbox_paypal_email); ?>" <?php echo $sandbox_email_read_only; ?>>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -195,7 +195,10 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_phone_number" class="col-sm-3 col-form-label"><?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" name="phone_number" value="<?php echo esc_attr($phone_number); ?>">
+                            <input type="text" class="form-control" id="apifw_phone_number" placeholder="<?php echo __('Phone Number', 'angelleye-paypal-invoicing'); ?>" pattern="^[0-9]{1,14}?$" minlength="1" maxlength="14" name="phone_number" value="<?php echo esc_attr($phone_number); ?>">
+                            <small id="passwordHelpBlock" class="form-text text-muted">
+                                <?php echo __('Enter your phone number without country code.', 'angelleye-paypal-invoicing'); ?>
+                            </small>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -251,7 +254,7 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_shipping_amount" class="col-sm-4 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="apifw_shipping_amount" placeholder="<?php echo __('0.00', 'angelleye-paypal-invoicing'); ?>" name="shipping_amount" value="<?php echo esc_attr($shipping_amount); ?>">
+                            <input type="text" class="form-control" id="apifw_shipping_amount" placeholder="<?php echo __('0.00', 'angelleye-paypal-invoicing'); ?>" name="shipping_amount" pattern='[[0-9]+(\.[0-9][0-9]?)?' value="<?php echo esc_attr($shipping_amount); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -263,13 +266,13 @@ $sync_paypal_invoice_history_interval_array = array(
                     <div class="form-group row">
                         <label for="apifw_tax_rate" class="col-sm-4 col-form-label"><?php echo __('Tax Rate %', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="apifw_tax_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" name="tax_rate" value="<?php echo esc_attr($tax_rate); ?>">
+                            <input type="text" class="form-control" id="apifw_tax_rate" placeholder="<?php echo __('%', 'angelleye-paypal-invoicing'); ?>" pattern="[0-9]+(\.[0-9][0-9]?)?" name="tax_rate" value="<?php echo esc_attr($tax_rate); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="apifw_item_quantity" class="col-sm-4 col-form-label"><?php echo __('Item Quantity', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="apifw_item_quantity" placeholder="" name="item_quantity" value="<?php echo esc_attr($item_quantity); ?>">
+                            <input type="text" class="form-control" id="apifw_item_quantity" placeholder="" name="item_quantity" pattern="\d{1,15}" value="<?php echo esc_attr($item_quantity); ?>">
                         </div>
                     </div>
                     <div class="form-group row">
