@@ -1443,5 +1443,4 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
         return $headers;
     }
-
 }

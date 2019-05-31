@@ -99,6 +99,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 == Changelog ==
 
 = 2.1.0 - xx.xx.2019 =
+* Feature - Adds ability to Mark Invoice Paid at PayPal from the invoice screen in WordPress. ([PPIW-37](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/71))
 * Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67))
 * Tweak - Adds validation to the settings form. ([PPIW-54](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/70))
 * Fix - Resolves an issue with the PayPal Webhook handler getting stuck sometimes. ([PPIW-149](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/68))
