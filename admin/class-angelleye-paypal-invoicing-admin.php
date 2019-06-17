@@ -573,16 +573,29 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $angelleye_send_opt_in_logging_details_paypal_invoicing = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', '');
         if ($opt_in_log == 'yes' && empty($angelleye_send_opt_in_logging_details_paypal_invoicing)) {
             echo '<div class="notice notice-success angelleye-notice" style="display:none;">'
-                    . '<div class="angelleye-notice-logo-original"><span></span></div>'
-                    . '<div class="angelleye-notice-message">'
-                        . '<h3>PayPal Invoicing for WordPress</h3>'
+            . '<div class="angelleye-notice-logo-original"><span></span></div>'
+            . '<div class="angelleye-notice-message">'
+            . '<h3>PayPal Invoicing for WordPress</h3>'
                         . '<div class="angelleye-notice-message-inner">'.sprintf(__('We work directly with PayPal to improve your experience as a seller as well as your buyer\'s experience. May we log some basic details about your site (eg. URL) for future improvement purposes? It would be a big help, thanks!.','angelleye-paypal-invoicing'))
-                    . '</div></div>'
-                    . '<div class="angelleye-notice-cta">'
+            . '</div></div>'
+            . '<div class="angelleye-notice-cta">'
                         . '<a href="'.  add_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing','yes').'" class="button button-primary">'.__('Sure, I\'ll help!','angelleye-paypal-invoicing').'</a>&nbsp;&nbsp;'
                         .'<a href="'.  add_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing','no').'" class="button">'.__('No thanks.','angelleye-paypal-invoicing').'</a>'
-                    . '</div>'
-                . '</div>';
+            . '</div>'
+            . '</div>';
+        }
+        if (isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'yes') {
+            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'yes');
+            $log_url = $_SERVER['HTTP_HOST'];
+            $log_plugin_id = 1;
+            $log_activation_status = 1;
+            wp_remote_request('http://www.angelleye.com/web-services/wordpress/update-plugin-status.php?url=' . $log_url . '&plugin_id=' . $log_plugin_id . '&activation_status=' . $log_activation_status);
+            $set_ignore_tag_url = remove_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing');
+            wp_redirect($set_ignore_tag_url);
+        } elseif (isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'no') {
+            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+            $set_ignore_tag_url = remove_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing');
+            wp_redirect($set_ignore_tag_url);
         }
     }
 
@@ -1306,7 +1319,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'activation_status' => 0,
             'reason' => pifw_clean($_POST['reason']),
             'reason_details' => pifw_clean($_POST['reason_details']),
-        ), $web_services_url );
+                ), $web_services_url);
         $response = wp_remote_request($request_url);
         update_option('angelleye_paypal_invoicing_submited_feedback', 'yes');
         if (is_wp_error($response)) {
@@ -1326,7 +1339,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_display_push_notification() {
         global $current_user;
         $user_id = $current_user->ID;
-        $response = $this->angelleye_get_push_notifications();
+        if (false === ( $response = get_transient('angelleye_push_notification_result') )) {
+            $response = $this->angelleye_get_push_notifications();
+            if(is_object($response)) {
+                set_transient('angelleye_push_notification_result', $response, 12 * HOUR_IN_SECONDS);
+            }
+        }
         if (is_object($response)) {
             foreach ($response->data as $key => $response_data) {
                 if (!get_user_meta($user_id, $response_data->id)) {

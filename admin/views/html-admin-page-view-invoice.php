@@ -69,6 +69,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                                         echo '<a class="dropdown-item" href="' . add_query_arg(array('post_id' => $post->ID, 'invoice_action' => 'paypal_invoice_remind')) . '">' . __('Send Invoice Reminder', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     if ($status == 'PARTIALLY_PAID' || $status == 'SCHEDULED' || $status == 'SENT' || $status == 'UNPAID') {
+
                                         echo '<a class="dropdown-item" data-toggle="modal" data-target="#Payment_RecordModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     if ($status == 'SENT' || $status == 'UNPAID') {
@@ -76,6 +77,7 @@ $apifw_company_logo = ( isset($invoice['invoicer']['logo_url']) && !empty($invoi
                                     }
                                     if ($status == 'PARTIALLY_PAID' || $status == 'PAID' || $status == 'PARTIALLY_REFUNDED' || $status == 'MARKED_AS_PAID') { 
                                         echo '<a class="dropdown-item" data-toggle="modal" data-target="#Refund_RecordModal" href="">' . __('Record a Refund', 'angelleye-paypal-invoicing') . '</a>';
+                                        echo '<a class="dropdown-item" data-toggle="modal" data-target="#Payment_RecordModal" href="">' . __('Record a payment', 'angelleye-paypal-invoicing') . '</a>';
                                     }
                                     ?>
                                 </div>
