@@ -10,6 +10,11 @@
             });
             notify_wordpress(jQuery(this).data("msg"));
         });
+         var opt_in_logging = jQuery("#angelleye_send_opt_in_logging_details");
+        jQuery('#angelleye_send_opt_in_logging_details').each(function (i) {
+            jQuery('[id="' + this.id + '"]').slice(1).remove();
+        });
+        opt_in_logging.fadeIn(750);
         function notify_wordpress(message) {
             var param = {
                 action: 'angelleye_dismiss_notice',
