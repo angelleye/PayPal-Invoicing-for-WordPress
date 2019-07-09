@@ -17,7 +17,7 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
     public function __construct() {
         $this->api_url = 'https://gtctgyk7fh.execute-api.us-east-2.amazonaws.com/default/PayPalPaymentsTracker';
         $this->api_key = 'srGiuJFpDO4W7YCDXF56g2c9nT1JhlURVGqYD7oa';
-        $this->allow_method = array('PayPal Plus');
+        $this->allow_method = array('PayPal Invoice');
         add_action('angelleye_paypal_invoice_response_data', array($this, 'own_angelleye_paypal_invoice_response_data'), 10, 6);
     }
 
@@ -33,23 +33,22 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
             }
             if (isset($request['METHOD']) && !empty($request['METHOD']) && in_array($request['METHOD'], $this->allow_method)) {
                 $opt_in_log = get_option('angelleye_send_opt_in_logging_details', 'no');
-                if ($opt_in == 'yes') {
+                if ($opt_in_log == 'yes') {
                     $request_param['site_url'] = get_bloginfo('url');
                 }
                 $request_param['type'] = $request['METHOD'];
                 $request_param['mode'] = ($sandbox) ? 'sandbox' : 'live';
                 $request_param['product_id'] = $product_id;
-                if ($request['METHOD'] == 'PayPal Plus') {
+                if ($request['METHOD'] == 'PayPal Invoice') {
                     if (isset($result->id)) {
                         $request_param['status'] = 'Success';
                         $request_param['transaction_id'] = isset($result->id) ? $result->id : '';
                     } else {
                         $request_param['status'] = 'Failure';
                     }
-                    $request_param['site_url'] = '';
                     $request_param['merchant_id'] = '';
                     $request_param['correlation_id'] = '';
-                    $request_param['amount'] = isset($result->amount->total) ? $result->amount->total : '0.00';
+                    $request_param['amount'] = isset($result->amount['value']) ? $result->amount['value'] : '0.00';
                     error_log(print_r($request_param, true));
                     $this->angelleye_tpv_request($request_param);
                 }
