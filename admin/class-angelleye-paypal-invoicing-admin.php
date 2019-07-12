@@ -372,7 +372,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_paypal_invoicing_register_post_status() {
         global $wpdb;
         if(isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'yes'){
-            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'yes');
+            update_option('angelleye_send_opt_in_logging_details', 'yes');
             $log_url = $_SERVER['HTTP_HOST'];
             $log_plugin_id = 1;
             $log_activation_status = 1;
@@ -380,7 +380,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $set_ignore_tag_url =  remove_query_arg( 'angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing' );
             wp_redirect($set_ignore_tag_url);
         } elseif(isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'no') {
-            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+            update_option('angelleye_send_opt_in_logging_details', 'no');
             $set_ignore_tag_url =  remove_query_arg( 'angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing' );
             wp_redirect($set_ignore_tag_url);
         }
@@ -570,9 +570,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             echo "<div class='notice notice-error is-dismissible'><p>" . __('Refund for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
         }
         $opt_in_log = get_option('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing', 'yes');
-        $angelleye_send_opt_in_logging_details_paypal_invoicing = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', '');
-        if ($opt_in_log == 'yes' && empty($angelleye_send_opt_in_logging_details_paypal_invoicing)) {
-            echo '<div class="notice notice-success angelleye-notice" style="display:none;">'
+        $angelleye_send_opt_in_logging_details = get_option('angelleye_send_opt_in_logging_details', '');
+        if ($opt_in_log == 'yes' && empty($angelleye_send_opt_in_logging_details)) {
+            echo '<div class="notice notice-success angelleye-notice" style="display:none;" id="angelleye_send_opt_in_logging_details">'
             . '<div class="angelleye-notice-logo-original"><span></span></div>'
             . '<div class="angelleye-notice-message">'
             . '<h3>PayPal Invoicing for WordPress</h3>'
@@ -585,7 +585,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             . '</div>';
         }
         if (isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'yes') {
-            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'yes');
+            update_option('angelleye_send_opt_in_logging_details', 'yes');
             $log_url = $_SERVER['HTTP_HOST'];
             $log_plugin_id = 1;
             $log_activation_status = 1;
@@ -593,7 +593,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $set_ignore_tag_url = remove_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing');
             wp_redirect($set_ignore_tag_url);
         } elseif (isset($_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing']) && $_GET['angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing'] == 'no') {
-            update_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+            update_option('angelleye_send_opt_in_logging_details', 'no');
             $set_ignore_tag_url = remove_query_arg('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing');
             wp_redirect($set_ignore_tag_url);
         }

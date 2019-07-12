@@ -42,7 +42,7 @@ class AngellEYE_PayPal_Invoicing_Activator {
         }
         if($web_services) { 
             delete_option('angelleye_paypal_invoicing_submited_feedback');
-            $opt_in_log = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+            $opt_in_log = get_option('angelleye_send_opt_in_logging_details', 'no');
             if($opt_in_log == 'yes') {
                 $log_url = $_SERVER['HTTP_HOST'];
                 $log_plugin_id = 10;

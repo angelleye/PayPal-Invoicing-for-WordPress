@@ -442,8 +442,9 @@ class AngellEYE_PayPal_Invoicing_Request {
         $AngellEYE_Invoice = new AngellEYE_Invoice();
         try {
             $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
+            $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
+            do_action('angelleye_paypal_invoice_response_data', $invoice_ob, array(), '10', ($this->mode == 'SANDBOX') ? true : false, false, 'paypal_invoice');
             if ($is_send == true) {
-                $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
                 $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
             }
             return $invoice_id;
@@ -861,8 +862,9 @@ class AngellEYE_PayPal_Invoicing_Request {
             $payLoad = json_encode($body_request);
             $AngellEYE_Invoice = new AngellEYE_Invoice();
             $invoice_id = $AngellEYE_Invoice->create($this->angelleye_paypal_invoicing_getAuth(), '', $payLoad);
+            $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
+            do_action('angelleye_paypal_invoice_response_data', $invoice_ob, array(), '10', ($this->mode == 'SANDBOX') ? true : false, false, 'paypal_invoice');
             if (!empty($_REQUEST['send_invoice'])) {
-                $invoice_ob = AngellEYE_Invoice::get($invoice_id, $this->angelleye_paypal_invoicing_getAuth());
                 $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
                 update_post_meta($post_ID, 'is_paypal_invoice_sent', 'yes');
                 return $invoice_ob->getId();
@@ -972,6 +974,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         try {
             $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
             $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
+            do_action('angelleye_paypal_invoice_response_data', $invoice_ob, array(), '10', ($this->mode == 'SANDBOX') ? true : false, false, 'paypal_invoice');
             $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
             $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
         } catch (PayPalConnectionException $ex) {

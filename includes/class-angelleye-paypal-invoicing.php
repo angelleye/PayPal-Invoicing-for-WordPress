@@ -115,6 +115,7 @@ class AngellEYE_PayPal_Invoicing {
 
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-activator.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'includes/angelleye-paypal-invoicing-payment-logger.php';
         
 
         $this->loader = new AngellEYE_PayPal_Invoicing_Loader();
@@ -146,7 +147,7 @@ class AngellEYE_PayPal_Invoicing {
     private function define_admin_hooks() {
 
         $plugin_admin = new AngellEYE_PayPal_Invoicing_Admin($this->get_plugin_name(), $this->get_version());
-
+        AngellEYE_PayPal_Invoicing_Payment_Logger::instance();
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_sub_menu_manage_invoices');

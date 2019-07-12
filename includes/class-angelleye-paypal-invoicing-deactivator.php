@@ -23,7 +23,7 @@ class AngellEYE_PayPal_Invoicing_Deactivator {
         }
         wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
         
-        $opt_in_log = get_option('angelleye_send_opt_in_logging_details_paypal_invoicing', 'no');
+        $opt_in_log = get_option('angelleye_send_opt_in_logging_details', 'no');
         $is_submited_feedback = get_option('angelleye_paypal_invoicing_submited_feedback', 'no');
         if($opt_in_log == 'yes') {
             if($is_submited_feedback == 'no') {
