@@ -109,6 +109,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 * Fix - Resolves a broken link in the settings panel. ([PPIW-150](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/76))
 * Fix - Resolves a PHP headers issue. ([PPIW-152](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/73))
 * Fix - Removes the use of a WooCommerce function that was causing problems when WC is not being used. ([PPIW-151](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/74))
+* Feature - Update push notification system. ([PPIW-156](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/77))
 
 = 2.0.5 - 07.09.2019 =
 * Tweak - Minor adjustment to PayPal API requests.
