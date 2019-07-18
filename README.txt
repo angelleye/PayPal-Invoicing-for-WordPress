@@ -3,8 +3,8 @@ Contributors: angelleye
 Donate link: http://www.angelleye.com/
 Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
-Tested up to: 5.1.1
-Stable tag: 2.0.5
+Tested up to: 5.2.2
+Stable tag: 2.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
