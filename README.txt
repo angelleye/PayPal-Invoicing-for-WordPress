@@ -4,7 +4,7 @@ Donate link: http://www.angelleye.com/
 Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
 Tested up to: 5.2.2
-Stable tag: 2.0.6
+Stable tag: 2.1.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,7 +98,7 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
-= 2.0.6 - 07.19.2019 =
+= 2.1.0 - 07.19.2019 =
 * Feature - Adds ability to Mark Invoice Paid at PayPal from the invoice screen in WordPress. ([PPIW-37](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/71))
 * Feature - Adds ability to refund invoice payments from within WordPress invoice screen. ([PPIW-38](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/72))
 * Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67)) ([PPIW-156](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/77))
