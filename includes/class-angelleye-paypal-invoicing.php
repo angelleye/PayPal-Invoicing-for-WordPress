@@ -57,7 +57,7 @@ class AngellEYE_PayPal_Invoicing {
         if (defined('PLUGIN_NAME_VERSION')) {
             $this->version = PLUGIN_NAME_VERSION;
         } else {
-            $this->version = '2.1.0';
+            $this->version = '2.0.6';
         }
         $this->plugin_name = 'angelleye-paypal-invoicing';
         $this->load_dependencies();
