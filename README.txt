@@ -3,8 +3,8 @@ Contributors: angelleye
 Donate link: http://www.angelleye.com/
 Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
-Tested up to: 5.1.1
-Stable tag: 2.0.5
+Tested up to: 5.2.2
+Stable tag: 2.0.6
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,19 +98,17 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
-= 2.1.0 - xx.xx.2019 =
+= 2.0.6 - 07.19.2019 =
 * Feature - Adds ability to Mark Invoice Paid at PayPal from the invoice screen in WordPress. ([PPIW-37](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/71))
 * Feature - Adds ability to refund invoice payments from within WordPress invoice screen. ([PPIW-38](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/72))
-* Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67))
-* Tweak - Adds validation to the settings form. ([PPIW-54](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/70))
-* Tweak - Adjusts placeholder on feedback form. ([PPIW-153](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/75))
+* Feature - Adds AE notification system. ([PPIW-147](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/67)) ([PPIW-156](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/77))
 * Fix - Resolves an issue with the PayPal Webhook handler getting stuck sometimes. ([PPIW-149](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/68))
 * Fix - Resolves an issue where the user cannot clear out a company name entered in the plugin settings. ([PPIW-55](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/69))
 * Fix - Resolves a broken link in the settings panel. ([PPIW-150](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/76))
 * Fix - Resolves a PHP headers issue. ([PPIW-152](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/73))
 * Fix - Removes the use of a WooCommerce function that was causing problems when WC is not being used. ([PPIW-151](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/74))
-* Feature - Update push notification system. ([PPIW-156](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/77))
-* Feature - Adds Volume tracking system.. ([PPIW-157](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/78))
+* Tweak - Adds validation to the settings form. ([PPIW-54](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/70))
+* Tweak - Adjusts placeholder on feedback form. ([PPIW-153](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/75))
 
 = 2.0.5 - 07.09.2019 =
 * Tweak - Minor adjustment to PayPal API requests.
