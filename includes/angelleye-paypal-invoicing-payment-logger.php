@@ -40,16 +40,15 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
                 $request_param['mode'] = ($sandbox) ? 'sandbox' : 'live';
                 $request_param['product_id'] = $product_id;
                 if ($request['METHOD'] == 'PayPal Invoice') {
-                    if (isset($result->id)) {
+                    if (isset($result['id'])) {
                         $request_param['status'] = 'Success';
-                        $request_param['transaction_id'] = isset($result->id) ? $result->id : '';
+                        $request_param['transaction_id'] = isset($result['id']) ? $result['id'] : '';
                     } else {
                         $request_param['status'] = 'Failure';
                     }
                     $request_param['merchant_id'] = '';
                     $request_param['correlation_id'] = '';
-                    $request_param['amount'] = isset($result->amount['value']) ? $result->amount['value'] : '0.00';
-                    error_log(print_r($request_param, true));
+                    $request_param['amount'] = isset($result['total_amount']) ? $result['total_amount'] : '0.00';
                     $this->angelleye_tpv_request($request_param);
                 }
             }

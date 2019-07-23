@@ -826,6 +826,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
                 $posted = json_decode($posted_raw, true);
+                error_log(print_r($posted, true));
                 if ($post_id != false && !empty($posted['summary'])) {
                     if ($posted['event_type'] == 'INVOICING.INVOICE.CANCELLED') {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
@@ -838,6 +839,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                         $amount = $invoice['total_amount'];
                         $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
+                        do_action('angelleye_paypal_invoice_response_data', $invoice, array(), '10', ($this->request->testmode == true) ? true : false, false, 'paypal_invoice');
                         if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
                             if ($this->request->testmode == true) {
                                 $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
