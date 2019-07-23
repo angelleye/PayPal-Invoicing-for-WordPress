@@ -48,7 +48,7 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
                     }
                     $request_param['merchant_id'] = '';
                     $request_param['correlation_id'] = '';
-                    $request_param['amount'] = isset($result['total_amount']) ? $result['total_amount'] : '0.00';
+                    $request_param['amount'] = isset($result['amount']['breakdown']['value']) ? $result['amount']['breakdown']['value'] : '0.00';
                     $this->angelleye_tpv_request($request_param);
                 }
             }
