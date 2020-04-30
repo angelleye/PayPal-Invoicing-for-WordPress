@@ -1277,7 +1277,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         }
                     } else {
                         if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-                            $order->payment_complete( $invoice['payments'][0]['transaction_id'] );
+                            $order->payment_complete();
                         }
                     }
                     wc_reduce_stock_levels($order_id);
