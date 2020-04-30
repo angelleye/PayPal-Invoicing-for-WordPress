@@ -822,6 +822,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             if ($this->request->angelleye_paypal_invoicing_is_api_set() == true) {
                 $log = new AngellEYE_PayPal_Invoicing_Logger();
                 $posted_raw = $this->angelleye_paypal_invoicing_get_raw_data();
+                if(empty($posted_raw)) {
+                    return false;
+                }
                 $headers = $this->getallheaders_value();
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
