@@ -1273,10 +1273,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
             try {
                 $order = wc_get_order($order_id);
                 if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
-                    $order->update_status('completed');
                     if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
-                        update_post_meta($post_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
+                        if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
+                            $order->payment_complete( $invoice['payments'][0]['transaction_id'] );
+                        }
+                    } else {
+                        if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
+                            $order->payment_complete();
+                        }
                     }
+                    wc_reduce_stock_levels($order_id);
                     $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                     $amount = $invoice['total_amount'];
                     $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
