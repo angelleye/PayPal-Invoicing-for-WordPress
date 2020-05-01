@@ -152,6 +152,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_sub_menu_manage_invoices');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_register_post_status', 10);
+        $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_update_token', 10);
         $this->loader->add_action('admin_menu', $plugin_admin, 'angelleye_paypal_invoicing_top_menu');
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_remove_meta', 10, 2);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_add_meta_box', 99, 2);

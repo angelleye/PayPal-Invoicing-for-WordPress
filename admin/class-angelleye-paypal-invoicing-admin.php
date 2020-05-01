@@ -862,100 +862,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             header('HTTP/1.1 200 OK');
             exit();
         }
-        if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && ($_GET['action'] == 'lipp_paypal_sandbox_connect' || $_GET['action'] == 'lipp_paypal_live_connect')) {
-            $apifw_setting = get_option('apifw_setting', false);
-            if ($apifw_setting == false) {
-                $apifw_setting = array();
-            }
-            if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
-                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL);
-                update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
-                $apifw_setting['enable_paypal_sandbox'] = 'on';
-            } elseif ($_GET['action'] == 'lipp_paypal_live_connect') {
-                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL);
-                update_option('apifw_live_refresh_token', $_GET['refresh_token']);
-                $apifw_setting['enable_paypal_sandbox'] = '';
-            }
-            update_option('apifw_setting', $apifw_setting);
-            $response = wp_remote_post($this->get_access_token_url, array(
-                'method' => 'POST',
-                'timeout' => 45,
-                'redirection' => 5,
-                'httpversion' => '1.0',
-                'blocking' => true,
-                'headers' => array(),
-                'body' => array('refresh_token' => $_GET['refresh_token']),
-                'cookies' => array()
-                    )
-            );
-            if (is_wp_error($response)) {
-                $error_message = $response->get_error_message();
-                error_log(print_r($error_message, true));
-                echo "Something went wrong: $error_message";
-                exit();
-            } else {
-                $json_data_string = wp_remote_retrieve_body($response);
-                $data = json_decode($json_data_string, true);
-                if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
-                    if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
-                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
-                    } else {
-                        set_transient('apifw_live_access_token', $data['access_token'], 28200);
-                    }
-                    delete_option('webhook_id');
-                    $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
-                    wp_redirect(admin_url('admin.php?page=apifw_settings'));
-                    exit();
-                } else {
-                    error_log(print_r($data, true));
-                }
-            }
-        }
-        if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
-            $this->angelleye_paypal_invoicing_load_rest_api();
-            if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
-                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
-                if (!empty($list_webhooks)) {
-                    try {
-                        foreach ($list_webhooks->getWebhooks() as $webhook) {
-                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
-                        }
-                    } catch (Exception $ex) {
-                        $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-                        delete_transient('apifw_live_access_token');
-                        delete_option('webhook_id');
-                        wp_redirect(admin_url('admin.php?page=apifw_settings'));
-                        exit();
-                    }
-                }
-                delete_option('apifw_sandbox_refresh_token');
-                delete_transient('apifw_sandbox_access_token');
-                delete_option('webhook_id');
-                wp_redirect(admin_url('admin.php?page=apifw_settings'));
-                exit();
-            } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
-                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
-                if (!empty($list_webhooks)) {
-                    try {
-                        foreach ($list_webhooks->getWebhooks() as $webhook) {
-                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
-                        }
-                    } catch (Exception $ex) {
-                        $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-                        delete_option('apifw_live_refresh_token');
-                        delete_transient('apifw_live_access_token');
-                        delete_option('webhook_id');
-                        wp_redirect(admin_url('admin.php?page=apifw_settings'));
-                        exit();
-                    }
-                }
-                delete_option('apifw_live_refresh_token');
-                delete_transient('apifw_live_access_token');
-                delete_option('webhook_id');
-                wp_redirect(admin_url('admin.php?page=apifw_settings'));
-                exit();
-            }
-        }
+        
     }
 
     public function angelleye_paypal_invoicing_get_raw_data() {
@@ -1469,6 +1376,103 @@ class AngellEYE_PayPal_Invoicing_Admin {
             }
         }
         return $headers;
+    }
+    
+    public function angelleye_paypal_invoicing_update_token() {
+        if (isset($_GET['refresh_token']) && !empty($_GET['refresh_token']) && isset($_GET['action']) && ($_GET['action'] == 'lipp_paypal_sandbox_connect' || $_GET['action'] == 'lipp_paypal_live_connect')) {
+            $apifw_setting = get_option('apifw_setting', false);
+            if ($apifw_setting == false) {
+                $apifw_setting = array();
+            }
+            if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'SANDBOX'), PAYPAL_INVOICE_PLUGIN_SANDBOX_API_URL);
+                update_option('apifw_sandbox_refresh_token', $_GET['refresh_token']);
+                $apifw_setting['enable_paypal_sandbox'] = 'on';
+            } elseif ($_GET['action'] == 'lipp_paypal_live_connect') {
+                $this->get_access_token_url = add_query_arg(array('rest_action' => 'get_access_token', 'mode' => 'LIVE'), PAYPAL_INVOICE_PLUGIN_LIVE_API_URL);
+                update_option('apifw_live_refresh_token', $_GET['refresh_token']);
+                $apifw_setting['enable_paypal_sandbox'] = '';
+            }
+            update_option('apifw_setting', $apifw_setting);
+            $response = wp_remote_post($this->get_access_token_url, array(
+                'method' => 'POST',
+                'timeout' => 45,
+                'redirection' => 5,
+                'httpversion' => '1.0',
+                'blocking' => true,
+                'headers' => array(),
+                'body' => array('refresh_token' => $_GET['refresh_token']),
+                'cookies' => array()
+                    )
+            );
+            if (is_wp_error($response)) {
+                $error_message = $response->get_error_message();
+                error_log(print_r($error_message, true));
+                echo "Something went wrong: $error_message";
+                exit();
+            } else {
+                $json_data_string = wp_remote_retrieve_body($response);
+                $data = json_decode($json_data_string, true);
+                if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
+                    if ($_GET['action'] == 'lipp_paypal_sandbox_connect') {
+                        set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
+                    } else {
+                        set_transient('apifw_live_access_token', $data['access_token'], 28200);
+                    }
+                    delete_option('webhook_id');
+                    $this->angelleye_paypal_invoice_update_user_info($data['access_token']);
+                    wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                    exit();
+                } else {
+                    error_log(print_r($data, true));
+                }
+            }
+        }
+        if (!empty($_GET['action']) && $_GET['action'] == 'disconnect_paypal') {
+            $this->angelleye_paypal_invoicing_load_rest_api();
+            if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
+                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
+                if (!empty($list_webhooks)) {
+                    try {
+                        foreach ($list_webhooks->getWebhooks() as $webhook) {
+                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
+                        }
+                    } catch (Exception $ex) {
+                        $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                        delete_transient('apifw_live_access_token');
+                        delete_option('webhook_id');
+                        wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                        exit();
+                    }
+                }
+                delete_option('apifw_sandbox_refresh_token');
+                delete_transient('apifw_sandbox_access_token');
+                delete_option('webhook_id');
+                wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                exit();
+            } else if (!empty($_GET['mode']) && $_GET['mode'] == 'LIVE') {
+                $list_webhooks = $this->request->angelleye_paypal_invoicing_list_web_hook_request();
+                if (!empty($list_webhooks)) {
+                    try {
+                        foreach ($list_webhooks->getWebhooks() as $webhook) {
+                            $webhook->delete($this->request->angelleye_paypal_invoicing_getAuth());
+                        }
+                    } catch (Exception $ex) {
+                        $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                        delete_option('apifw_live_refresh_token');
+                        delete_transient('apifw_live_access_token');
+                        delete_option('webhook_id');
+                        wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                        exit();
+                    }
+                }
+                delete_option('apifw_live_refresh_token');
+                delete_transient('apifw_live_access_token');
+                delete_option('webhook_id');
+                wp_redirect(admin_url('admin.php?page=apifw_settings'));
+                exit();
+            }
+        }
     }
 
 }
