@@ -8,6 +8,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
 $apifw_setting = get_option('apifw_setting');
 $enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
 $sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
@@ -54,9 +55,9 @@ if (is_ssl()) {
 }
 $sandbox_email_read_only = '';
 $live_email_read_only = '';
-if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
+if (!empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
     $sandbox_email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
-} elseif (empty ($enable_paypal_sandbox)) {
+} elseif (empty($enable_paypal_sandbox)) {
     $live_email_read_only = !empty($apifw_live_refresh_token) ? 'readonly' : '';
 }
 $sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
@@ -243,7 +244,8 @@ $sync_paypal_invoice_history_interval_array = array(
                             <input type="text" class="form-control" id="apifw_company_logo" placeholder="" name="apifw_company_logo" value="<?php echo $apifw_company_logo; ?>">
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 <?php echo __('The logo must not be larger than 250 pixels wide by 90 pixels high. The logo must be stored on a secure server.', 'angelleye-paypal-invoicing'); ?>
-                                <?php if( !empty($require_ssl)) {
+                                <?php
+                                if (!empty($require_ssl)) {
                                     echo '<br/>' . $require_ssl;
                                 }
                                 ?>
@@ -294,10 +296,10 @@ $sync_paypal_invoice_history_interval_array = array(
                         <div class="col-sm-8">
                             <label  for="apifw_debug_log">
                                 <input  type="checkbox" id="apifw_debug_log" name="debug_log" <?php checked($debug_log, 'on', true); ?>>
-                                <?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
+<?php echo __('Enable logging', 'angelleye-paypal-invoicing'); ?>
                             </label>
                             <small id="passwordHelpBlock" class="form-text text-muted">
-                                <?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
+<?php echo __('Log PayPal events, inside', 'angelleye-paypal-invoicing'); ?> <code><?php echo ANGELLEYE_PAYPAL_INVOICING_LOG_DIR; ?> </code>
                             </small>
                         </div>
                     </div>
@@ -313,7 +315,7 @@ $sync_paypal_invoice_history_interval_array = array(
                         <div class="col-sm-8">
                             <label  for="apifw_enable_sync_paypal_invoice_history">
                                 <input  type="checkbox" id="apifw_enable_sync_paypal_invoice_history" name="enable_sync_paypal_invoice_history" <?php checked($enable_sync_paypal_invoice_history, 'on', true); ?>>
-                                <?php echo __('Enable Sync PayPal Invoice History', 'angelleye-paypal-invoicing'); ?>
+<?php echo __('Enable Sync PayPal Invoice History', 'angelleye-paypal-invoicing'); ?>
                             </label>
                         </div>
                     </div>
@@ -321,15 +323,15 @@ $sync_paypal_invoice_history_interval_array = array(
                         <label for="sync_paypal_invoice_history_interval" class="col-sm-4 col-form-label"><?php echo __('Sync PayPal Invoice History Interval', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
                             <select id="sync_paypal_invoice_history_interval" name="sync_paypal_invoice_history_interval" class="widefat" name="schedule">
-                                <?php 
-                                    foreach ($sync_paypal_invoice_history_interval_array as $key => $value) {
-                                        if($key  == $sync_paypal_invoice_history_interval) {
-                                            echo "<option value='$key' selected>$value</option>";      
-                                        } else {
-                                            echo "<option value='$key'>$value</option>";                                
-                                        }
-                                  }  
-                                  ?>
+                                <?php
+                                foreach ($sync_paypal_invoice_history_interval_array as $key => $value) {
+                                    if ($key == $sync_paypal_invoice_history_interval) {
+                                        echo "<option value='$key' selected>$value</option>";
+                                    } else {
+                                        echo "<option value='$key'>$value</option>";
+                                    }
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
