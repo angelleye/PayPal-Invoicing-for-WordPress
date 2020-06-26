@@ -1138,14 +1138,17 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
     
-    public function angelleye_paypal_invoicing_list_web_hook_request() {
+    public function angelleye_paypal_invoicing_delete_web_hook_request() {
         try {
             if(is_local_server() === true) {
                 return false;
             }
             $webhook_id = get_option('webhook_id');
             if( !empty($webhook_id) ) {
-                $output = \PayPal\Api\Webhook::get($this->angelleye_paypal_invoicing_getAuth());
+                $webhook = new \PayPal\Api\Webhook();
+                $webhook->setId($webhook_id);
+                $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+                $output = \PayPal\Api\Webhook::get($webhook_id, $this->angelleye_paypal_invoicing_getAuth());
                 return $output;
             } else {
                 return false;
