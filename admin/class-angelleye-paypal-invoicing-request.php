@@ -458,14 +458,13 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
+            return false;
+        } catch (Exception $ex) {
+            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            return false;
         }
+        
+        
     }
 
     public function angelleye_paypal_invoice_get_phone_country_code($country_code) {
