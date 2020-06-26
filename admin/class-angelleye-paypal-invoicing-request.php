@@ -1148,12 +1148,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $webhook = new \PayPal\Api\Webhook();
                 $webhook->setId($webhook_id);
                 $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
-                $output = \PayPal\Api\Webhook::get($webhook_id, $this->angelleye_paypal_invoicing_getAuth());
-                return $output;
             } else {
                 return false;
             }
-            
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
