@@ -113,7 +113,6 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->log = new AngellEYE_PayPal_Invoicing_Logger();
         try {
             require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-angelleye-paypal-invoicing-manage.php';
-            require_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-manage.php');
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
         }
@@ -458,14 +457,13 @@ class AngellEYE_PayPal_Invoicing_Request {
             return $invoice_id;
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
+            return false;
+        } catch (Exception $ex) {
+            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            return false;
         }
+        
+        
     }
 
     public function angelleye_paypal_invoice_get_phone_country_code($country_code) {
@@ -1045,6 +1043,7 @@ class AngellEYE_PayPal_Invoicing_Request {
     public function angelleye_paypal_invoicing_create_web_hook_request() {
         if ($this->angelleye_paypal_invoicing_is_api_set() == true) {
             try {
+                
                 $webhook = new \PayPal\Api\Webhook();
                 $website_url = site_url('?AngellEYE_PayPal_Invoicing&action=webhook_handler');
                 $webhook->setUrl($website_url);
@@ -1088,7 +1087,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 if ($ex instanceof \PayPal\Exception\PayPalConnectionException) {
                     $data = $ex->getData();
                     if (strpos($data, 'WEBHOOK_NUMBER_LIMIT_EXCEEDED') !== false || strpos($data, 'WEBHOOK_URL_ALREADY_EXISTS') !== false) {
-                        $list_webhooks = $this->angelleye_paypal_invoicing_list_web_hook_request();
+                        $list_webhooks = $this->angelleye_paypal_invoicing_all_list_web_hook_request();
                         if (!empty($list_webhooks)) {
                             try {
                                 foreach ($list_webhooks->getWebhooks() as $webhook) {
@@ -1117,8 +1116,11 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
     }
 
-    public function angelleye_paypal_invoicing_list_web_hook_request() {
+    public function angelleye_paypal_invoicing_all_list_web_hook_request() {
         try {
+            if(is_local_server() === true) {
+                return false;
+            }
             $output = \PayPal\Api\Webhook::getAll($this->angelleye_paypal_invoicing_getAuth());
             return $output;
         } catch (Exception $ex) {
@@ -1128,8 +1130,31 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
+            return false;
+        }
+    }
+    
+    public function angelleye_paypal_invoicing_delete_web_hook_request() {
+        try {
+            if(is_local_server() === true) {
+                return false;
+            }
+            $webhook_id = get_option('webhook_id');
+            if( !empty($webhook_id) ) {
+                $webhook = new \PayPal\Api\Webhook();
+                $webhook->setId($webhook_id);
+                $webhook->delete($this->angelleye_paypal_invoicing_getAuth());
+            } else {
+                return false;
+            }
+        } catch (Exception $ex) {
+            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+            if( empty($error)) {
+                $error = $ex->getMessage();
+            }
+            set_transient('angelleye_paypal_invoicing_error', $error);
+            return false;
         }
     }
 
