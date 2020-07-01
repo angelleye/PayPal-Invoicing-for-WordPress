@@ -140,9 +140,9 @@ class AngellEYE_PayPal_Invoicing_Request {
                     $data = json_decode($json_data_string, true);
                     if (isset($data['result']) && $data['result'] == 'success' && !empty($data['access_token'])) {
                         if ($this->mode == 'LIVE') {
-                            set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
-                        } else {
                             set_transient('apifw_live_access_token', $data['access_token'], 28200);
+                        } else {
+                            set_transient('apifw_sandbox_access_token', $data['access_token'], 28200);
                         }
                         $this->apifw_access_token = $data['access_token'];
                     } else {
