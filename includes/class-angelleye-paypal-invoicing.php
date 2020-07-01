@@ -69,7 +69,6 @@ class AngellEYE_PayPal_Invoicing {
         add_action('angelleye_paypal_invoicing_sync_event', array($this, 'angelleye_paypal_invoicing_sync_with_paypal'));
         $prefix = is_network_admin() ? 'network_admin_' : '';
         add_filter("{$prefix}plugin_action_links_" . PAYPAL_INVOICE_PLUGIN_BASENAME, array($this, 'angelleye_paypal_invoicing_plugin_action_links'), 10, 4);
-       
     }
 
     /**
@@ -116,7 +115,7 @@ class AngellEYE_PayPal_Invoicing {
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-activator.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/angelleye-paypal-invoicing-payment-logger.php';
-        
+
 
         $this->loader = new AngellEYE_PayPal_Invoicing_Loader();
     }
@@ -181,8 +180,8 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label');
         $this->loader->add_action('parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
         $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
-        $this->loader->add_action( 'admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
-        $this->loader->add_action( 'wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
+        $this->loader->add_action('admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
+        $this->loader->add_action('wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_add_web_hooks', 10);
         $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_push_notification', 10);
         $this->loader->add_action('wp_ajax_angelleye_dismiss_notice', $plugin_admin, 'angelleye_dismiss_notice', 10);

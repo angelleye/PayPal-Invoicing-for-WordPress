@@ -51,6 +51,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $this->tax_name = isset($this->apifw_setting['tax_name']) ? $this->apifw_setting['tax_name'] : '';
         $this->item_quantity = isset($this->apifw_setting['item_quantity']) ? $this->apifw_setting['item_quantity'] : '1';
         $this->get_access_token_url = '';
+        // Secure Invoice notes.
+        add_filter('comments_clauses', array(__CLASS__, 'exclude_invoice_comments'), 10, 1);
+        add_filter('comment_feed_where', array(__CLASS__, 'exclude_invoice_comments_from_feed_where'));
     }
 
     /**
@@ -285,7 +288,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 try {
                     $this->request->angelleye_paypal_invoicing_delete_web_hook_request();
                 } catch (Exception $ex) {
-
+                    
                 }
             }
             delete_transient('apifw_sandbox_access_token');
@@ -765,13 +768,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
         $args = array(
             'post_id' => $post_id,
             'comment_type' => 'invoice_note',
-            'post_type' => 'paypal_invoices'
+            'post_type' => 'paypal_invoices',
         );
+        remove_filter( 'comments_clauses', array( 'AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments' ), 10, 1 );
         $comments = get_comments($args);
+        add_filter( 'comments_clauses', array( 'AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments' ), 10, 1 );
         foreach ($comments as $comment) {
-            if (!get_comment_meta($comment->comment_ID, 'is_customer_note', true)) {
-                continue;
-            }
             $comment->comment_content = make_clickable($comment->comment_content);
             $notes[] = $comment;
         }
@@ -1444,7 +1446,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
             $this->angelleye_paypal_invoicing_load_rest_api();
             if (!empty($_GET['mode']) && $_GET['mode'] == 'SANDBOX') {
                 try {
-                    if( is_local_server() === false ) {
+                    if (is_local_server() === false) {
                         $this->request->angelleye_paypal_invoicing_delete_web_hook_request();
                     }
                 } catch (Exception $ex) {
@@ -1476,6 +1478,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
             wp_redirect(admin_url('admin.php?page=apifw_settings'));
             exit();
         }
+    }
+
+    public static function exclude_invoice_comments_from_feed_where($where) {
+        return $where . ( $where ? ' AND ' : '' ) . " comment_type != 'invoice_note' ";
+    }
+
+    public static function exclude_invoice_comments($clauses) {
+        $clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) . " comment_type != 'invoice_note' ";
+        return $clauses;
     }
 
 }
