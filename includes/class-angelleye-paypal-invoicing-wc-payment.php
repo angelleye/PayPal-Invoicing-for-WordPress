@@ -76,7 +76,7 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
                 'title' => __('Description', 'angelleye-paypal-invoicing'),
                 'type' => 'textarea',
                 'description' => __('Payment method description that the customer will see on your checkout.', 'angelleye-paypal-invoicing'),
-                'default' => __('Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.', 'angelleye-paypal-invoicing'),
+                'default' => __('This will send PayPal invoice to your PayPal account.', 'angelleye-paypal-invoicing'),
                 'desc_tip' => true,
             ),
             'instructions' => array(
