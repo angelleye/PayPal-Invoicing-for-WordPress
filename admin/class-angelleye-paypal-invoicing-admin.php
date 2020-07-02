@@ -770,9 +770,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'comment_type' => 'invoice_note',
             'post_type' => 'paypal_invoices',
         );
-        remove_filter( 'comments_clauses', array( 'AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments' ), 10, 1 );
+        remove_filter('comments_clauses', array('AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments'), 10, 1);
         $comments = get_comments($args);
-        add_filter( 'comments_clauses', array( 'AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments' ), 10, 1 );
+        add_filter('comments_clauses', array('AngellEYE_PayPal_Invoicing_Admin', 'exclude_invoice_comments'), 10, 1);
         foreach ($comments as $comment) {
             $comment->comment_content = make_clickable($comment->comment_content);
             $notes[] = $comment;
@@ -1487,6 +1487,57 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public static function exclude_invoice_comments($clauses) {
         $clauses['where'] .= ( $clauses['where'] ? ' AND ' : '' ) . " comment_type != 'invoice_note' ";
         return $clauses;
+    }
+
+    public function own_angelleye_marketing_sendy_subscription() {
+        global $wp;
+        if (!empty($_SERVER['HTTP_REFERER'])) {
+            $current_url = $_SERVER['HTTP_REFERER'];
+        } else {
+            $current_url = home_url(add_query_arg(array(), $wp->request));
+        }
+        $url = 'https://sendy.angelleye.com/subscribe';
+        $response = wp_remote_post($url, array(
+            'method' => 'POST',
+            'timeout' => 45,
+            'redirection' => 5,
+            'httpversion' => '1.0',
+            'blocking' => true,
+            'headers' => array(),
+            'body' => array('list' => 'pjFolYKqSdLe57i4uuUz0g',
+                'boolean' => 'true',
+                'email' => $_POST['email'],
+                'gdpr' => 'true',
+                'silent' => 'true',
+                'api_key' => 'qFcoVlU2uG3AMYabNTrC',
+                'referrer' => $current_url
+            ),
+            'cookies' => array()
+                )
+        );
+        if (is_wp_error($response)) {
+            wp_send_json(wp_remote_retrieve_body($response));
+        } else {
+            $body = wp_remote_retrieve_body($response);
+            $apiResponse = strval($body);
+            switch ($apiResponse) {
+                case 'true':
+                case '1':
+                    $this->prepareResponse("true", 'Thank you for subscribing!');
+                case 'Already subscribed.':
+                    $this->prepareResponse("true", 'Already subscribed!');
+                default:
+                    $this->prepareResponse("false", $apiResponse);
+            }
+        }
+    }
+    
+    public function prepareResponse($status = false, $msg = 'Something went wrong!') {
+        $return = array(
+            'result' => $status,
+            'message' => $msg
+        );
+        wp_send_json($return);
     }
 
 }
