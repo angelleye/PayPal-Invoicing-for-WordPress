@@ -90,15 +90,33 @@ class AngellEYE_PayPal_Invoicing_WC_Payment extends WC_Payment_Gateway {
     }
 
     public function admin_options() {
+        $GLOBALS['hide_save_button'] = true;
         ?>
         <h3><?php _e('PayPal Invoice', 'angelleye-paypal-invoicing'); ?></h3>
         <p><?php _e($this->method_description, 'angelleye-paypal-invoicing'); ?></p>
+        <div id="angelleye_paypal_marketing_table">
         <table class="form-table">
             <?php
             $this->generate_settings_html();
             ?>
         </table> 
+        <p class="submit">
+            <button name="save" class="button-primary woocommerce-save-button" type="submit" value="<?php esc_attr_e( 'Save changes', 'paypal-for-woocommerce' ); ?>"><?php esc_html_e( 'Save changes', 'paypal-for-woocommerce' ); ?></button>
+            <?php wp_nonce_field( 'woocommerce-settings' ); ?>
+        </p>
+        </div>
         <?php
+        if (false === ( $html = get_transient('angelleye_dynamic_marketing_sidebar_html_ppiw') )) {
+            $response = wp_remote_get('https://8aystwpoqi.execute-api.us-east-2.amazonaws.com/AngellEyeDynamicSidebar?pluginId=10');
+            if (is_array($response) && !is_wp_error($response)) {
+                if (!empty($response['body'])) {
+                    set_transient('angelleye_dynamic_marketing_sidebar_html_ppiw', $response['body'], 24 * HOUR_IN_SECONDS);
+                    echo $response['body'];
+                }
+            }
+        } else {
+            echo $html;
+        }
     }
 
     public function is_available() {

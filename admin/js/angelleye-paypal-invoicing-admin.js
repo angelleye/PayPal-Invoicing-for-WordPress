@@ -357,8 +357,28 @@
             });
 
         });
+        $(".icon_header_ppiw_one").toggle(
+                function () {				
+                        $('.icon_header_ppiw_one').html('').html('<span class="dashicons dashicons-minus" style="float: right;margin-top: 13px;"></span>');
+                        $('.card-body_ppiw_one').show('slow');
+                        
+                },
+                function () {
+                        $('.icon_header_ppiw_one').html('').html('<span class="dashicons dashicons-plus" style="float: right;margin-top: 13px;"></span>');
+                        $('.card-body_ppiw_one').hide('slow');
+                }
+        );
 
-
-
+        $(".icon_header_ppiw_two").toggle(
+                function () {				
+                        $('.icon_header_ppiw_two').html('').html('<span class="dashicons dashicons-minus" style="float: right;margin-top: 13px;"></span>');
+                        $('.card-body_ppiw_two').show('slow');
+                        
+                },
+                function () {
+                        $('.icon_header_ppiw_two').html('').html('<span class="dashicons dashicons-plus" style="float: right;margin-top: 13px;"></span>');
+                        $('.card-body_ppiw_two').hide('slow');
+                }
+        );
     });
 })(jQuery);
