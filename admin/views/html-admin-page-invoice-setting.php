@@ -392,11 +392,11 @@ $sync_paypal_invoice_history_interval_array = array(
             </div>
             <div class="col-lg-3 col-md-12 col-sm-12">
                 <?php
-                if (false === ( $html = get_transient('angelleye_dynamic_marketing_sidebar_html_ppiw_bootstrap') )) {
+                if (false === ( $html = get_transient('angelleye_dynamic_marketing_sidebar_html_ppiw') )) {
                     $response = wp_remote_get('https://8aystwpoqi.execute-api.us-east-2.amazonaws.com/AngellEyeDynamicSidebar?pluginId=10');
                     if (is_array($response) && !is_wp_error($response)) {
                         if (!empty($response['body'])) {
-                            set_transient('angelleye_dynamic_marketing_sidebar_html_ppiw_bootstrap', $response['body'], 24 * HOUR_IN_SECONDS);
+                            set_transient('angelleye_dynamic_marketing_sidebar_html_ppiw', $response['body'], 24 * HOUR_IN_SECONDS);
                             echo $response['body'];
                         }
                     }
