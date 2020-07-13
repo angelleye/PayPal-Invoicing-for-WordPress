@@ -423,21 +423,6 @@ body {
     font-size: 15px;
     vertical-align: middle;
 }
-.row_border_bottom{
-    border-bottom: 1px solid #63ab40;
-}
-
-.pwfwml{
-    margin-right: 10px;
-}
-
-.pwfwml .pwfwmlimg{
-    height: 45px;
-    width:45px;
-}
-.container-fluid a{
-    color: #0073aa;
-}
 .updater-dismissible {
     padding-right: 38px;
     position: relative;
