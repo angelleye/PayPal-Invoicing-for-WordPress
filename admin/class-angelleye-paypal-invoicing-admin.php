@@ -1223,12 +1223,16 @@ class AngellEYE_PayPal_Invoicing_Admin {
                                 $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                             }
                         }
+                        $order->add_order_note('PayPal Invoice Paid');
                     } else if ($invoice['status'] == 'CANCELLED') {
                         $order->update_status('cancelled');
+                        $order->add_order_note('PayPal Invoice Cancelled');
                     } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
                         $order->update_status('refunded');
+                        $order->add_order_note('PayPal Invoice Refunded');
                     } else if ('PARTIALLY_PAID' == $invoice['status']) {
                         $order->update_status('wc-partial-payment');
+                        $order->add_order_note('PayPal Invoice Partially Paid');
                     } 
                     if( !empty($request_array['summary'])) {
                         $order->add_order_note($request_array['summary']);
