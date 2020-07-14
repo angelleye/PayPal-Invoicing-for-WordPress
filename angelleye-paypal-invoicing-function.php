@@ -286,3 +286,10 @@ function is_local_server() {
 
     return false;
 }
+
+function webhook_log($message) {
+    if (function_exists('wc_get_logger')) {
+        $log = wc_get_logger();
+        $log->log('info', $message, array('source' => 'webhook'));
+    }
+}

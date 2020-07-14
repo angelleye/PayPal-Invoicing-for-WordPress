@@ -179,7 +179,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var');
         $this->loader->add_filter('get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label');
         $this->loader->add_action('parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
-        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
+        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 3);
         $this->loader->add_action('admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
         $this->loader->add_action('wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_add_web_hooks', 10);
