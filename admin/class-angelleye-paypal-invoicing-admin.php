@@ -838,11 +838,11 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if (empty($posted_raw)) {
                     return false;
                 }
+                webhook_log($posted_raw);
                 $headers = $this->getallheaders_value();
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
                 $posted = json_decode($posted_raw, true);
-                error_log(print_r($posted, true));
                 if ($post_id != false && !empty($posted['summary'])) {
                     if ($posted['event_type'] == 'INVOICING.INVOICE.CANCELLED') {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
@@ -1195,7 +1195,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
     public function angelleye_update_order_status($post_id, $invoice, $request_array) {
         $this->angelleye_paypal_invoicing_load_rest_api();
         $order_id = get_post_meta($post_id, '_order_id', true);
-        error_log(print_r($request_array, true));
         if (!empty($order_id)) {
             try {
                 $order = wc_get_order($order_id);
