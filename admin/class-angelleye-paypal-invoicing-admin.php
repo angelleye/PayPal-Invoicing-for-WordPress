@@ -842,7 +842,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
                 $posted = json_decode($posted_raw, true);
-                error_log(print_r($posted, true));
                 if ($post_id != false && !empty($posted['summary'])) {
                     if ($posted['event_type'] == 'INVOICING.INVOICE.CANCELLED') {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
@@ -1188,38 +1187,44 @@ class AngellEYE_PayPal_Invoicing_Admin {
         }
     }
 
-    public function angelleye_update_order_status($post_id, $invoice) {
+    public function angelleye_update_order_status($post_id, $invoice, $request_array) {
         $this->angelleye_paypal_invoicing_load_rest_api();
         $order_id = get_post_meta($post_id, '_order_id', true);
+        error_log(print_r($request_array, true));
         if (!empty($order_id)) {
             try {
                 $order = wc_get_order($order_id);
-                if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
-                    if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
-                        if (!$order->has_status(array('processing', 'completed'))) {
-                            $order->payment_complete($invoice['payments'][0]['transaction_id']);
-                        }
-                    } else {
-                        if (!$order->has_status(array('processing', 'completed'))) {
-                            $order->payment_complete();
-                        }
-                    }
-                    wc_reduce_stock_levels($order_id);
-                    $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-                    $amount = $invoice['total_amount'];
-                    $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
-                    if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
-                        if ($this->request->testmode == true) {
-                            $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                if($order) {
+                    if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
+                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                            if (!$order->has_status(array('processing', 'completed'))) {
+                                $order->payment_complete($invoice['payments'][0]['transaction_id']);
+                            }
                         } else {
-                            $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                            if (!$order->has_status(array('processing', 'completed'))) {
+                                $order->payment_complete();
+                            }
                         }
-                        $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
+                        wc_reduce_stock_levels($order_id);
+                        $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
+                        $amount = $invoice['total_amount'];
+                        $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
+                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                            if ($this->request->testmode == true) {
+                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                            } else {
+                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                            }
+                            $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
+                        }
+                    } else if ($invoice['status'] == 'CANCELLED') {
+                        $order->update_status('cancelled');
+                    } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
+                        $order->update_status('refunded');
                     }
-                } else if ($invoice['status'] == 'CANCELLED') {
-                    $order->update_status('cancelled');
-                } else if ('MARKED_AS_REFUNDED' == $invoice['status'] || 'REFUNDED' == $invoice['status']) {
-                    $order->update_status('refunded');
+                    if( !empty($request_array['summary'])) {
+                        $order->add_order_note($request_array['summary']);
+                    }
                 }
             } catch (Exception $ex) {
                 error_log(print_r($ex->getMessage(), true));

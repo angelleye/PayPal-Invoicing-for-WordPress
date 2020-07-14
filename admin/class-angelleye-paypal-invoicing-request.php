@@ -288,15 +288,14 @@ class AngellEYE_PayPal_Invoicing_Request {
                 update_post_meta($existing_post_id, $key, pifw_clean($value));
             }
             update_post_meta($existing_post_id, 'all_invoice_data', pifw_clean($invoice));
-            if ($paypal_invoice_data_array['status'] == 'PAID' || 'MARKED_AS_PAID' == $paypal_invoice_data_array['status']) {
-                $order_id = get_post_meta($post_id, '_order_id', true);
-                if( !empty($order_id) ) {
-                    $order = wc_get_order($order_id);
-                    if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-                        $order->payment_complete();
-                    }
+            $order_id = get_post_meta($existing_post_id, '_order_id', true);
+            if( !empty($order_id) ) {
+                $order = wc_get_order($order_id);
+                if($order) {
+                    do_action('angelleye_update_order_status', $existing_post_id, $invoice, array());
                 }
             }
+            
         }
         return $existing_post_id;
     }
@@ -958,8 +957,8 @@ class AngellEYE_PayPal_Invoicing_Request {
             $order_id = get_post_meta($post_id, '_order_id', true);
             if( !empty($order_id) ) {
                 $order = wc_get_order($order_id);
-                if ( ! $order->has_status( array( 'processing', 'completed' ) ) ) {
-                    $order->payment_complete();
+                if($order) {
+                    do_action('angelleye_update_order_status', $post_id, $invoice, array());
                 }
             }
         }
@@ -1176,10 +1175,10 @@ class AngellEYE_PayPal_Invoicing_Request {
             $status = $output->getVerificationStatus();
             if ($status == 'SUCCESS') {
                 $request_array = json_decode($request_body, true);
-                if ($request_array['resource_type'] == 'invoices' || 'invoice' == $request_array['resource_type']) {
+                if (isset($request_array['resource_type']) && $request_array['resource_type'] == 'invoices' || 'invoice' == $request_array['resource_type']) {
                     if (!empty($request_array['resource']['invoice'])) {
                         $post_id = $this->angelleye_paypal_invoicing_insert_paypal_invoice_data($request_array['resource']['invoice']);
-                        do_action('angelleye_update_order_status', $post_id, $request_array['resource']['invoice']);
+                        do_action('angelleye_update_order_status', $post_id, $request_array['resource']['invoice'], $request_array);
                         return $post_id;
                     }
                 }
