@@ -49,7 +49,6 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
                     $request_param['merchant_id'] = '';
                     $request_param['correlation_id'] = '';
                     $request_param['amount'] = isset($result->amount['value']) ? $result->amount['value'] : '0.00';
-                    error_log(print_r($request_param, true));
                     $this->angelleye_tpv_request($request_param);
                 }
             }
@@ -92,7 +91,6 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
             $response = wp_remote_post($this->api_url, $post_args);
             if (is_wp_error($response)) {
                 $error_message = $response->get_error_message();
-                error_log(print_r($error_message, true));
                 return false;
             } else {
                 $body = json_decode(wp_remote_retrieve_body($response), true);

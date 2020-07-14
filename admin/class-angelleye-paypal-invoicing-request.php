@@ -953,13 +953,11 @@ class AngellEYE_PayPal_Invoicing_Request {
             update_post_meta($post_id, $key, pifw_clean($value));
         }
         update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
-        if ($paypal_invoice_data_array['status'] == 'PAID' || 'MARKED_AS_PAID' == $paypal_invoice_data_array['status']) {
-            $order_id = get_post_meta($post_id, '_order_id', true);
-            if( !empty($order_id) ) {
-                $order = wc_get_order($order_id);
-                if($order) {
-                    do_action('angelleye_update_order_status', $post_id, $invoice, array());
-                }
+        $order_id = get_post_meta($post_id, '_order_id', true);
+        if( !empty($order_id) ) {
+            $order = wc_get_order($order_id);
+            if($order) {
+                do_action('angelleye_update_order_status', $post_id, $invoice, array());
             }
         }
     }
