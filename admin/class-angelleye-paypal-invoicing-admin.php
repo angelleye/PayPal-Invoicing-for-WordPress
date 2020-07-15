@@ -1203,6 +1203,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
                             if (!$order->has_status(array('processing', 'completed'))) {
                                 $order->payment_complete($invoice['payments'][0]['transaction_id']);
+                                update_post_meta($order_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
                                 $order->add_order_note('PayPal Invoice Paid');
                             }
                         } else {
