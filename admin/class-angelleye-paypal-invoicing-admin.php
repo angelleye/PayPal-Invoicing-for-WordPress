@@ -1236,7 +1236,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $order->add_order_note('PayPal Invoice Partially Paid');
                     } 
                     if( !empty($request_array['summary'])) {
-                        $order->add_order_note('PayPal Webhook'. $request_array['summary']);
+                        $order->add_order_note('PayPal Webhook : '. $request_array['summary']);
                     }
                 }
             } catch (Exception $ex) {
