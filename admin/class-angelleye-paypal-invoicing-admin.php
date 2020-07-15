@@ -1203,10 +1203,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
                             if (!$order->has_status(array('processing', 'completed'))) {
                                 $order->payment_complete($invoice['payments'][0]['transaction_id']);
+                                $order->add_order_note('PayPal Invoice Paid');
                             }
                         } else {
                             if (!$order->has_status(array('processing', 'completed'))) {
                                 $order->payment_complete();
+                                $order->add_order_note('PayPal Invoice Paid');
                             }
                         }
                         wc_reduce_stock_levels($order_id);
@@ -1223,7 +1225,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                                 $order->add_order_note(sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url));
                             }
                         }
-                        $order->add_order_note('PayPal Invoice Paid');
                     } else if ($invoice['status'] == 'CANCELLED') {
                         $order->update_status('cancelled');
                         $order->add_order_note('PayPal Invoice Cancelled');
@@ -1235,7 +1236,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $order->add_order_note('PayPal Invoice Partially Paid');
                     } 
                     if( !empty($request_array['summary'])) {
-                        $order->add_order_note($request_array['summary']);
+                        $order->add_order_note('PayPal Webhook'. $request_array['summary']);
                     }
                 }
             } catch (Exception $ex) {
