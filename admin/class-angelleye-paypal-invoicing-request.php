@@ -387,12 +387,12 @@ class AngellEYE_PayPal_Invoicing_Request {
                         'email_address' => $billing_email,
                         'additional_info_value' => 'add-info',
                         'name' => array('given_name' => $billing_first_name, 'surname' => $billing_last_name),
-                        'address' => array('address_line_1' => $billing_address_1, 'address_line_1' => $billing_address_2, 'admin_area_2' => $billing_city, 'admin_area_1' => $billing_state, 'postal_code' => $billing_postcode, 'country_code' => $billing_country)
+                        'address' => array('address_line_1' => $billing_address_1, 'address_line_2' => $billing_address_2, 'admin_area_2' => $billing_city, 'admin_area_1' => $billing_state, 'postal_code' => $billing_postcode, 'country_code' => $billing_country)
                     ),
                     'shipping_info' =>
                     array(
                         'name' => array('given_name' => $shipping_first_name, 'surname' => $shipping_last_name),
-                        'address' => array('address_line_1' => $shipping_address_1, 'address_line_1' => $shipping_address_2, 'admin_area_2' => $shipping_city, 'admin_area_1' => $shipping_state, 'postal_code' => $shipping_postcode, 'country_code' => $shipping_country)
+                        'address' => array('address_line_1' => $shipping_address_1, 'address_line_2' => $shipping_address_2, 'admin_area_2' => $shipping_city, 'admin_area_1' => $shipping_state, 'postal_code' => $shipping_postcode, 'country_code' => $shipping_country)
                     ),
                 ),
             ),
