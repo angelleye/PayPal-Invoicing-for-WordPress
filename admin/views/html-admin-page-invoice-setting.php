@@ -8,6 +8,7 @@
 if (!defined('ABSPATH')) {
     exit;
 }
+
 $apifw_setting = get_option('apifw_setting');
 $enable_paypal_sandbox = isset($apifw_setting['enable_paypal_sandbox']) ? $apifw_setting['enable_paypal_sandbox'] : '';
 $sandbox_client_id = isset($apifw_setting['sandbox_client_id']) ? $apifw_setting['sandbox_client_id'] : '';
@@ -54,9 +55,9 @@ if (is_ssl()) {
 }
 $sandbox_email_read_only = '';
 $live_email_read_only = '';
-if( !empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
+if (!empty($enable_paypal_sandbox) && $enable_paypal_sandbox == 'on') {
     $sandbox_email_read_only = !empty($apifw_sandbox_refresh_token) ? 'readonly' : '';
-} elseif (empty ($enable_paypal_sandbox)) {
+} elseif (empty($enable_paypal_sandbox)) {
     $live_email_read_only = !empty($apifw_live_refresh_token) ? 'readonly' : '';
 }
 $sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
@@ -78,10 +79,58 @@ $sync_paypal_invoice_history_interval_array = array(
 ?>
 <div class="wrap">
     <div class="container-fluid" id="angelleye-paypal-invoicing">
+        <div class="mb-4">
+            <h1>PayPal Invoicing for WordPress</h1>
+        </div>
         <div class="row">
-            <div class="col-lg-6 col-md-12 col-sm-12">
+            <div class="col-lg-9 col-md-12 col-sm-12" style="border-right: 2px solid #dfdfdf;">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card" style="max-width:100%">
+                            <div class="card-header card-header_ppiw_one">
+                                <div class="float-right icon_header_ppiw_one">
+                                    <span class="dashicons dashicons-plus" style="float: right;margin-top: 13px;"></span>
+                                </div>
+                                <h5><?php echo __('Instructions', 'angelleye-paypal-invoicing'); ?> </h5>
+                            </div>
+                            <div class="card-body card-body_ppiw_one" style="display: none;">
+                                <ol>
+                                    <li><?php echo __('Check the box to Enable PayPal Sandbox if you are going to configure the plugin with a test account.  Otherwise, leave it unchecked.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <li><?php echo __('Click the Log In with PayPal button to quickly and easily connect your PayPal account to the Invoicing plugin.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <ol style="list-style-type:lower-alpha">
+                                        <li><?php echo __('If you have your own app configured with PayPal and would prefer to use that, click the link to “add my own app credentials”.', 'angelleye-paypal-invoicing'); ?></li>
+                                    </ol>
+                                    <li><?php echo __('Enter details for Address and Default values to use on new invoices.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <li><?php echo __('Save Changes.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <li><?php echo __('Click the PayPal Invoicing item in the WordPress admin menu bar.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <li><?php echo __('Click Add Invoice to create your first PayPal invoice!', 'angelleye-paypal-invoicing'); ?></li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="card" style="max-width:100%">
+                            <div class="card-header">
+                                <div class="float-right icon_header_ppiw_two">
+                                    <span class="dashicons dashicons-plus" style="float: right;margin-top: 13px;"></span>
+                                </div>
+                                <h5><?php echo __('WooCommerce Compatibility', 'angelleye-paypal-invoicing'); ?></h5>
+                            </div>
+                            <div class="card-body card-body_ppiw_two" style="display: none;">
+                                <ol>
+                                    <li><?php echo __('Create an order in WooCommerce.', 'angelleye-paypal-invoicing'); ?></li>
+                                    <li><?php echo __('From the Order Actions menu, choose to:', 'angelleye-paypal-invoicing'); ?></li>
+                                    <ol style="list-style-type:lower-alpha">
+                                        <li><?php echo __('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing'); ?></li>
+                                        <li><?php echo __('Send PayPal Invoice', 'angelleye-paypal-invoicing'); ?></li>
+                                    </ol>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
                 <form method="POST">
-                    <h3><?php echo __('PayPal API Credentials', 'angelleye-paypal-invoicing'); ?></h3>
+                    <h5><?php echo __('PayPal API Credentials', 'angelleye-paypal-invoicing'); ?></h5><br>
                     <div class="form-group row">
                         <div class="col-sm-4"><?php echo __('PayPal Sandbox', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-8">
@@ -95,12 +144,12 @@ $sync_paypal_invoice_history_interval_array = array(
                     <?php
                     if (empty($sandbox_client_id) || empty($sandbox_secret)) {
                         if ($apifw_sandbox_refresh_token == false) {
-                            ?> 
+                            ?>
                             <div class="form-group row angelleye_paypal_invoicing_sandbox_connect_box">
                                 <div class="col-sm-12" >
                                     <a  href="<?php echo $paypal_sandbox_remote_connect_url; ?>">
                                         <img src="https://www.paypalobjects.com/webstatic/en_US/developer/docs/lipp/loginwithpaypalbutton.png" alt="Login with PayPal" style="cursor: pointer"/>
-                                    </a> 
+                                    </a>
                                     <span class="paypal_invoice_setting_sepraer">OR</span> <a href="#" class="angelleye-invoice-toggle-settings">Add my own app credentials</a>
                                 </div>
                             </div>
@@ -130,7 +179,7 @@ $sync_paypal_invoice_history_interval_array = array(
                     <?php
                     if (empty($client_id) || empty($secret)) {
                         if ($apifw_live_refresh_token == false) {
-                            ?> 
+                            ?>
                             <div class="form-group row angelleye_paypal_invoicing_live_connect_box">
                                 <div class="col-sm-12" >
                                     <a  href="<?php echo $paypal_live_remote_connect_url; ?>">
@@ -161,7 +210,7 @@ $sync_paypal_invoice_history_interval_array = array(
                             <input type="password" class="form-control" id="apifw_secret" placeholder="<?php echo __('Secret', 'angelleye-paypal-invoicing'); ?>" name="secret" value="<?php echo esc_attr($secret); ?>">
                         </div>
                     </div>
-                    <h3><?php echo __('My Business Info', 'angelleye-paypal-invoicing'); ?></h3>
+                    <br><h5><?php echo __('My Business Info', 'angelleye-paypal-invoicing'); ?></h5><br>
                     <div class="form-group row">
                         <label for="apifw_paypal_email" class="col-sm-3 col-form-label"><?php echo __('PayPal Email', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
@@ -238,19 +287,20 @@ $sync_paypal_invoice_history_interval_array = array(
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="apifw_company_logo" class="col-sm-3 col-form-label"><?php echo __('Company Logo', 'angelleye-paypal-invoicing'); ?></label> 
+                        <label for="apifw_company_logo" class="col-sm-3 col-form-label"><?php echo __('Company Logo', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" id="apifw_company_logo" placeholder="" name="apifw_company_logo" value="<?php echo $apifw_company_logo; ?>">
                             <small id="passwordHelpBlock" class="form-text text-muted">
                                 <?php echo __('The logo must not be larger than 250 pixels wide by 90 pixels high. The logo must be stored on a secure server.', 'angelleye-paypal-invoicing'); ?>
-                                <?php if( !empty($require_ssl)) {
+                                <?php
+                                if (!empty($require_ssl)) {
                                     echo '<br/>' . $require_ssl;
                                 }
                                 ?>
                             </small>
                         </div>
-                    </div> 
-                    <h3><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h3>
+                    </div>
+                    <br><h5><?php echo __('Default Values', 'angelleye-paypal-invoicing'); ?></h5><br>
                     <div class="form-group row">
                         <label for="apifw_shipping_amount" class="col-sm-4 col-form-label"><?php echo __('Shipping Amount', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
@@ -288,7 +338,7 @@ $sync_paypal_invoice_history_interval_array = array(
                         </div>
                     </div>
 
-                    <h3><?php echo __('Log Event', 'angelleye-paypal-invoicing'); ?></h3>
+                    <br><h5><?php echo __('Log Event', 'angelleye-paypal-invoicing'); ?></h5><br>
                     <div class="form-group row">
                         <div class="col-sm-4"><?php echo __('Debug Log', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-8">
@@ -307,7 +357,7 @@ $sync_paypal_invoice_history_interval_array = array(
                             <button name="apifw_delete_logs" type="submit" value="Delete Logs" class="btn btn-danger"><?php echo __('Delete Logs', 'angelleye-paypal-invoicing'); ?></button>
                         </div>
                     </div>
-                    <h3><?php echo __('Advanced Options', 'angelleye-paypal-invoicing'); ?></h3>
+                    <br><h5><?php echo __('Advanced Options', 'angelleye-paypal-invoicing'); ?></h5><br>
                     <div class="form-group row">
                         <div class="col-sm-4"><?php echo __('Sync PayPal Invoice History', 'angelleye-paypal-invoicing'); ?> </div>
                         <div class="col-sm-8">
@@ -321,15 +371,15 @@ $sync_paypal_invoice_history_interval_array = array(
                         <label for="sync_paypal_invoice_history_interval" class="col-sm-4 col-form-label"><?php echo __('Sync PayPal Invoice History Interval', 'angelleye-paypal-invoicing'); ?></label>
                         <div class="col-sm-8">
                             <select id="sync_paypal_invoice_history_interval" name="sync_paypal_invoice_history_interval" class="widefat" name="schedule">
-                                <?php 
-                                    foreach ($sync_paypal_invoice_history_interval_array as $key => $value) {
-                                        if($key  == $sync_paypal_invoice_history_interval) {
-                                            echo "<option value='$key' selected>$value</option>";      
-                                        } else {
-                                            echo "<option value='$key'>$value</option>";                                
-                                        }
-                                  }  
-                                  ?>
+                                <?php
+                                foreach ($sync_paypal_invoice_history_interval_array as $key => $value) {
+                                    if ($key == $sync_paypal_invoice_history_interval) {
+                                        echo "<option value='$key' selected>$value</option>";
+                                    } else {
+                                        echo "<option value='$key'>$value</option>";
+                                    }
+                                }
+                                ?>
                             </select>
                         </div>
                     </div>
@@ -340,37 +390,20 @@ $sync_paypal_invoice_history_interval_array = array(
                     </div>
                 </form>
             </div>
-            <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="card border-light">
-                    <div class="card-header"><h4><?php echo __('Instructions', 'angelleye-paypal-invoicing'); ?></h4></div>
-                    <div class="card-body">
-                        <ol>
-                            <li><?php echo __('Check the box to Enable PayPal Sandbox if you are going to configure the plugin with a test account.  Otherwise, leave it unchecked.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Click the Log In with PayPal button to quickly and easily connect your PayPal account to the Invoicing plugin.', 'angelleye-paypal-invoicing'); ?></li>
-                            <ol style="list-style-type:lower-alpha">
-                                <li><?php echo __('If you have your own app configured with PayPal and would prefer to use that, click the link to “add my own app credentials”.', 'angelleye-paypal-invoicing'); ?></li>
-                            </ol>
-                            <li><?php echo __('Enter details for Address and Default values to use on new invoices.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Save Changes.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Click the PayPal Invoicing item in the WordPress admin menu bar.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('Click Add Invoice to create your first PayPal invoice!', 'angelleye-paypal-invoicing'); ?></li>
-                        </ol>
-                    </div>
-                </div>
-                <br>
-                <div class="card border-light">
-                    <div class="card-header"><h4><?php echo __('WooCommerce Compatibility', 'angelleye-paypal-invoicing'); ?></h4></div>
-                    <div class="card-body">
-                        <ol>
-                            <li><?php echo __('Create an order in WooCommerce.', 'angelleye-paypal-invoicing'); ?></li>
-                            <li><?php echo __('From the Order Actions menu, choose to:', 'angelleye-paypal-invoicing'); ?></li>
-                            <ol style="list-style-type:lower-alpha">
-                                <li><?php echo __('Save PayPal Invoice Draft', 'angelleye-paypal-invoicing'); ?></li>
-                                <li><?php echo __('Send PayPal Invoice', 'angelleye-paypal-invoicing'); ?></li>
-                            </ol>
-                        </ol>
-                    </div>
-                </div>
+            <div class="col-lg-3 col-md-12 col-sm-12">
+                <?php
+                if (false === ( $html = get_transient('angelleye_dynamic_marketing_sidebar_html_ppiw') )) {
+                    $response = wp_remote_get('https://8aystwpoqi.execute-api.us-east-2.amazonaws.com/AngellEyeDynamicSidebar?pluginId=10');
+                    if (is_array($response) && !is_wp_error($response)) {
+                        if (!empty($response['body'])) {
+                            set_transient('angelleye_dynamic_marketing_sidebar_html_ppiw', $response['body'], 24 * HOUR_IN_SECONDS);
+                            echo $response['body'];
+                        }
+                    }
+                } else {
+                    echo $html;
+                }
+                ?>
             </div>
         </div>
     </div>

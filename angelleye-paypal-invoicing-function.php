@@ -201,7 +201,7 @@ function pifw_clean($var) {
 }
 
 function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d') {
-    $input_date_format  = get_option('date_format');
+    $input_date_format = get_option('date_format');
     $string = preg_replace('/[(]+[^*]+/', '', $date);
     $current_offset = get_option('gmt_offset');
     $tzstring = get_option('timezone_string');
@@ -230,21 +230,66 @@ function pifw_get_paypal_invoice_date_format($date, $output_date_format = 'Y-m-d
     return $dt->format($output_date_format);
 }
 
-function angelleye_date_format_php_to_js( $sFormat ) {
+function angelleye_date_format_php_to_js($sFormat) {
     $chars = array(
-            // Day
-            'd' => 'dd',
-            'j' => 'd',
-            'l' => 'DD',
-            'D' => 'D',
-            // Month
-            'm' => 'mm',
-            'n' => 'm',
-            'F' => 'MM',
-            'M' => 'M',
-            // Year
-            'Y' => 'yy',
-            'y' => 'y',
+        // Day
+        'd' => 'dd',
+        'j' => 'd',
+        'l' => 'DD',
+        'D' => 'D',
+        // Month
+        'm' => 'mm',
+        'n' => 'm',
+        'F' => 'MM',
+        'M' => 'M',
+        // Year
+        'Y' => 'yy',
+        'y' => 'y',
     );
-    return strtr( (string) $sFormat, $chars );
+    return strtr((string) $sFormat, $chars);
+}
+
+function is_local_server() {
+    // we are from cli
+    if (!isset($_SERVER['HTTP_HOST'])) {
+        return;
+    }
+
+    if ($_SERVER['HTTP_HOST'] === 'localhost' || substr($_SERVER['REMOTE_ADDR'], 0, 3) === '10.' || substr($_SERVER['REMOTE_ADDR'], 0, 7) === '192.168') {
+
+        return true;
+    }
+
+    $live_sites = [
+        'HTTP_CLIENT_IP',
+        'HTTP_X_REAL_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+    ];
+
+    foreach ($live_sites as $ip) {
+        if (!empty($_SERVER[$ip])) {
+            return false;
+        }
+    }
+
+    if (in_array($_SERVER['REMOTE_ADDR'], array('127.0.0.1', '::1'))) {
+        return true;
+    }
+
+    $fragments = explode('.', site_url());
+
+    if (in_array(end($fragments), array('dev', 'local', 'localhost', 'test'))) {
+        return true;
+    }
+
+    return false;
+}
+
+function webhook_log($message) {
+    if (function_exists('wc_get_logger')) {
+        $log = wc_get_logger();
+        $log->log('info', $message, array('source' => 'webhook'));
+    }
 }

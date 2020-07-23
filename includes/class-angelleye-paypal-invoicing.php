@@ -69,7 +69,6 @@ class AngellEYE_PayPal_Invoicing {
         add_action('angelleye_paypal_invoicing_sync_event', array($this, 'angelleye_paypal_invoicing_sync_with_paypal'));
         $prefix = is_network_admin() ? 'network_admin_' : '';
         add_filter("{$prefix}plugin_action_links_" . PAYPAL_INVOICE_PLUGIN_BASENAME, array($this, 'angelleye_paypal_invoicing_plugin_action_links'), 10, 4);
-       
     }
 
     /**
@@ -116,7 +115,7 @@ class AngellEYE_PayPal_Invoicing {
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-activator.php';
         require_once plugin_dir_path(dirname(__FILE__)) . 'includes/angelleye-paypal-invoicing-payment-logger.php';
-        
+
 
         $this->loader = new AngellEYE_PayPal_Invoicing_Loader();
     }
@@ -152,6 +151,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_sub_menu_manage_invoices');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_register_post_status', 10);
+        $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_update_token', 10);
         $this->loader->add_action('admin_menu', $plugin_admin, 'angelleye_paypal_invoicing_top_menu');
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_remove_meta', 10, 2);
         $this->loader->add_action('add_meta_boxes', $plugin_admin, 'angelleye_paypal_invoicing_add_meta_box', 99, 2);
@@ -167,7 +167,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_bulk_actions', 10, 2);
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
-        $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 9);
+        $this->loader->add_action('parse_request', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 0);
         $this->loader->add_filter('woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action', 10, 1);
         $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice', 10, 1);
         $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice', 10, 1);
@@ -179,14 +179,15 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('query_vars', $plugin_admin, 'angelleye_paypal_invoicing_add_custom_query_var');
         $this->loader->add_filter('get_search_query', $plugin_admin, 'angelleye_paypal_invoicing_search_label');
         $this->loader->add_action('parse_query', $plugin_admin, 'angelleye_paypal_invoicing_search_custom_fields');
-        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 2);
-        $this->loader->add_action( 'admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
-        $this->loader->add_action( 'wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
+        $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 3);
+        $this->loader->add_action('admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
+        $this->loader->add_action('wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
         $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_add_web_hooks', 10);
-        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_payment', $plugin_admin, 'angelleye_paypal_invoicing_record_payment', 10);
-        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_refund', $plugin_admin, 'angelleye_paypal_invoicing_record_refund', 10);
         $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_push_notification', 10);
         $this->loader->add_action('wp_ajax_angelleye_dismiss_notice', $plugin_admin, 'angelleye_dismiss_notice', 10);
+        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_payment', $plugin_admin, 'angelleye_paypal_invoicing_record_payment', 10);
+        $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_refund', $plugin_admin, 'angelleye_paypal_invoicing_record_refund', 10);
+        $this->loader->add_action('wp_ajax_angelleye_marketing_sendy_subscription', $plugin_admin, 'own_angelleye_marketing_sendy_subscription');
         register_shutdown_function(array($plugin_admin, 'angelleye_log_errors'));
     }
 
