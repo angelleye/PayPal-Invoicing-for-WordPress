@@ -98,6 +98,10 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
+= 2.x.x - xx.xx.2020 =
+* Fix - Pass Full Billing / Shipping Address in PayPal Invoice. ([PPIW-175](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/82))
+* Fix - Update WooCommerce Order Status when PayPal Invoice Status updates. ([PPIW-163](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/80))
+
 = 2.1.0 - 07.19.2019 =
 * Feature - Adds ability to Mark Invoice Paid at PayPal from the invoice screen in WordPress. ([PPIW-37](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/71))
 * Feature - Adds ability to refund invoice payments from within WordPress invoice screen. ([PPIW-38](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/72))
