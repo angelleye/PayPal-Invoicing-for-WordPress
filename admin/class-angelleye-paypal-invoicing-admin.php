@@ -838,7 +838,6 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 if (empty($posted_raw)) {
                     return false;
                 }
-                webhook_log($posted_raw);
                 $headers = $this->getallheaders_value();
                 $headers = array_change_key_case($headers, CASE_UPPER);
                 $post_id = $this->request->angelleye_paypal_invoicing_validate_webhook_event($headers, $posted_raw);
@@ -848,21 +847,21 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.CREATED') {
                         $invoice = $posted['resource']['invoice'];
-                        $amount = $invoice['total_amount'];
-                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'angelleye-paypal-invoicing'), pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency']), $is_customer_note = 1);
+                        $amount = $invoice['amount'];
+                        $this->add_invoice_note($post_id, sprintf(__(' You created a %s invoice.', 'angelleye-paypal-invoicing'), pifw_get_currency_symbol($amount['currency_code']) . $amount['value'] . ' ' . $amount['currency_code']), $is_customer_note = 1);
                     } elseif ($posted['event_type'] == 'INVOICING.INVOICE.PAID') {
                         $invoice = $posted['resource']['invoice'];
                         $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
-                        $amount = $invoice['total_amount'];
+                        $amount = $invoice['amount'];
                         $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
                         do_action('angelleye_paypal_invoice_response_data', $invoice, array(), '10', ($this->request->testmode == true) ? true : false, false, 'paypal_invoice');
-                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                        if (isset($invoice['payments']['transactions'][0]) && !empty($invoice['payments']['transactions'][0])) {
                             if ($this->request->testmode == true) {
-                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                                $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments']['transactions'][0]['payment_id'];
                             } else {
-                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
+                                $transaction_details_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments']['transactions'][0]['payment_id'];
                             }
-                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($amount['currency']) . $amount['value'] . ' ' . $amount['currency'], $transaction_details_url), $is_customer_note = 1);
+                            $this->add_invoice_note($post_id, sprintf(__(' %s made a %s payment. <a href="%s">View details</a>', 'angelleye-paypal-invoicing'), $email, pifw_get_currency_symbol($invoice['payments']['transactions'][0]['amount']['currency_code']) . $invoice['payments']['transactions'][0]['amount']['value'] . ' ' . $invoice['payments']['transactions'][0]['amount']['currency_code'], $transaction_details_url), $is_customer_note = 1);
                         } else {
                             $this->add_invoice_note($post_id, 'Webhook: ' . $posted['summary'], $is_customer_note = 1);
                         }
