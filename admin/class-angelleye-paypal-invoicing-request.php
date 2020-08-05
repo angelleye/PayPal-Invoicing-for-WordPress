@@ -107,7 +107,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         $this->apifw_company_logo = isset($this->apifw_setting['apifw_company_logo']) ? $this->apifw_setting['apifw_company_logo'] : '';
         $this->mode = ($this->testmode == true) ? 'SANDBOX' : 'LIVE';
         include_once( ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/paypal-rest/autoload.php' );
-        if(!class_exists('AngellEYE_PayPal_Invoicing_Logger')) {
+        if (!class_exists('AngellEYE_PayPal_Invoicing_Logger')) {
             require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-angelleye-paypal-invoicing-logger.php';
         }
         $this->log = new AngellEYE_PayPal_Invoicing_Logger();
@@ -168,7 +168,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
+            if (empty($error)) {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
@@ -184,7 +184,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (Exception $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
+            if (empty($error)) {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
@@ -215,7 +215,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $bool = true;
                 while ($bool) {
                     try {
-                        $invoices_data = AngellEYE_Invoice::getAll(array('page' => $page, 'page_size' => 100, 'total_count_required' => "true"), $this->angelleye_paypal_invoicing_getAuth());
+                        $invoices_data = AngellEYE_Invoice::getAll(array('page' => $page, 'page_size' => 100, 'total_count_required' => "true", 'fields' => 'payment_detail, payment_id, method, type'), $this->angelleye_paypal_invoicing_getAuth());
                     } catch (Exception $ex) {
                         $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
                         $bool = false;
@@ -253,6 +253,16 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_insert_paypal_invoice_data($invoice) {
+        if (!empty($invoice['id'])) {
+            try {
+                $invoice_data = AngellEYE_Invoice::get($invoice['id'], $this->angelleye_paypal_invoicing_getAuth());
+                if( !empty($invoice_data) ) {
+                    $invoice = json_decode($invoice_data, true);
+                }
+            } catch (Exception $ex) {
+                
+            }
+        }
         $amount = $invoice['amount'];
         $paypal_invoice_data_array = array(
             'id' => $invoice['id'],
@@ -289,13 +299,12 @@ class AngellEYE_PayPal_Invoicing_Request {
             }
             update_post_meta($existing_post_id, 'all_invoice_data', pifw_clean($invoice));
             $order_id = get_post_meta($existing_post_id, '_order_id', true);
-            if( !empty($order_id) ) {
+            if (!empty($order_id)) {
                 $order = wc_get_order($order_id);
-                if($order) {
+                if ($order) {
                     do_action('angelleye_update_order_status', $existing_post_id, $invoice, array());
                 }
             }
-            
         }
         return $existing_post_id;
     }
@@ -351,7 +360,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         $shipping_postcode = version_compare(WC_VERSION, '3.0', '<') ? $order->shipping_postcode : $order->get_shipping_postcode();
         $shipping_country = version_compare(WC_VERSION, '3.0', '<') ? $order->shipping_country : $order->get_shipping_country();
         $shipping_state = version_compare(WC_VERSION, '3.0', '<') ? $order->shipping_state : $order->get_shipping_state();
-        if( empty($shipping_address_1) || empty($shipping_country)) {
+        if (empty($shipping_address_1) || empty($shipping_country)) {
             $shipping_first_name = $billing_first_name;
             $shipping_last_name = $billing_last_name;
             $shipping_address_1 = $billing_address_1;
@@ -424,7 +433,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 0 =>
                 array(
                     'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                    'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
+                    'national_number' => preg_replace("/[^0-9]/", "", $this->phone_number),
                     'phone_type' => 'MOBILE',
                 ),
             );
@@ -461,8 +470,6 @@ class AngellEYE_PayPal_Invoicing_Request {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             return false;
         }
-        
-        
     }
 
     public function angelleye_paypal_invoice_get_phone_country_code($country_code) {
@@ -790,7 +797,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                     0 =>
                     array(
                         'country_code' => $this->angelleye_paypal_invoice_get_phone_country_code($this->country),
-                        'national_number' => preg_replace("/[^0-9]/","",$this->phone_number),
+                        'national_number' => preg_replace("/[^0-9]/", "", $this->phone_number),
                         'phone_type' => 'MOBILE',
                     ),
                 );
@@ -879,7 +886,7 @@ class AngellEYE_PayPal_Invoicing_Request {
         } catch (PayPalConnectionException $ex) {
             $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
             $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
+            if (empty($error)) {
                 $error = $ex->getMessage();
             }
             set_transient('angelleye_paypal_invoicing_error', $error);
@@ -901,245 +908,247 @@ class AngellEYE_PayPal_Invoicing_Request {
         ?>
         <br>
         <div class="alert alert-danger alert-dismissible fade show mtonerem" role="alert">
-            <?php echo wp_kses_post($error_msg) . PHP_EOL; ?>
+        <?php echo wp_kses_post($error_msg) . PHP_EOL; ?>
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <?php
-    }
-
-    public function angelleye_paypal_invoicing_get_invoice_details($invoiceId) {
-        try {
-            $invoice = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $invoices_array_data = json_decode($invoice, true);
-            return $invoices_array_data;
-        } catch (PayPalConnectionException $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
+            <?php
         }
-    }
 
-    public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
-        $amount = $invoice['amount'];
-        $paypal_invoice_data_array = array(
-            'id' => $invoice['id'],
-            'status' => isset($invoice['status']) ? $invoice['status'] : '',
-            'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
-            'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
-            'email' => isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? $invoice['primary_recipients'][0]['billing_info']['email_address'] : '',
-            'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
-            'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
-            'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
-        );
-        $insert_invoice_array = array(
-            'ID' => $post_id,
-            'post_type' => 'paypal_invoices',
-            'post_status' => $paypal_invoice_data_array['status'],
-            'post_title' => $paypal_invoice_data_array['number'],
-            'post_author' => 0,
-            'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
-            'post_name' => sanitize_title($invoice['id'])
-        );
-        wp_update_post($insert_invoice_array);
-        foreach ($paypal_invoice_data_array as $key => $value) {
-            update_post_meta($post_id, $key, pifw_clean($value));
-        }
-        update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
-        $order_id = get_post_meta($post_id, '_order_id', true);
-        if( !empty($order_id) ) {
-            $order = wc_get_order($order_id);
-            if($order) {
-                do_action('angelleye_update_order_status', $post_id, $invoice, array());
+        public function angelleye_paypal_invoicing_get_invoice_details($invoiceId) {
+            try {
+                $invoice = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $invoices_array_data = json_decode($invoice, true);
+                return $invoices_array_data;
+            } catch (PayPalConnectionException $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+                exit();
             }
         }
-    }
 
-    public function angelleye_paypal_invoicing_send_invoice_remind($invoiceId) {
-        try {
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $notify = new Notification();
-            $notify
-                    ->setSubject(apply_filters('angelleye_paypal_invoice_remind_subject', "Past due"))
-                    ->setNote(apply_filters('angelleye_paypal_invoice_remind_note', "Please pay soon"))
-                    ->setSendToMerchant(true);
-            $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
-        } catch (PayPalConnectionException $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
+        public function angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id) {
+            $amount = $invoice['amount'];
+            $paypal_invoice_data_array = array(
+                'id' => $invoice['id'],
+                'status' => isset($invoice['status']) ? $invoice['status'] : '',
+                'invoice_date' => isset($invoice['invoice_date']) ? $invoice['invoice_date'] : '',
+                'number' => isset($invoice['detail']['invoice_number']) ? $invoice['detail']['invoice_number'] : '',
+                'email' => isset($invoice['primary_recipients'][0]['billing_info']['email_address']) ? $invoice['primary_recipients'][0]['billing_info']['email_address'] : '',
+                'currency' => isset($amount['currency_code']) ? $amount['currency_code'] : '',
+                'total_amount_value' => isset($amount['value']) ? $amount['value'] : '',
+                'wp_invoice_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date']))
+            );
+            $insert_invoice_array = array(
+                'ID' => $post_id,
+                'post_type' => 'paypal_invoices',
+                'post_status' => $paypal_invoice_data_array['status'],
+                'post_title' => $paypal_invoice_data_array['number'],
+                'post_author' => 0,
+                'post_date' => date("Y-m-d H:i:s", strtotime($invoice['detail']['invoice_date'])),
+                'post_name' => sanitize_title($invoice['id'])
+            );
+            wp_update_post($insert_invoice_array);
+            foreach ($paypal_invoice_data_array as $key => $value) {
+                update_post_meta($post_id, $key, pifw_clean($value));
             }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
-        }
-    }
-
-    public function angelleye_paypal_invoicing_send_invoice_from_draft($invoiceId, $post_id) {
-        try {
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
-            do_action('angelleye_paypal_invoice_response_data', $invoice_ob, array(), '10', ($this->mode == 'SANDBOX') ? true : false, false, 'paypal_invoice');
-            $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
-            $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
-        } catch (PayPalConnectionException $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
-        }
-    }
-
-    public function angelleye_paypal_invoicing_cancel_invoice($invoiceId) {
-        try {
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $notify = new CancelNotification();
-            $notify
-                    ->setSubject(apply_filters('angelleye_paypal_invoice_cancel_subject', "Past due"))
-                    ->setNote(apply_filters('angelleye_paypal_invoice_cancel_note', "Please pay soon"))
-                    ->setSendToMerchant(apply_filters('angelleye_paypal_invoice_send_to_merchant', true))
-                    ->setSendToPayer(apply_filters('angelleye_paypal_invoice_send_to_payer', true));
-            $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
-        } catch (PayPalConnectionException $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
-        }
-    }
-
-    public function angelleye_paypal_invoicing_delete_invoice($invoiceId) {
-        try {
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
-        } catch (PayPalConnectionException $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
-            exit();
-        }
-    }
-
-    public function angelleye_paypal_invoicing_get_readable_message($json_error) {
-        $message = '';
-        $error_object = json_decode($json_error);
-        if( isset($error_object->name) ) {
-            switch ($error_object->name) {
-                case 'VALIDATION_ERROR':
-                    foreach ($error_object->details as $e) {
-                        $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
-                    }
-                    break;
-                case 'INVALID_REQUEST':
-                    foreach ($error_object->details as $e) {
-                        $message .= "\t" . $e->field . "\n\t" . $e->description . "\n\n";
-                    }
-                    break;
-                case 'BUSINESS_ERROR':
-                    $message .= $error_object->message;
-                    break;
+            update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
+            $order_id = get_post_meta($post_id, '_order_id', true);
+            if (!empty($order_id)) {
+                $order = wc_get_order($order_id);
+                if ($order) {
+                    do_action('angelleye_update_order_status', $post_id, $invoice, array());
+                }
             }
         }
-        if( !empty($message)) {
+
+        public function angelleye_paypal_invoicing_send_invoice_remind($invoiceId) {
+            try {
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $notify = new Notification();
+                $notify
+                        ->setSubject(apply_filters('angelleye_paypal_invoice_remind_subject', "Past due"))
+                        ->setNote(apply_filters('angelleye_paypal_invoice_remind_note', "Please pay soon"))
+                        ->setSendToMerchant(true);
+                $invoice_ob->remind($notify, $this->angelleye_paypal_invoicing_getAuth());
+            } catch (PayPalConnectionException $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+                exit();
+            }
+        }
+
+        public function angelleye_paypal_invoicing_send_invoice_from_draft($invoiceId, $post_id) {
+            try {
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob->send($this->angelleye_paypal_invoicing_getAuth());
+                do_action('angelleye_paypal_invoice_response_data', $invoice_ob, array(), '10', ($this->mode == 'SANDBOX') ? true : false, false, 'paypal_invoice');
+                $invoice = $this->angelleye_paypal_invoicing_get_invoice_details($invoiceId);
+                $this->angelleye_paypal_invoicing_update_paypal_invoice_data($invoice, $post_id);
+            } catch (PayPalConnectionException $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+                exit();
+            }
+        }
+
+        public function angelleye_paypal_invoicing_cancel_invoice($invoiceId) {
+            try {
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $notify = new CancelNotification();
+                $notify
+                        ->setSubject(apply_filters('angelleye_paypal_invoice_cancel_subject', "Past due"))
+                        ->setNote(apply_filters('angelleye_paypal_invoice_cancel_note', "Please pay soon"))
+                        ->setSendToMerchant(apply_filters('angelleye_paypal_invoice_send_to_merchant', true))
+                        ->setSendToPayer(apply_filters('angelleye_paypal_invoice_send_to_payer', true));
+                $invoice_ob->cancel($notify, $this->angelleye_paypal_invoicing_getAuth());
+            } catch (PayPalConnectionException $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+                exit();
+            }
+        }
+
+        public function angelleye_paypal_invoicing_delete_invoice($invoiceId) {
+            try {
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $invoice_ob->delete($this->angelleye_paypal_invoicing_getAuth());
+            } catch (PayPalConnectionException $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1029'));
+                exit();
+            }
+        }
+
+        public function angelleye_paypal_invoicing_get_readable_message($json_error) {
+            $message = '';
+            $error_object = json_decode($json_error);
+            if (isset($error_object->name)) {
+                switch ($error_object->name) {
+                    case 'VALIDATION_ERROR':
+                        foreach ($error_object->details as $e) {
+                            $message .= "\t" . $e->field . "\n\t" . $e->issue . "\n\n";
+                        }
+                        break;
+                    case 'INVALID_REQUEST':
+                        foreach ($error_object->details as $e) {
+                            $message .= "\t" . $e->field . "\n\t" . $e->description . "\n\n";
+                        }
+                        break;
+                    case 'BUSINESS_ERROR':
+                        $message .= $error_object->message;
+                        break;
+                }
+            }
+            if (!empty($message)) {
+                return $message;
+            } else if (!empty($error_object->message)) {
+                $message = $error_object->message;
+            } else if (!empty($error_object->error_description)) {
+                $message = $error_object->error_description;
+            } else {
+                $message = $json_error;
+            }
             return $message;
-        } else if (!empty($error_object->message)) {
-            $message = $error_object->message;
-        } else if (!empty($error_object->error_description)) {
-            $message = $error_object->error_description;
-        } else {
-            $message = $json_error;
         }
-        return $message;
-    }
 
-    public function angelleye_get_user_info_using_access_token($access_token) {
-        try {
-            $params = array('access_token' => $access_token);
-            $userInfo = OpenIdUserinfo::getUserinfo($params, $this->angelleye_paypal_invoicing_getAuth());
-            $result_data = array('result' => 'success', 'user_data' => $userInfo);
-        } catch (Exception $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $result_data = array('result' => 'error', 'error_msg' => $ex->getMessage());
-        }
-        return $result_data;
-    }
-
-    public function angelleye_paypal_invoicing_is_api_set() {
-        if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || $this->apifw_refresh_token) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function angelleye_paypal_invoice_get_payment($transaction_id) {
-        try {
-            $payment = Payment::get($transaction_id, $this->angelleye_paypal_invoicing_getAuth());
-            return $payment;
-        } catch (Exception $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
+        public function angelleye_get_user_info_using_access_token($access_token) {
+            try {
+                $params = array('access_token' => $access_token);
+                $userInfo = OpenIdUserinfo::getUserinfo($params, $this->angelleye_paypal_invoicing_getAuth());
+                $result_data = array('result' => 'success', 'user_data' => $userInfo);
+            } catch (Exception $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $result_data = array('result' => 'error', 'error_msg' => $ex->getMessage());
             }
-            set_transient('angelleye_paypal_invoicing_error', $error);
+            return $result_data;
         }
+
+        public function angelleye_paypal_invoicing_is_api_set() {
+            if ((!empty($this->rest_client_id) && !empty($this->rest_secret_id) && !empty($this->rest_paypal_email)) || $this->apifw_refresh_token) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        public function angelleye_paypal_invoice_get_payment($transaction_id) {
+            try {
+                $payment = Payment::get($transaction_id, $this->angelleye_paypal_invoicing_getAuth());
+                return $payment;
+            } catch (Exception $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+            }
+        }
+
+        public function angelleye_paypal_invoice_record_payment($invoiceId, $paymentDetail) {
+            try {
+                $body_request = $this->angelleye_remove_empty_key($paymentDetail);
+                $payLoad = json_encode($body_request);
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $record = new PaymentDetail($payLoad);
+                $return = $invoice_ob->recordPayment($record, $this->angelleye_paypal_invoicing_getAuth());
+                return $return;
+            } catch (Exception $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                return false;
+            }
+        }
+
+        public function angelleye_paypal_invoice_record_refund($invoiceId, $paymentDetail) {
+            try {
+                $body_request = $this->angelleye_remove_empty_key($paymentDetail);
+                $payLoad = json_encode($body_request);
+                $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
+                $record = new RefundDetail($payLoad);
+                $return = $invoice_ob->recordRefund($record, $this->angelleye_paypal_invoicing_getAuth());
+                return $return;
+            } catch (Exception $ex) {
+                $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
+                $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
+                if (empty($error)) {
+                    $error = $ex->getMessage();
+                }
+                set_transient('angelleye_paypal_invoicing_error', $error);
+                return false;
+            }
+        }
+
     }
     
-    public function angelleye_paypal_invoice_record_payment($invoiceId, $paymentDetail) {
-        try {
-            $body_request = $this->angelleye_remove_empty_key($paymentDetail);
-            $payLoad = json_encode($body_request);
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $record = new PaymentDetail($payLoad);
-            $return = $invoice_ob->recordPayment($record, $this->angelleye_paypal_invoicing_getAuth());
-            return $return;
-        } catch (Exception $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            return false;
-        }
-    }
-    
-    public function angelleye_paypal_invoice_record_refund($invoiceId, $paymentDetail) {
-        try {
-            $body_request = $this->angelleye_remove_empty_key($paymentDetail);
-            $payLoad = json_encode($body_request);
-            $invoice_ob = AngellEYE_Invoice::get($invoiceId, $this->angelleye_paypal_invoicing_getAuth());
-            $record = new RefundDetail($payLoad);
-            $return = $invoice_ob->recordRefund($record, $this->angelleye_paypal_invoicing_getAuth());
-            return $return;
-        } catch (Exception $ex) {
-            $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
-            $error = $this->angelleye_paypal_invoicing_get_readable_message($ex->getData());
-            if( empty($error)) {
-                $error = $ex->getMessage();
-            }
-            set_transient('angelleye_paypal_invoicing_error', $error);
-            return false;
-        }
-    }
-}
