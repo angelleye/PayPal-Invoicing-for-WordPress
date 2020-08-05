@@ -18,23 +18,14 @@ class AngellEYE_PayPal_Invoicing_Activator {
     public static function activate($web_services) {
         $apifw_setting = get_option('apifw_setting');
         $sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
-        $enable_sync_paypal_invoice_history = isset($apifw_setting['enable_sync_paypal_invoice_history']) ? $apifw_setting['enable_sync_paypal_invoice_history'] : '';
         self::create_files();
-        if($enable_sync_paypal_invoice_history == 'on') {
-            if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
-                wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
-            }
-            wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
-            if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                wp_schedule_event(time(), $sync_paypal_invoice_history_interval, 'angelleye_paypal_invoicing_sync_event');
-            }
-        } else {
-            if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
-                wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
-            }
-            wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
+        if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
+            $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
+            wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
+        }
+        wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
+        if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
+            wp_schedule_event(time(), $sync_paypal_invoice_history_interval, 'angelleye_paypal_invoicing_sync_event');
         }
         if($web_services) { 
             delete_option('angelleye_paypal_invoicing_submited_feedback');
