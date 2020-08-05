@@ -186,6 +186,7 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_payment', $plugin_admin, 'angelleye_paypal_invoicing_record_payment', 10);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_refund', $plugin_admin, 'angelleye_paypal_invoicing_record_refund', 10);
         $this->loader->add_action('wp_ajax_angelleye_marketing_sendy_subscription', $plugin_admin, 'own_angelleye_marketing_sendy_subscription');
+        $this->loader->add_action('manage_posts_extra_tablenav', $plugin_admin, 'angelleye_paypal_add_sync_button', 999);
         register_shutdown_function(array($plugin_admin, 'angelleye_log_errors'));
     }
 

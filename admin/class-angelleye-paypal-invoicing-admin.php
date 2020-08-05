@@ -816,6 +816,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     $this->angelleye_paypal_invoicing_print_error();
                 }
             }
+            if(isset($_GET['angelleye_synce']) && !empty($_GET['angelleye_synce'])) {
+                $this->request->angelleye_paypal_invoicing_delete_invoice($invoice_id);
+                wp_delete_post($post_id, true);
+                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1027'));
+                exit();
+            }
         } catch (Exception $ex) {
             error_log(print_r($ex->getMessage(), true));
         }
@@ -1467,6 +1473,12 @@ class AngellEYE_PayPal_Invoicing_Admin {
             'message' => $msg
         );
         wp_send_json($return);
+    }
+    
+    public function angelleye_paypal_add_sync_button() {
+        if(isset($_GET['post_type']) && 'paypal_invoices' === $_GET['post_type']) {
+            echo '<input type="submit" name="angelleye_synce" id="angelleye_synce" class="button button-primary" value="Sync PayPal Invoice">';
+        }
     }
 
 }
