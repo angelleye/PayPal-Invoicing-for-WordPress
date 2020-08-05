@@ -36,11 +36,6 @@ class AngellEYE_PayPal_Invoicing_Activator {
             }
             wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
         }
-        $webhook_id = get_option('webhook_id', false);
-        
-        if( $webhook_id == false && is_local_server() === false) {
-            self::angelleye_paypal_invoicing_create_web_hook();
-        }
         if($web_services) { 
             delete_option('angelleye_paypal_invoicing_submited_feedback');
             $opt_in_log = get_option('angelleye_send_opt_in_logging_details', 'no');
@@ -76,25 +71,4 @@ class AngellEYE_PayPal_Invoicing_Activator {
             }
         }
     }
-
-    private static function angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp() {
-        try {
-            include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
-            $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-            $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
-        } catch (Exception $ex) {
-            error_log(print_r($ex->getMessage(), true));
-        }
-    }
-    
-    private static function angelleye_paypal_invoicing_create_web_hook() {
-        try {
-            include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
-            $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-            $request->angelleye_paypal_invoicing_create_web_hook_request();
-        } catch (Exception $ex) {
-            error_log(print_r($ex->getMessage(), true));
-        }
-    }
-
 }

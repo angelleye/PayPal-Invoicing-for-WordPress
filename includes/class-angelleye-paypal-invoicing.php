@@ -167,7 +167,6 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_filter('bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_bulk_actions', 10, 2);
         $this->loader->add_filter('handle_bulk_actions-edit-paypal_invoices', $plugin_admin, 'angelleye_paypal_invoicing_handle_bulk_action', 10, 3);
         $this->loader->add_filter('admin_init', $plugin_admin, 'angelleye_paypal_invoicing_handle_post_row_action', 10);
-        $this->loader->add_action('parse_request', $plugin_admin, 'angelleye_paypal_invoicing_handle_webhook_request', 0);
         $this->loader->add_filter('woocommerce_order_actions', $plugin_admin, 'angelleye_paypal_invoicing_add_order_action', 10, 1);
         $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_save_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_save_paypal_invoice', 10, 1);
         $this->loader->add_filter('woocommerce_order_action_angelleye_paypal_invoicing_wc_send_paypal_invoice', $plugin_admin, 'angelleye_paypal_invoicing_wc_send_paypal_invoice', 10, 1);
@@ -182,7 +181,6 @@ class AngellEYE_PayPal_Invoicing {
         $this->loader->add_action('angelleye_update_order_status', $plugin_admin, 'angelleye_update_order_status', 10, 3);
         $this->loader->add_action('admin_footer', $plugin_admin, 'angelleye_paypal_invoicing_add_deactivation_form');
         $this->loader->add_action('wp_ajax_angelleye_send_deactivation_invocing', $plugin_admin, 'angelleye_handle_plugin_deactivation_request');
-        $this->loader->add_action('init', $plugin_admin, 'angelleye_paypal_invoicing_add_web_hooks', 10);
         $this->loader->add_action('admin_notices', $plugin_admin, 'angelleye_paypal_invoicing_display_push_notification', 10);
         $this->loader->add_action('wp_ajax_angelleye_dismiss_notice', $plugin_admin, 'angelleye_dismiss_notice', 10);
         $this->loader->add_action('wp_ajax_angelleye_paypal_invoicing_record_payment', $plugin_admin, 'angelleye_paypal_invoicing_record_payment', 10);
