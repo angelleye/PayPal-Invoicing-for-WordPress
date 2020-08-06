@@ -290,11 +290,13 @@ class AngellEYE_PayPal_Invoicing_Request {
                 update_post_meta($existing_post_id, $key, pifw_clean($value));
             }
             update_post_meta($existing_post_id, 'all_invoice_data', pifw_clean($invoice));
-            $order_id = get_post_meta($existing_post_id, '_order_id', true);
-            if (!empty($order_id)) {
-                $order = wc_get_order($order_id);
-                if ($order) {
-                    do_action('angelleye_update_order_status', $existing_post_id, $invoice, array());
+            if( function_exists('WC') ) {
+                $order_id = get_post_meta($existing_post_id, '_order_id', true);
+                if (!empty($order_id)) {
+                    $order = wc_get_order($order_id);
+                    if ($order) {
+                        do_action('angelleye_update_order_status', $existing_post_id, $invoice, array());
+                    }
                 }
             }
             $wp_post_id = $existing_post_id;
@@ -1010,11 +1012,13 @@ class AngellEYE_PayPal_Invoicing_Request {
             update_post_meta($post_id, $key, pifw_clean($value));
         }
         update_post_meta($post_id, 'all_invoice_data', pifw_clean($invoice));
-        $order_id = get_post_meta($post_id, '_order_id', true);
-        if (!empty($order_id)) {
-            $order = wc_get_order($order_id);
-            if ($order) {
-                do_action('angelleye_update_order_status', $post_id, $invoice, array());
+        if( function_exists('WC') ) {
+            $order_id = get_post_meta($post_id, '_order_id', true);
+            if (!empty($order_id)) {
+                $order = wc_get_order($order_id);
+                if ($order) {
+                    do_action('angelleye_update_order_status', $post_id, $invoice, array());
+                }
             }
         }
     }
