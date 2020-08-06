@@ -58,6 +58,7 @@ class AngellEYE_PayPal_Invoicing_Request {
      */
     private $version;
     public $invoice_request;
+    public $tpv_tracking;
 
     /**
      * Initialize the class and set its properties.
@@ -299,15 +300,14 @@ class AngellEYE_PayPal_Invoicing_Request {
             $wp_post_id = $existing_post_id;
         }
         if (isset($invoice['status']) && !empty($invoice['id']) && in_array($invoice['status'], array('PARTIALLY_PAID', 'PAID', 'MARKED_AS_PAID'))) {
-            if ($this->angelleye_paypal_invoicing_is_tpv_send($wp_post_id, $invoice)) {
+            $tpv_tracking = get_post_meta($wp_post_id, '_tpv_tracking', true);
+            if ($this->angelleye_paypal_invoicing_is_tpv_send($invoice, $tpv_tracking) === false) {
                 try {
                     $invoice_data = AngellEYE_Invoice::get($invoice['id'], $this->angelleye_paypal_invoicing_getAuth());
                     if (!empty($invoice_data)) {
                         $invoice = json_decode($invoice_data, true);
                         update_post_meta($wp_post_id, 'all_invoice_data', pifw_clean($invoice));
-                        do_action('angelleye_paypal_invoice_response_data', $invoice);
-                        
-                        
+                        $this->angelleye_paypa_invoice_save_track_invoice($wp_post_id, $invoice, $tpv_tracking);
                     }
                 } catch (Exception $ex) {
                     return $wp_post_id;
@@ -316,9 +316,35 @@ class AngellEYE_PayPal_Invoicing_Request {
         }
         return $wp_post_id;
     }
+    
+    public function angelleye_paypa_invoice_save_track_invoice($wp_post_id, $invoice, $tpv_tracking) {
+        $paid_amount = 0;
+        $tpv_tracked_transaction = array();
+        if(isset($invoice['payments']['transactions']) && !empty($invoice['payments']['transactions'])) {
+            foreach ($invoice['payments']['transactions'] as $key => $transaction) {
+                if(isset($transaction['payment_id']) && !empty($transaction['payment_id'])) {
+                    if(!empty($tpv_tracking) && isset($tpv_tracking['payment_id']) && !empty($tpv_tracking['payment_id']) && in_array($transaction['payment_id'], $tpv_tracking['payment_id'])) {
+                        $tpv_tracked_transaction['amount'][$key] = isset($transaction['amount']['value']) ? $transaction['amount']['value'] : 0;
+                        $paid_amount + $paid_amount = isset($transaction['amount']['value']) ? $transaction['amount']['value'] : 0;
+                        $tpv_tracked_transaction['payment_id'][$key] = isset($transaction['payment_id']) ? $transaction['payment_id'] : '';
+                    } else {
+                        do_action('angelleye_paypal_invoice_response_data', $transaction, 10, $this->testmode);
+                        $tpv_tracked_transaction['amount'][$key] = isset($transaction['amount']['value']) ? $transaction['amount']['value'] : 0;
+                        $paid_amount + $paid_amount = isset($transaction['amount']['value']) ? $transaction['amount']['value'] : 0;
+                        $tpv_tracked_transaction['payment_id'][$key] = isset($transaction['payment_id']) ? $transaction['payment_id'] : '';
+                    }
+                }
+            }
+            
+        }
+        if( !empty($tpv_tracked_transaction) && $paid_amount > 0) {
+            $tpv_tracked_transaction['total_amout'] = $paid_amount;
+            update_post_meta($wp_post_id, '_tpv_tracking', $tpv_tracked_transaction);
+        }
+    }
 
-    public function angelleye_paypal_invoicing_is_tpv_send($wp_post_id, $invoice) {
-        $tpv_tracking = get_post_meta($wp_post_id, '_tpv_tracking', true);
+    public function angelleye_paypal_invoicing_is_tpv_send($invoice, $tpv_tracking) {
+        
         if (empty($tpv_tracking)) {
             return false;
         }

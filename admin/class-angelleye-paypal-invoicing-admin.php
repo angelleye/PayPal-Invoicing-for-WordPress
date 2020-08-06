@@ -575,6 +575,9 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (!empty($_GET['message']) && $_GET['message'] == '1033') {
             echo "<div class='notice notice-error is-dismissible'><p>" . __('Refund for invoice is not recorded', 'angelleye-paypal-invoicing') . "</p></div>";
         }
+        if (!empty($_GET['message']) && $_GET['message'] == '1034') {
+            echo "<div class='notice notice-success is-dismissible'><p>" . __('The sync has completed successfully', 'angelleye-paypal-invoicing') . "</p></div>";
+        }
         $opt_in_log = get_option('angelleye_display_agree_disgree_opt_in_logging_paypal_invoicing', 'yes');
         $angelleye_send_opt_in_logging_details = get_option('angelleye_send_opt_in_logging_details', '');
         if ($opt_in_log == 'yes' && empty($angelleye_send_opt_in_logging_details)) {
@@ -817,10 +820,15 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 }
             }
             if(isset($_GET['angelleye_synce']) && !empty($_GET['angelleye_synce'])) {
-                $this->request->angelleye_paypal_invoicing_delete_invoice($invoice_id);
-                wp_delete_post($post_id, true);
-                wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1027'));
-                exit();
+                try {
+                    $this->angelleye_paypal_invoicing_load_rest_api();
+                    $this->request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
+                    wp_redirect(admin_url('edit.php?post_type=paypal_invoices&message=1034'));
+                    exit();
+                } catch (Exception $ex) {
+                    wp_redirect(admin_url('edit.php?post_type=paypal_invoices'));
+                    exit();
+                }
             }
         } catch (Exception $ex) {
             error_log(print_r($ex->getMessage(), true));
@@ -1148,10 +1156,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
                 $order = wc_get_order($order_id);
                 if($order) {
                     if ($invoice['status'] == 'PAID' || 'MARKED_AS_PAID' == $invoice['status']) {
-                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                        if (isset($invoice['payments'][0]['payment_id']) && !empty($invoice['payments'][0]['payment_id'])) {
                             if (!$order->has_status(array('processing', 'completed'))) {
                                 $order->payment_complete($invoice['payments'][0]['transaction_id']);
-                                update_post_meta($order_id, '_transaction_id', $invoice['payments'][0]['transaction_id']);
+                                update_post_meta($order_id, '_transaction_id', $invoice['payments'][0]['payment_id']);
                                 $order->add_order_note('PayPal Invoice Paid');
                             }
                         } else {
@@ -1164,7 +1172,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                         $billing_info = isset($invoice['billing_info']) ? $invoice['billing_info'] : array();
                         $amount = isset($invoice['total_amount']) ? $invoice['total_amount'] : '';
                         $email = isset($billing_info[0]['email']) ? $billing_info[0]['email'] : 'Customer';
-                        if (isset($invoice['payments'][0]['transaction_id']) && !empty($invoice['payments'][0]['transaction_id'])) {
+                        if (isset($invoice['payments']['transactions'][0]['payment_id']) && !empty($invoice['payments']['transactions'][0]['payment_id'])) {
                             if ($this->request->testmode == true) {
                                 $transaction_details_url = "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_history-details-from-hub&id=" . $invoice['payments'][0]['transaction_id'];
                             } else {
