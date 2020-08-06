@@ -17,9 +17,9 @@ class AngellEYE_PayPal_Invoicing_Deactivator {
      */
     public static function deactivate() {
 
-        if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-            $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
-            wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
+        if (wp_next_scheduled('angelleye_paypal_invoicing_sync_event')) {
+            $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_event');
+            wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_event');
         }
         wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
         
