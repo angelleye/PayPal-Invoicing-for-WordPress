@@ -344,7 +344,6 @@ class AngellEYE_PayPal_Invoicing_Request {
     }
 
     public function angelleye_paypal_invoicing_is_tpv_send($invoice, $tpv_tracking) {
-        
         if (empty($tpv_tracking)) {
             return false;
         }
@@ -354,7 +353,10 @@ class AngellEYE_PayPal_Invoicing_Request {
         if (!isset($invoice['amount']['value'])) {
             return false;
         }
-        if ($tpv_tracking['total_amout'] < $invoice['amount']['value']) {
+        if(!isset($invoice['payments']['paid_amount']['value'])) {
+            return false;
+        }
+        if ($tpv_tracking['total_amout'] < $invoice['payments']['paid_amount']['value']) {
             return false;
         }
         return true;
