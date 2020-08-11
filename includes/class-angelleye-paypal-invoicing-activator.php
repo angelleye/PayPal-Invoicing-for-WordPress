@@ -18,28 +18,13 @@ class AngellEYE_PayPal_Invoicing_Activator {
     public static function activate($web_services) {
         $apifw_setting = get_option('apifw_setting');
         $sync_paypal_invoice_history_interval = isset($apifw_setting['sync_paypal_invoice_history_interval']) ? $apifw_setting['sync_paypal_invoice_history_interval'] : 'daily';
-        $enable_sync_paypal_invoice_history = isset($apifw_setting['enable_sync_paypal_invoice_history']) ? $apifw_setting['enable_sync_paypal_invoice_history'] : '';
         self::create_files();
-        if($enable_sync_paypal_invoice_history == 'on') {
-            if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
-                wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
-            }
-            wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
-            if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                wp_schedule_event(time(), $sync_paypal_invoice_history_interval, 'angelleye_paypal_invoicing_sync_event');
-            }
-        } else {
-            if (wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal')) {
-                $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_with_paypal');
-                wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_with_paypal');
-            }
-            wp_clear_scheduled_hook('angelleye_paypal_invoicing_sync_event');
+        if (wp_next_scheduled('angelleye_paypal_invoicing_sync_event')) {
+            $timestamp = wp_next_scheduled('angelleye_paypal_invoicing_sync_event');
+            wp_unschedule_event($timestamp, 'angelleye_paypal_invoicing_sync_event');
         }
-        $webhook_id = get_option('webhook_id', false);
-        
-        if( $webhook_id == false && is_local_server() === false) {
-            self::angelleye_paypal_invoicing_create_web_hook();
+        if (!wp_next_scheduled('angelleye_paypal_invoicing_sync_event')) {
+            wp_schedule_event(time(), $sync_paypal_invoice_history_interval, 'angelleye_paypal_invoicing_sync_event');
         }
         if($web_services) { 
             delete_option('angelleye_paypal_invoicing_submited_feedback');
@@ -76,25 +61,4 @@ class AngellEYE_PayPal_Invoicing_Activator {
             }
         }
     }
-
-    private static function angelleye_paypal_invoicing_synce_paypal_invoiceing_data_to_wp() {
-        try {
-            include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
-            $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-            $request->angelleye_paypal_invoicing_sync_invoicing_with_wp();
-        } catch (Exception $ex) {
-            error_log(print_r($ex->getMessage(), true));
-        }
-    }
-    
-    private static function angelleye_paypal_invoicing_create_web_hook() {
-        try {
-            include_once(ANGELLEYE_PAYPAL_INVOICING_PLUGIN_DIR . '/admin/class-angelleye-paypal-invoicing-request.php');
-            $request = new AngellEYE_PayPal_Invoicing_Request(null, null);
-            $request->angelleye_paypal_invoicing_create_web_hook_request();
-        } catch (Exception $ex) {
-            error_log(print_r($ex->getMessage(), true));
-        }
-    }
-
 }

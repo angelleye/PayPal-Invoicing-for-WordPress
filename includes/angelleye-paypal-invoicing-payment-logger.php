@@ -18,42 +18,20 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
         $this->api_url = 'https://gtctgyk7fh.execute-api.us-east-2.amazonaws.com/default/PayPalPaymentsTracker';
         $this->api_key = 'srGiuJFpDO4W7YCDXF56g2c9nT1JhlURVGqYD7oa';
         $this->allow_method = array('PayPal Invoice');
-        add_action('angelleye_paypal_invoice_response_data', array($this, 'own_angelleye_paypal_invoice_response_data'), 10, 6);
+        add_action('angelleye_paypal_invoice_response_data', array($this, 'own_angelleye_paypal_invoice_response_data'), 10, 3);
     }
 
-    public function own_angelleye_paypal_invoice_response_data($result_data, $request_data, $product_id = 1, $sandbox = false, $is_nvp = true, $payment_method = 'express_checkout') {
-        $request_param = array();
-        if (isset($result_data) && is_array($result_data) && !empty($result_data['CURL_ERROR'])) {
-            return $result_data;
-        } else {
-            $result = $result_data;
-            $request = $request_data;
-            if ($payment_method == 'paypal_invoice') {
-                $request['METHOD'] = 'PayPal Invoice';
-            }
-            if (isset($request['METHOD']) && !empty($request['METHOD']) && in_array($request['METHOD'], $this->allow_method)) {
-                $opt_in_log = get_option('angelleye_send_opt_in_logging_details', 'no');
-                if ($opt_in_log == 'yes') {
-                    $request_param['site_url'] = get_bloginfo('url');
-                }
-                $request_param['type'] = $request['METHOD'];
-                $request_param['mode'] = ($sandbox) ? 'sandbox' : 'live';
-                $request_param['product_id'] = $product_id;
-                if ($request['METHOD'] == 'PayPal Invoice') {
-                    if (isset($result->id)) {
-                        $request_param['status'] = 'Success';
-                        $request_param['transaction_id'] = isset($result->id) ? $result->id : '';
-                    } else {
-                        $request_param['status'] = 'Failure';
-                    }
-                    $request_param['merchant_id'] = '';
-                    $request_param['correlation_id'] = '';
-                    $request_param['amount'] = isset($result->amount['value']) ? $result->amount['value'] : '0.00';
-                    $this->angelleye_tpv_request($request_param);
-                }
-            }
-        }
-        return $result_data;
+    public function own_angelleye_paypal_invoice_response_data($result, $product_id = 10, $sandbox = false) {
+        $request_param['site_url'] = get_bloginfo('url');
+        $request_param['type'] = 'PayPal Invoice';
+        $request_param['mode'] = ($sandbox) ? 'sandbox' : 'live';
+        $request_param['product_id'] = $product_id;
+        $request_param['status'] = 'Success';
+        $request_param['transaction_id'] = isset($result['payment_id']) ? $result['payment_id'] : '';
+        $request_param['merchant_id'] = '';
+        $request_param['correlation_id'] = '';
+        $request_param['amount'] = isset($result['amount']['value']) ? $result['amount']['value'] : '0.0';
+        $this->angelleye_tpv_request($request_param);
     }
 
     public function angelleye_tpv_request($request_param) {
@@ -90,15 +68,10 @@ class AngellEYE_PayPal_Invoicing_Payment_Logger {
             );
             $response = wp_remote_post($this->api_url, $post_args);
             if (is_wp_error($response)) {
-                $error_message = $response->get_error_message();
-                return false;
+                
             } else {
-                $body = json_decode(wp_remote_retrieve_body($response), true);
-                if ($body['status']) {
-                    return true;
-                }
+                
             }
-            return false;
         } catch (Exception $ex) {
             
         }

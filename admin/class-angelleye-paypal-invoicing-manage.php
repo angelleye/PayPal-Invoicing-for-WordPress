@@ -1015,7 +1015,8 @@ class AngellEYE_Invoice extends Invoice {
         $allowedParams = array(
             'page' => 1,
             'page_size' => 1,
-            'total_count_required' => 1
+            'total_count_required' => 1,
+            'fields' => 1
         );
 
         $payLoad = "";
