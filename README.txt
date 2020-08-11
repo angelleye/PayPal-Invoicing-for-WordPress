@@ -3,8 +3,8 @@ Contributors: angelleye
 Donate link: http://www.angelleye.com/
 Tags: paypal, invoice, invoicing, woocommerce, order, orders, angelleye, money, payment, payments
 Requires at least: 3.0.1
-Tested up to: 5.2.2
-Stable tag: 2.1.0
+Tested up to: 5.4.2
+Stable tag: 3.0.0
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -98,7 +98,8 @@ Automatic updates should work great for you.  As always, though, we recommend ba
 
 == Changelog ==
 
-= 2.x.x - xx.xx.2020 =
+= 3.0.0 - 08.11.2020 =
+* Tweak - Webhook feature removed with Manual & Cron Job Option to Sync the Invoices and Update the Status. ([PPIW-165](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/84))
 * Fix - Pass Full Billing / Shipping Address in PayPal Invoice. ([PPIW-175](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/82))
 * Fix - Update WooCommerce Order Status when PayPal Invoice Status updates. ([PPIW-163](https://github.com/angelleye/PayPal-Invoicing-for-WordPress/pull/80))
 
