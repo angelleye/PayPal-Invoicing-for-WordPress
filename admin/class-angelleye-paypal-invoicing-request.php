@@ -216,7 +216,7 @@ class AngellEYE_PayPal_Invoicing_Request {
                 $bool = true;
                 while ($bool) {
                     try {
-                        $invoices_data = AngellEYE_Invoice::getAll(array('page' => $page, 'page_size' => 100, 'total_count_required' => "true", 'fields' => 'payment_detail, payment_id, method, type'), $this->angelleye_paypal_invoicing_getAuth());
+                        $invoices_data = AngellEYE_Invoice::getAll(array('page' => $page, 'page_size' => 100, 'total_count_required' => "true", 'fields' => 'payment_detail, payment_id, method, type', 'payments', 'shipping_info'), $this->angelleye_paypal_invoicing_getAuth());
                     } catch (Exception $ex) {
                         $this->log->add('paypal_invoice_log', print_r($ex->getMessage(), true));
                         $bool = false;

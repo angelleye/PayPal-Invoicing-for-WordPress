@@ -54,6 +54,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
         // Secure Invoice notes.
         add_filter('comments_clauses', array(__CLASS__, 'exclude_invoice_comments'), 10, 1);
         add_filter('comment_feed_where', array(__CLASS__, 'exclude_invoice_comments_from_feed_where'));
+        add_action('angelleye_paypal_invoice_update_wc_address', array($this, 'angelleye_paypal_invoice_update_wc_address'), 10, 2);
     }
 
     /**
@@ -1149,6 +1150,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
     }
 
     public function angelleye_update_order_status($post_id, $invoice, $request_array) {
+        $may_update_woo_address = false;
         $this->angelleye_paypal_invoicing_load_rest_api();
         $order_id = get_post_meta($post_id, '_order_id', true);
         if (!empty($order_id)) {
@@ -1160,6 +1162,7 @@ class AngellEYE_PayPal_Invoicing_Admin {
                             $order->payment_complete();
                             $order->add_order_note('PayPal Invoice Paid');
                             wc_reduce_stock_levels($order_id);
+                            $may_update_woo_address = true;
                         }
                     } else if ($invoice['status'] == 'CANCELLED') {
                         if (!$order->has_status(array('cancelled'))) {
@@ -1174,6 +1177,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
                     } else if ('PARTIALLY_PAID' == $invoice['status']) {
                         $order->update_status('wc-partial-payment');
                         $order->add_order_note('PayPal Invoice Partially Paid');
+                        $may_update_woo_address = true;
+                    }
+                    if($may_update_woo_address) {
+                        do_action('angelleye_paypal_invoice_update_wc_address', $order_id, $invoice);
                     }
                 }
             } catch (Exception $ex) {
@@ -1467,6 +1474,10 @@ class AngellEYE_PayPal_Invoicing_Admin {
         if (isset($_GET['post_type']) && 'paypal_invoices' === $_GET['post_type']) {
             echo '<input type="submit" name="angelleye_synce" id="angelleye_synce" class="button button-primary" value="Sync PayPal Invoice">';
         }
+    }
+    
+    public function angelleye_paypal_invoice_update_wc_address($order_id, $invoice) {
+        
     }
 
 }
